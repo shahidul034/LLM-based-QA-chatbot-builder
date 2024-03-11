@@ -1,0 +1,19 @@
+Divide the above data into paragraphs based on their context meaning. In each paragraph, assign appropriate headlines.
+
+Divide the above data into paragraphs based on their context without changing anything.
+
+
+Understand the context and, for each paragraph, assign appropriate headlines. Do not change anything, and do not put any wrong information because it is for a medical chatbot.
+
+Divide the above data into paragraphs based on their context meaning and do not change anything. In each paragraph, assign appropriate headlines.
+
+convert into paragraphs with context information. Do not change anything, and do not put any wrong information because it is for a medical chatbot. Assign proper headlines.
+
+Format the above text. rearrange their headings and content. If any heading is missing from any paragraph, kindly add a heading to the paragraph. Do not miss any information, and do not put any wrong information because it is for a medical chatbot.
+
+Format the above text. rearrange their headings and content. If any heading is missing from any paragraph, kindly add a heading to the paragraph. Remove the redundant citation from the text and make it clean. Do not miss any information, and do not put any wrong information because it is for a medical chatbot.
+
+
+Format the above text. rearrange their headings and content. If any heading is missing from any paragraph, kindly add a heading to the paragraph. Remove the redundant citation from the text and make it clean. Do not miss any information, and do not put any wrong information because it is for a medical chatbot. Include all the information given in the above text.
+
+This information is related to Khulna University of Engineering and Technology (KUET). Use above text as context, generate 10 question-answer or prompt-reply pairs using the given text as context, remember, the prompts should be small and simple, the answers should be large and knowledge rich, by this you should harvest as much knowledge as possible from the text only using the answer, the prompt will be general and open ended and simple, like human queries.  and the prompt/answers must be only from the text. give me the prompts and replies or question and answers in table format for excel.  

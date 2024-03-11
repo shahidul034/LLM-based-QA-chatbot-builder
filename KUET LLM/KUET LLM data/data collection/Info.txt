@@ -1,0 +1,554 @@
+||//About KUET// 
+Khulna University of Engineering & Technology (KUET) is one of the leading public universities of Bangladesh giving special emphasis in the Engineering and Technological Education and research. KUET is well known for offering very high quality educational, research and developmental programs in the major disciplines of engineering as well as basic sciences. It has a sober objective to achieve excellence in quality education, research and progression to address the present needs of the country as well as the South-Western region to make it as the "Center of Excellence".
+||//History// Khulna University of Engineering & Technology (KUET), Bangladesh established in 1967 as Khulna Engineering College, starts its long cherished journey in 3 June, 1974 after receiving special direction from the Father of the Nation Bangabandhu Sheikh Mujibur Rahman. Later to ensure the better academic and research capabilities and environment, it is converted to an autonomous institute called Bangladesh Institute of Technology (BIT), Khulna in July 1986. To meet the demands of the days in the academic and research arena, the institute was upgraded and renamed as Khulna University of Engineering & Technology (KUET) in September 2003.[[History]]
+||KUET offers engineering education in both undergraduate and post-graduate levels, and also offers degree and conducts research in basic sciences at post-graduate level. At present, around 5240 students are studying in KUET in 20 Academic Department under 3 Faculty. From the academic session (2018-2019), total 1065 top graded students of the country are enrolled yearly in undergraduate level in 16 departments through very competitive, transparent and standard admission test. Besides, quality level graduate study and research in M.Sc, M.Sc Engg, M.Phil and Ph.D. Programs are running in its nourished environment. Students from foreign counties are also studying in this prestigious institute. Around 356 eminent, scholarly and diverse faculties are engaged in teaching at this university in various disciplines.
+||The campus of this university stands at North-West corner of Khulna City Corporation, about 12 Km from the city center, in the midst of an impressive natural beauty having vast greenery spreading over an area of 101 acres land. <br> 
+||In every year, approximately seven hundred students graduate from this university at different branches of engineering and technology.[[About KUET]]
+||Graduate Degree Offered: <br>
+Bachelor of Science in Engineering, Bachelor of URP, Bachelor of Arch <br>
+i) Bachelor of Science in Civil Engineering abbreviated as B.Sc. Eng. (CE) <br>
+ii) Bachelor of Science in Electrical & Electronic Engineering abbreviated as B. Sc. Eng. (EEE) <br>
+iii) Bachelor of Science in Mechanical Engineering abbreviated as B. Sc. Eng. (ME) <br>
+iv) Bachelor of Science in Computer Science & Engineering abbreviated as B. Sc. Eng. (CSE) <br>
+v) Bachelor of Science in Electronics & Communication Engineering abbreviated as B. Sc. Eng. (ECE) <br>
+vi) Bachelor of Science in Industrial in abbreviated as B. Sc. Eng. (IEM) <br>
+vii) Bachelor of Urban & Regional Planning abbreviated as BURP <br>
+viii) Bachelor of Science in Leather Engineering abbreviated as B. Sc. Eng. (LE) <br>
+ix) Bachelor of Science in Textile Engineering abbreviated as B. Sc. Eng. (TE) <br>
+x) Bachelor of Science in Building Engineering & Construction Management as B. Sc. Eng. (BECM) <br>
+xi) Bachelor of Science in Biomedical Engineering abbreviated as B. Sc. Eng. (BME) <br>
+xii) Bachelor of Science in Materials Science & Engineering abbreviated as B. Sc. Eng. (MSE) <br>
+xiii) Bachelor of Science in Energy Science & Engineering abbreviated as B. Sc. Eng. (ESE) <br>
+xiv) Bachelor of Architecture abbreviated as B. Arch. <br>
+xv) Bachelor of Science in Mechatronics Engineering abbreviated as B. Sc. Eng. (MTE) <br>
+xvi) Bachelor of Science in Chemical Engineering abbreviated as B. Sc. Eng. (ChE) <br>
+Any other degree that may be awarded by a department on the recommendation of the Academic Council from time to time.
+||Graduate Course Duration: <br>
+B. Sc. Eng. and BURP: <br>
+The B. Sc. Eng./BURP courses shall be extended over a period of four academic years, each with a normal duration of one calender year. Each academic year will be divided into two Terms for the purpose of academic programs and conducting of examinations. <br>
+B. Sc. in Architecture: <br>
+Five academic year.
+||//Postgraduate//Postgraduate Degree offered: <br>
+||Master of Science in Engineering: <br>
+i) Master of Science in Civil Engineering abbreviated as M. Sc. Eng. (CE) <br>
+ii) Master of Science in Electrical & Electronic Engineering abbreviated as M. Sc. Eng. (EEE) <br>
+iii) Master of Science in Mechanical Engineering abbreviated as M. Sc. Eng. (ME) <br>
+iv) Master of Science in Computer Science & Engineering abbreviated as M. Sc. Eng. (CSE) <br>
+v) Master of Science in Electronics & Communication Engineering abbreviated as M. Sc. Eng. (ECE) <br>
+vi) Master of Science in Industrial Engineering & Management abbreviated as M. Sc. Eng. (IEM) <br>
+Vii) Master of Science in Energy Science & Engineering abbreviated as M. Sc. Eng. (ESE) <br>
+Viii) Master of Science in Biomedical Engineering abbreviated as M. Sc. Eng. (BME) <br>
+ix) Master of Urban & Regional Planning abbreviated as MURP <br>
+x) Master of Science in Leather Engineering abbreviated as M. Sc. Eng. (LE) <br>
+xi) M.Sc Eng.(Full time) offered by Institute of Disaster Management <br>
+xii) M.Sc Eng. offered by Institute of Information and Communication Technology abbreviated as M. Sc. Eng. (ICT) <br>
+Any such other degree as may be approved by the Syndicate on the recommendation of the Academic Council from time to time. <br>
+||Master of Science: <br>
+i) Master of Science in Mathematics abbreviated as M. Sc. (Math) <br>
+ii) Master of Science in Chemistry abbreviated as M. Sc. (Chem) <br>
+iii) Master of Science in Physics abbreviated as M. Sc. (Phy) <br>
+Any such other degree as may be approved by the Syndicate on the recommendation of the Academic Council from time to time. <br>
+||Master of Philosophy: <br>
+i) Master of Philosophy in Mathematics abbreviated as M. Phil. (Math) <br>
+ii) Master of Philosophy in Chemistry abbreviated as M. Phil. (Chem) <br>
+iii) Master of Philosophy in Physics abbreviated as M. Phil. (Phy) <br>
+vi) M.Sc./MDM (Part time) offered by Institute of Disaster Management <br>
+Any such other degree as may be approved by the Syndicate on the recommendation of the Academic Council from time to time. <br>
+||Doctor of Philosophy: <br>
+i) Doctor of Philosophy in Civil Engineering abbreviated as Ph. D. (CE) <br>
+ii) Doctor of Philosophy in Electrical & Electronic Engineering abbreviated as Ph. D. (EEE) <br>
+iii) Doctor of Philosophy in Mechanical Engineering abbreviated as Ph. D. (ME) <br>
+iv) Doctor of Philosophy in Computer Science & Engineering abbreviated as Ph. D. (CSE) <br>
+v) Doctor of Philosophy in Electronics & Communication Engineering abbreviated as Ph. D. (ECE) <br>
+vi) Doctor of Philosophy in Industrial Engineering & Management abbreviated as Ph. D. (IEM) <br>
+vii) Doctor of Philosophy in Mathematics abbreviated as Ph. D. (Math) <br>
+viii) Doctor of Philosophy in Chemistry abbreviated as Ph. D. (Chem) <br>
+ix) Doctor of Philosophy in Physics abbreviated as Ph. D. (Phy) <br>
+ix) Doctor of Philosophy in ICT abbreviated as Ph. D. (ICT) <br>
+Any such other degree as may be approved by the Syndicate on the recommendation of the Academic Council from time to time. <br>
+||Postgraduate Diplomas: <br>
+i) PGD(Full time/ Part time) offered by Institute of Disaster Management <br>
+ii) PGD(Full time/ Part time) offered by Institute of Information and Communication Technology <br>
+iii) Diploma in Computer Applications (DCA) offered by Institute of Information and Communication Technology <br>
+iv) Diploma in Software Engineering (DSE) offered by Institute of Information and Communication Technology <br>
+v)Diploma in Computer Networks and System Administration (DNSA) offered by Institute of Information and Communication Technology <br>
+vi) Diploma in Internet Programming and Web Development (DIPW) offered by Institute of Information and Communication Technology <br>
+vii)Diploma in Mobile Applications Development (DMAD) offered by Institute of Information and Communication Technology <br>
+viii) Diploma in Multimedia and Graphics Design (DMGD) offered by Institute of Information and Communication Technology <br>
+ix) Diploma in Communication Technology (DCT) offered by Institute of Information and Communication Technology. <br>[[Postgraduate]]
+||Postgraduate Course Duration: <br>
+M. Sc. Eng. Degree: <br>
+The minimum duration to complete the requirements of M. Sc. Eng. degree shall normally be 3 (three) semesters and generally not be more than 5 (five) academic years from the date of his/her admission. <br>
+M. Sc. Degree: <br>
+The minimum duration to complete the requirements of M. Sc. degree shall normally be 3 (three) semesters and generally not be more than 5 (five) academic years from the date of his/her admission. <br>
+M. Phil. Degree: <br>
+The minimum duration to complete the requirements of M. Phil. degree shall normally be 4 (four) semesters and generally not be more than 5 (five) academic years from the date of his/her admission. <br>
+Ph. D. Degree: <br>
+The minimum duration to complete the requirements of Ph.D. degree shall normally be 4 (four) semesters from the date of his/her provisional admission and generally not be more than 7 (seven) academic years from the date of his/her provisional admission. <br>
+Others <br>
+One have to complete 36 credits to complete M.Sc. Eng./M.Sc./MDM degree offered by Institute of Disaster Management. <br>
+One have to complete 24 credits to complete PGD degree offered by Institute of Disaster Management. <br>
+The minimum duration to complete the requirements of Diploma degree offered by Institute of Information and Communication Technology is 312 hours(6 months). <br>
+The application for extension of time span of a student should be processed through the CASR. A recommended proforma may be used for this purpose. The application must be submitted within 6 (six) months after the normal time span has elapsed.
+||Faculty of Civil Engineering <br>
+❯   Department of Civil Engineering ( CE ) <br>
+❯   Department of Urban and Regional Planning ( URP ) <br>
+❯   Department of Building Engineering & Construction Management ( BECM ) <br>
+❯   Department of Architecture ( ARCH ) <br>
+❯   Department of Mathematics ( MATH ) <br>
+❯   Department of Chemistry ( CH ) <br>
+❯   Department of Physics ( PH ) <br>
+❯   Department of Humanities ( HUM )
+||Faculty of Electrical and Electronic Engineering <br>
+❯   Department of Electrical and Electronic Engineering ( EEE ) <br>
+❯   Department of Computer Science & Engineering ( CSE ) <br>
+❯   Department of Electronics and Communication Engineering ( ECE ) <br>
+❯   Department of Biomedical Engineering ( BME ) <br>
+❯   Department of Materials Science and Engineering ( MSE ) <br>
+||Faculty of Mechanical Engineering <br>
+❯   Department of Mechanical Engineering ( ME ) <br>
+❯   Department of Industrial Engineering and Management ( IEM ) <br>
+❯   Department of Leather Engineering ( LE ) <br>
+❯   Department of Textile Engineering ( TE ) <br>
+❯   Department of Energy  Science and Engineering ( ESE ) <br>
+❯   Department of Chemical Engineering ( Chemical ) <br>
+❯   Department of Mechatronics Engineering ( Mechat )
+||Department of Civil Engineering: <br>
+Established	:	10-05-1974 <br>
+Head	        :	Dr. Abu Zakir Morshed <br>
+Location	:	Old Academic Building <br>
+(Civil Engineering Building) <br>
+Phone	:	+8802477733280, Ext-200 <br>
+Email	:	head@ce.kuet.ac.bd <br>
+No of Faculty	:	43 <br>
+Degree offered	:	B.Sc. Eng., M.Sc. Eng., Ph.D. <br>
+Total Students	:	666 <br>
+Website:	:	www.kuet.ac.bd/ce <br>
+Divisions:	:	(i) Structural Engineering, (ii) Environmental Engineering, (iii) Transportation Engineering, (iv) Geotechnical Engineering , (v) Water Resource Engineering and (vi) Geo-Environment Engineering.
+||Department of Urban and Regional Planning: <br>
+Established	:	03-08-2010 <br>
+Head	:	Tusar Kanti Roy  <br>
+Location	:URP Building(Ground Floor, 1st Floor & 3rd Floor), KUET <br>
+Phone	:	+8802477733050-Ext:650 <br>
+Fax	:	02477733050 <br>
+Email	:	head@urp.kuet.ac.bd <br>
+No of Faculty	:	19 <br>
+No of Student	:	276
+||Department of Physics: <br>
+Established	:01-01-1973 <br>
+Head	:	Prof. Dr. Jolly Sultana <br>
+Location	:Old Academic Building (Sceince Building) <br>
+Phone	:	+8802477733351~70 Ext-500 <br>
+Fax	:	+8802477733303 <br>
+Email	:	head@phy.kuet.ac.bd <br>
+No of Faculty	:	13 <br>
+No of Student	:	84 
+||Department of Building Engineering & Construction Management:  <br>
+Established	:	02-09-2013 <br>
+Head	:	Md. Ikramul Hoque <br>
+Location	:	New Academic Building (Block B: 3rd floor). <br>
+Phone	:	+8802477733351~70, Ext-8700 <br>
+Fax	:	+8802477733303 <br>
+Email	:	head@becm.kuet.ac.bd <br>
+No of Faculty	:	13 <br>
+No of Student	:	236
+||Department of Architecture: <br>
+Established	:	September 2016 <br>
+Head	:	Prof.Dr. Md. Jahir Uddin <br>
+Location	:	URP Building (2nd, 4th& part of G. Floor), KUET <br>
+Phone	:	+8802477733351~70 Ext: 8750 <br>
+Fax	:	+8802477733303 <br>
+Email	:	head@arch.kuet.ac.bd <br>
+No of Faculty	:	09 <br>
+No of Student	:	120 (Yearly intake in UG:4o)
+||Department of Mathematics:  <br>
+Established	:	01-01-1973 <br>
+Head	:	Dr. Md. Habibur Rahman <br>
+Location	:	Old Academic Building <br>
+(Science Building) <br>
+Phone	:	+8802477733351~70 Ext-550 <br>
+Fax	:	+88041774403 <br>
+Email	:	head@math.kuet.ac.bd <br>
+No of Faculty	:	18 <br>
+No of Student	:	66
+||Department of Chemistry: <br>
+Established	:	3 June 1974 <br>
+Head	:	Prof. Dr. A. B. M. Mamun Jamal <br>
+Location	:	Old Academic Building (Science Building) <br>
+Phone	:	+8802477733351~70 Ext-504  <br>
+Fax	:	+8802477733971  <br>
+Email	:	head@chem.kuet.ac.bd <br>
+No of Faculty	:	12 <br>
+No of Student	:	113
+||Department of Humanities:  <br>
+Established	:	01-01-1974 <br>
+Head	:	Prof. Dr. Md. Shahinur Alam Sarker <br>
+Location	:	New Academic Building, Block-A 1st Floor. <br>
+Phone	:	+8802477733351~70 Ext-552 <br>
+Fax	:	+88041774403 <br>
+Email	:	headhum@kuet.ac.bd <br>
+No of Faculty	:	12 <br>
+Subject	:	English, Economics, Accounting, Sociology, Management, Professional Ethics.
+||Department of Electrical and Electronic Engineering:  <br>
+Established	:	03-03-1974 <br>
+Head	:	Dr. Md. Salah Uddin Yusuf <br>
+Location	:	Old Academic Building <br>
+(Electrical Engineering Building) <br>
+Established 	: 	03-03-1974
+Head	:	Dr. Md. Salah Uddin Yusuf <br>
+Phone	:	+8802477733282, Ext-300 <br>
+Fax	:	 <br>
+Email	:	head@eee.kuet.ac.bd <br>
+No of Faculty	:	43 <br>
+No of Student	:	716
+||Department of Computer Science and Engineering: <br>
+Established	:	14-09-1999 <br>
+Head	:	Dr. Sk. Mohammad Masudul Ahsan <br>
+Location	:	New Academic Building <br>
+Block-B <br>
+Phone	:	+8802477733318, <br>
++88024777 33351(Ext:350)(For Office Secretary) <br>
+Fax	:	+8802477733351 <br>
+Email	:	head@cse.kuet.ac.bd
+||Department of Electronics and Communication Engineering: <br>
+Established	:	01-10-2001 <br>
+Head	:	Dr. Sk. Shariful Alam <br>
+Location	:	New Academic Building <br>
+(Block-3, Ground and 1st Floor) <br>
+Phone	:	+8802477733021 Ext-250 <br>
+Fax	:	+88-041-774403 <br>
+Email	:	head@ece.kuet.ac.bd <br>
+No of Faculty	:	21 <br>
+No of Student	:	348
+||Department of Biomedical Engineering:  <br>
+Established	:	01-05-2007 <br>
+Head	:	Dr. Mostafa Zaman Chowdhury <br>
+Location	:	new Academic Building <br>
+(Block-2, 2nd Floor) <br>
+Phone	:	+8802477733210, Ext-8880 <br>
+Fax	:	+88-041-774403 <br>
+Email	:	head@bme.kuet.ac.bd <br>
+No of Faculty	:	7 <br>
+No of Student	:	185
+||Department of Materials Science and Engineering:  <br>
+Established	:	01-05-2016 <br>
+Head	:	Prof. Dr. Md. Foisal Hossain <br>
+Location	:	New Academic Building <br>
+(Block-D, Level-3) <br>
+Phone	:	+8802477733343,Ext 8850 <br>
+Fax	:	+88-041-774403 <br>
+Email	:	head@mse.kuet.ac.bd <br>
+No of Faculty	:	5 <br>
+No of Student	:	179
+||Department of Mechanical Engineering: <br>
+Established	:	04-05-1974 <br>
+Head	:	Dr. Zahir Uddin Ahmed <br>
+Location	:	Old Academic Building <br>
+( Mecanical Building) <br>
+Phone	:	+8802477733202, Ext-400 <br>
+Fax	:	+88041-774900 <br>
+Email	:	head@me.kuet.ac.bd <br>
+No of Faculty	:	37 <br>
+No of Student	:	594
+||Department of Industrial Engineering and Management: <br>
+Established	:	01-10-2001 <br>
+Head	:	Dr. Subrata Talapatra <br>
+Location	:	New Academic Building <br>
+(Block-D, Ground and 1st floor) <br>
+Phone	:	+8802477732972, Ext-460 <br>
+Fax	:	+88041-774403 <br>
+Email	:	head@iem.kuet.ac.bd <br>
+No of Faculty	:	24 <br>
+No of Student	:	340
+||Department of Leather Engineering: <br>
+Established	:	29-08-2010 <br>
+Head	:	Dr. Md. Abul Hashem <br>
+Location	:	New Academic Building <br>
+(Block-4, 2nd Floor) <br>
+Phone	:	+8802477733344, Ext-750 <br>
+Fax	:	+88-041-774403 <br>
+Email	:	head@le.kuet.ac.bd <br>
+No of Faculty	:	17 <br>
+No of Student	:	259
+||Department of Textile Engineering:  <br>
+Established	:	01-10-2012 <br>
+Head	:	Dr. Md. Abdul Hasib <br>
+Location	:	New Academic Building, KUET (4th floor block-c) <br>
+Phone	:	+88041-769468-75 Ext-680 <br>
+Fax	:	+88041-774403 <br>
+Email	:	headte@kuet.ac.bd <br>
+No of Faculty	:	14 <br>
+No of Student	:	234
+||Department of Energy Science and Engineering:  <br>
+Established	:	01-05-2007 <br>
+Head	:	Prof. Dr. Md. Hasan Ali <br>
+Location	:	New Academic Building, <br>
+Block C, 2nd Floor (North) <br>
+Phone	:	+88041-769471 ext-480 <br>
+Fax	:	+88-041-774403 <br>
+Email	:	head@ese.kuet.ac.bd <br>
+No of Faculty	:	7 <br>
+No of Student	:	128
+||Department of Mechatronics Engineering:  <br>
+Established	:01-07-2018 <br>
+Head	:	Prof. Dr. Md. Helal-An-Nahiyan <br>
+Location	:Civil Extension Building, 3rd Floor <br>
+Phone	:	+880-41-769468-75, Ext-8610 <br>
+Fax	:	+88-041-774403 <br>
+Email	:	head@mte.kuet.ac.bd <br>
+No of Faculty	:	5 <br>
+No of Student	:	87
+||Student Welfate Center (SWC): 
+The Mission of Student Welfare Center (SWC) is to facilitate students to discover, promote & enlighten their latent talent, knowledge & thoughts in such way that supports the social and economic improvement of the country. ❯ Central Cafeteria <br>
+❯ Open Stage <br>
+❯ Indoor Game <br>
+❯ Gymnasium & Swimming Pool <br>
+❯ KUET Archive <br>
+❯ Utility Zone <br>
+❯ KUET Brand Shop <br>
+❯ BNCC <br>
+❯ Conference Room
+||Central Cafeteria: 
+The University has a well-furnished Central Cafeteria to offer breakfast, meals and snacks, etc for Students, Teachers, Officers & other Communities. Various types of tasty & delicious foods are served among Students, Teachers, Officers & other communities during breakfast, lunch & dinner.
+||Open Stage: 
+KUET Open Stage is one of the finest open air stages in Bangladesh. The Open Air Stage is the pivotal point for the wide range of entertainment. The Open Air Stage is also suitable for all kinds of concert and stage events.
+||Indoor Games: 
+The University has a well-facilitated indoor games room in Student welfare center, where students get the opportunity to perform their indoor sports activities such as table tennis, badminton etc.
+||Gymnasium: 
+The University has a well-facilitated Gymnasium with gymnasia apparatus such as barbells, parallel bars, jumping board, treadmill etc.
+||BNCC: 
+Bangladesh National Cadet Corps (BNCC) is a Para-Military Defense force, a Tri-Services Organization comprising the Army, Navy and Air Force. BNCC is entrusted with the task of grooming the future leaders and finding the hidden potentials of youths. BNCC is an organization consisting of defense services officers, junior commissioned officers (JCOs) and noncommissioned officers (NCOs), civilian officers & staffs, teaching staffs and students from different educational institutions. Ministry of Defense administratively controls this organization. KUET has BNCC Army wing since 2018. KUET platoon under Karnaphuli Battalion III joins KUET Platoon to take Army Training & be a Gentleman/Lady. <br>
+||Central Computer Center (CCC):
+Central Computer Center aims to provide state-of-the-art computing, networking and uninterrupted Internet services to the educational, research and administrative community of KUET. It is the central hub of unique software solutions, hardware support and high-speed Internet through the campus-wide optical fibre backbone network. CCC was established in 1988 under the supervision of the Department of Electrical and Electronic Engineering. At the time of the inauguration, it had only six IBM desktop computers which were donated by BEXIMCO. In 2006, it was turned into an independent section to provide superior service in a renovated standalone building. In 2016, a newly created ICT cell was attached with CCC to enhance the development of integrated ICT support to automate different services of the university. Currently, this focal point of the university is supervised by a Chairman. Central Computer Center manages a High Definition Visual Computing and Multimedia Laboratory with 30 Windows-based high-definition computers.
+||Central Computer Center employee information:  <br>
+Dr. Md. Arafat Hossain <br>
+Chairman	Ext. 150 <br>
+arafat@eee.kuet.ac.bd,arafat.usyd@gmail.com <br>
+ <br>
+Engr. Mehirlal Sarkar <br>
+System Analyst	Ext. 138 <br>
+01912516628	mehir@kuet.ac.bd, mehirkuet99@gmail.com <br>
+ <br>
+Engr. Prodip Kumer Das <br>
+System Analyst	Ext. 158 <br>
+01914-134458	pk_kuet06@live.com, prodip@kuet.ac.bd
+||Admission seat amount:  <br>
+Sl.No. Name of the department Code of the Departments Number of Seats <br>
+1. 	Architecture ARCH 					40 <br>
+2. 	Building Engineering and Construction Management BECM   60 <br>
+3. 	Biomedical Engineering BME 				30 <br>
+4. 	Chemical Engineering CHE 				30 <br>
+5. 	Civil Engineering CE 					120 <br>
+6. 	Computer Science and Engineering CSE 			120 <br>
+7. 	Electrical and Electronic Engineering EEE 		120 <br>
+8. 	Electronics and Communication Engineering ECE 		60 <br>
+9. 	Energy Science and Engineering ESE 			30 <br>
+10. 	Industrial Engineering and Management IEM 		60 <br>
+11. 	Leather Engineering LE 					60 <br>
+12. 	Materials Science and Engineering MSE 			60 <br>
+13. 	Mechanical Engineering ME 				120 <br>
+14. 	Mechatronics Engineering MTE 				30 <br>
+15. 	Textile Engineering TE 					60 <br>
+16. 	Urban and Regional Planning URP 			60 <br>
+	Total no. of seats 					1060
+||Qualifications for Participation in the Admission Test: <br>
+a) Student must be a citizen of Bangladesh. <br>
+b) Student must have passed H.S.C or Equivalent Certificate in 2021 or obtain the result published of GCE ‘A’ Level <br>
+from September 2020 to October 2021. However, the GCE ‘A’ level students of June 2021 session who appeared at <br>
+the examination of October 2021 provided the result published are also eligible to apply. <br>
+c) Student must have passed S.S.C or Equivalent Certificate in 2018 or 2019 from any Secondary & Higher Secondary <br>
+Education Board/Madrasa Board/Vocational Board of Bangladesh with a minimum GPA 4.00 or an equal grade in <br>
+equivalent examination. <br>
+d) Student must have Grade Point 5.00 in each of Mathematics, Physics and Chemistry subjects (i.e. total Grade Point <br>
+15 in Mathematics, Physics and Chemistry) and at least Grade Point 4.00 in English in H.S.C/Alim/Equivalent <br>
+examination from any Board of Bangladesh. Students English of Version or Foreign Board must have the equal Grade <br>
+Point in those subjects. If a student wants to get admission into BME department, he must possess Grade Point 4.00 <br>
+in Biology in H.S.C or Equivalent examination. <br>
+e) GCE ‘O’ Level and GCE ‘A’ Level passed students must obtain Grade ‘A’ in Mathematics, Physics, Chemistry and <br>
+English respectively in GCE ‘O’ Level. They must obtain Grade ‘A’ in Mathematics, Physics, and Chemistry <br>
+respectively in GCE ‘A’ Level. If a student wants to get admission into BME department, he must obtain a minimum <br>
+Grade Point ‘B’ in Biology. <br>
+f) A student passed H.S.C/equivalent certificate in 2021 from Foreign Institutes with 12 years schooling must have at <br>
+least 80% marks or Equivalent Grade Point in Mathematics, Physics and Chemistry respectively and 70% marks or <br>
+Equivalent Grade Point in English. In S.S.C he must have a minimum 70% marks or Equivalent Grade Point.
+||//syllabus//Subjects and Syllabus for Admission Test: <br>
+I. Admission Test of the underwritten two groups (A & B) will be held on the same day and in the same time. <br>
+ 	Group A: Engineering departments and URP department <br>
+ 	Group B: Engineering departments, URP department and Architecture department <br>
+II. Subjects and Syllabus are as follows: <br>
+	Group A: <br>
+	  Engineering departments and <br>
+	  URP department <br>
+	  Subject Syllabuses <br>
+	    Mathematics <br>
+	    Physics <br>
+	    Chemistry <br>
+	    English  <br>
+		syllabuses designed for the H.S.C examination <br>
+	Group B: <br>
+	  Mathematics <br>
+	  Physics <br>
+	  Chemistry <br>
+		syllabuses designed for the H.S.C examination <br> [[syllabus]]
+||Distribution of marks in admission test: <br>
+An MCQ examination for 500 marks will be held for the students of Group A. For Group B, in addition to MCQ
+examination of 500 marks, a separate Free-hand Drawing examination for 200 marks (i.e. total 700 marks for
+examination) will be held.<br>
+||Minimum Qualifications for Admission: <br>
+(a) Only the total obtained marks in the admission test will be considered to make the merit position. A merit list for
+Engineering departments and URP department will be published according to the merit position and a separate merit
+list will be published for the Architecture department accordingly. <br>
+b) If more than one students get the same marks, their merit position will be made with their highest obtained marks
+sequentially in Mathematics, Physics, Chemistry and English for the departments of Engineering and URP and in the
+case of Architecture department, merit position will be made with the highest obtained marks sequentially in Freehand Drawing, Mathematics, Physics, Chemistry and English. <br>
+c) A separate merit list of students will be published for reserved seats. It is noted that maximum 2 in CUET and 1 in
+KUET and 1 in RUET will be admitted into each department according to their merits and choices.
+||Application Submission Methods for students passed from Bangladeshi Education Boards: <br>
+Application Form will be fulfilled on online after paying the fixed application fees through Debit Card/Credit Card/Mobile
+Banking or Internet Banking. A soft copy of a recent photo (not more than three months old, 300*350 pixel, 75 KB
+maximum) and a signature (300*80 pixel, 20 KB maximum) will be needed. <br>
+The following steps should be followed for application: <br>
+Step1: Enter into the website – https://admissionckruet.ac.bd and click on Apply now button. Read important instructions
+carefully and click on Yes, I understand all Instructions in the check box and then proceed on. <br>
+Step 2: Fill up carefully the name of Board, Roll no. of S.S.C and H.S.C, Passing Year and Captcha and then click on
+Continue. <br>
+Step 3: In this step application submission form will be found. Students will fill up all information, select Group (A or B)
+and examination centers sequentially. These sequential choices will be three individual examination centers. Tribal
+students will select Quota. New color photo and signature will be uploaded following the instructions. Students will click
+on I agree check box. Students can see the Preview. When everything is correct, students will submit application. <br>
+Step 4: ‘’Application Submitted Successfully’’ will be displayed after successful submission. In this step student’s
+Application ID and Password that student must preserve for the future uses will be shown. It is noted that students must
+not forget or lose their Password and ID. In this stage students will click on Pay Examination Fees Now to go to the
+payment page. <br>
+Step 5: Students will pay Application Fees through Debit Card/Credit Card/Mobile Banking/Internet Banking following the
+table given bellow. “Payment is successful” will be displayed after successful payment and students have to download
+the pay slip.  <br>
+Admission fees:
+Group A  <br>
+Departments Admission test fees including service charges
+Engineering departments and URP department 1200 (One thousand and two hundred) taka only <br>
+Group B  <br>
+Engineering departments, URP department and
+Architecture department 1300 (One thousand and three hundred) taka only <br> 
+Step 6: Students can login by giving Application ID and Password through Dashboard of Online application system and
+download Application Form, Application Receipt and Payment Receipt. Admit Card will be downloaded after the
+publication of the list of the qualified students for the Admission Test. <br>
+1. If students select GCE A/O Level in Step 2, he will upload scanned copy of GCE A and O Level Or Equivalent Grade
+Sheets as zip file with other information in the submission form. <br>
+2. If students select tribal to Quota, he will annex certificates in favor of his being a tribal student
+||//Admission fees fee//Admission fees: <br>
+Group A  <br>
+Departments Admission test fees including service charges
+Engineering departments and URP department 1200 (One thousand and two hundred) taka only <br>
+Group B  <br>
+Engineering departments, URP department and
+Architecture department 1300 (One thousand and three hundred) taka only <br> [[Admission fees fee]]
+||Admit Card Collection: 
+After publishing the list of qualified students, they enter into the websitehttps://admissionckruet.ac.bd and login to Dashboard and download the pdf of Admit Card. Admit Card will be color
+printed in a A4 size white paper. No student will be allowed into the examination hall without the Admit Card.
+||Students passed from Foreign Institutes or of GCE ‘O’ Level and GCE ‘A’ Level can apply Online. They can apply
+following the instructions given in website (https://admissionckruet.ac.bd) after paying Admission Test Fees and
+submitting the following documents: <br>
+a) Scanned copy of original Grade Sheet of S.S.C or Equivalent Examination <br>
+b) Scanned copy of original Grade Sheet of H.S.C or Equivalent Examination
+||Criteria of the Qualified Students for the Admission Test: <br>
+(a)A merit list will be made from the online application received in due time based on the obtained total Grade Point in
+H.S.C or Equivalent examination in Mathematics, Physics, Chemistry and English. If Grade Points are same, the merit
+position will be made based on total marks of Physics, Chemistry and Mathematics; total marks of Physics and
+Chemistry; marks of Physics; and marks of Chemistry sequentially. From this list 33000 (Thirty three thousand)
+students will be qualified to sit for the admission test. All students of the 3
+3000th position will be allowed for the
+admission test. It is noted that students who will not qualify for the admission test,will have their application fees
+refunded being deducted the processing fees. <br>
+c) All the GCE ‘O’ Level and GCE ‘A’ Level passed candidates having minimum qualification will get opportunity to
+sit for the Admission Test. <br>
+d) All the tribal students having minimum qualification will sit for the admission test. <br>
+e) The list of the qualified students for the admission test will be notified on the notice board and website of the university
+respectively as well as on the Combined Admission Test website – https://admissionckruet.ac.bd. It is the student’s
+responsibility to collect his/her own result
+||Admission test grading: 
+A merit list will be made from the online application received in due time based on the obtained total Grade Point in
+H.S.C or Equivalent examination in Mathematics, Physics, Chemistry and English. If Grade Points are same, the merit
+position will be made based on total marks of Physics, Chemistry and Mathematics; total marks of Physics and
+Chemistry; marks of Physics; and marks of Chemistry sequentially. From this list 33000 (Thirty three thousand)
+students will be qualified to sit for the admission test. All students of the 33000th position will be allowed for the
+admission test. It is noted that students who will not qualify for the admission test,will have their application fees
+refunded being deducted the processing fees. <br>
+||Choice of University and Department: <br>
+(A) The order of the choices of University and Departments will be received from all the candidates of the merit list,
+wishing to have admission, through online in the website of the Combined Admission Test
+(https://admissionckruet.ac.bd), and the choices will not be possible to change after submission. The detailed
+guidelines how to submit the order of the choices of the university and departments through online will be informed
+at the time of the publication of the result of Admission Test through notice at the website. <br>
+(B) The selection of the university and departments will be done according to the merit position and the order of the
+choices of the admitted candidates. <br>
+(C) The general candidates and the candidates for the reserved seats will get admitted according to the merit position at
+the merit list at the appointed date and time in the three universities following the admission rules. The name of the
+selected university and department of the admitted students, the number of the vacant seats and the selected
+candidates for next admission will be informed before the appointed date of the next admission. <br>
+(D) Those candidate, who are eligible to have admission in engineering and URP department, are to submit an order of
+the preference with 39 choices; and those candidates, who are eligible for Architecture department, are to submit an
+order of the preference with three choices (CUETArch, KUETArch, and RUETArch). If a candidate is interested to
+have admission in Architecture department after he/she got admitted in engineering and URP department, he/she is
+to get admitted after cancelling the admission in Engineering/URP department. Later this candidate is not considered
+to have admission in engineering and Urban and Regional Planning department. Likewise if a candidate is interested
+to have admission in engineering and URP department after he/she got admitted in Architecture department, he/she
+is get admitted after he/she cancelled the admission in Architecture Department. Later this candidate isn’t considered
+to have admission in Architecture department. The candidates of both cases are not asked to submit again their
+admission fee. <br>
+(E) The admission activity will be proceeding before the orientation day in the above admission system until the vacant
+seats for admission are filled in. If any seat is declared vacant due to the cancellation of admission the auto-migration
+will be continuing according to the merit position of the candidates and the order of the preference. <br>
+(F) A candidate is to complete his/her admission activity in a university where he/she was allowed to have examination.
+But after the completion of the last auto-migration the candidate will start his/her class at the given department and
+university, which he/she was received according to his merit position of the merit list and the order of the preference
+though he/she got admitted at any university. <br>
+(G) If any candidate, already got admitted, would like to cancel his/her admission, he/she can cancel according to the
+rules of admission cancellation before the date of orientation at the university where he/she submitted his/her papers
+necessary for admission. But if a candidate would like to cancel admission after the start of the class, he/she is to do
+this cancellation according to the rules of the concerned university, where he/she got admitted.
+||Admission Process: <br>
+A candidate is to submit the prescribed form for admission through online after he/she himself or herself filled in the
+form. There is no scope to change the university and the department after a candidate submitted the choice of university
+and the order of the choices of department through online submission of the prescribed form for admission. <br>
+(A) The papers for submission at the time of Admission <br>
+i. The registration card of H. S. C. or Equivalent examination issued by the education board. <br>
+ii. The original certificate of S.S.C or Equivalent. <br>
+iii. The original copy of grade-sheet of S. S. C or Equivalent. <br>
+iv. The original copy of grade-sheet of H. S. C or Equivalent. <br>
+v. The original certificate of H. S. C or Equivalent/the original copy of the provisional certificate of H. S. C or
+Equivalent/the original copy of the testimonial of H. S. C or Equivalent given by the principal of the Educational
+Institutions. <br>
+vi. Newly taken (not more than three months) passport size 2 copies color photos (not attested) <br>
+vii. The admit card of the Combined Admission Test. <br>
+viii. For admission in reserved seats <br>
+(a) The original copy of the small ethnic group certificate or the tribe certificate. The candidates of Rakhain
+community and small ethnic group (tribe) are to submit the following 3 documents as the proof of their
+permanent residence and tribe of Bangladesh: <br> (i) the certificate given by the principal of the college where
+from he/she passed H. S. C. <br> (ii) The certificate given by the deputy commissioner or the chairman of local
+municipal/ district parishad/ union parishad and <br> (iii) the certificate given by the head of the tribe community. <br>
+Or <br>
+(b) The original copy of the certificate for permanent residence of Bandarban district given by the deputy
+commissioner/ the chairman of local municipal/ district parishad/ union parishad. <br>
+(B) The scrutinizing committee will examine the certificates and the medical board formed by the university authority
+will check the health of the candidates. <br>
+(C) If the candidate is physically fit, he with the approval of the admission committee will get admitted in an appointed
+time and date submitting admission fee, the original grade-sheet and the certificates at the university. The candidates
+have to keep the certificates for a period of two years at the university. Only the candidate can get the certificates
+back before two years if he cancels the admission. <br>
+(D) No separate letter concerned with admission and class will be issued to inform the selected eligible candidates. The
+candidates will have to know information about admission and class start with their own responsibility. The
+information in respect to admission and class start will be available at the notice board and website of every
+university and the website of the integrated admission test (https://admissionckruet.ac.bd).
+||Admission process for foreign students: <br>
+The foreign students, who are interested to get admitted, will apply through the foreign ministry and education ministry of
+Bangladesh. The applications are to be reached at the university by 30 November, 2022.
+||Medical Checkup in Admission test: <br>
+The medical board formed by the medical officers of the university, where the candidate got admitted, will check the
+health of the candidates. If there are heart disease, disabled sight or hearing and any physical or mental disability, which
+the admission committee considers an inability in carrying out studies and studentship, it will be considered the
+ineligibility of the candidate. The selected candidate for admission will bring the report of the blood group test from an
+established and recognized diagnostic center and submit it to the concerned university. If the medical board thinks that
+the selected candidates need other essential medical tests, the candidates will have to do those tests and submit the reports
+to the board. The candidates, who use spectacles must carry their spectacles with them. The prescribed form for health
+report can be downloaded from the website of the combined admission test
