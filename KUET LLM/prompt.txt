@@ -1,0 +1,1 @@
+I want to fine-tune a model. All the questions and answers pair are about KUET. So I need question and answer data that maintains the context and answers are not answered with a single word. I provide you with a question and answer; you convert this question and answer format for fine tuning and do not add any extra information. Save it in Excel format.
