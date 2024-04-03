@@ -2,16 +2,16 @@ import os
 import torch
 import pandas as pd
 import transformers
-from transformers import AutoTokenizer
 from pynvml import *
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
 from data_ret import data_ret_doc
-from langchain import HuggingFacePipeline
 from langchain import hub
+from model_ret import zepyhr_model
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
 def create_vectorstore(flag):
     if flag == False:
         flag=True
@@ -31,47 +31,12 @@ def create_vectorstore(flag):
         return new_vectorstore
 
 vectorstore=create_vectorstore(False)
-path="models/full_KUET_LLM_zepyhr"
-tokenizer = AutoTokenizer.from_pretrained(path,
-                                          use_auth_token=True,)
-
-model = AutoModelForCausalLM.from_pretrained(path,
-                                             device_map='auto',
-                                             torch_dtype=torch.float16,
-                                             use_auth_token=True,
-                                             load_in_8bit=True,
-                                            #  load_in_4bit=True
-                                             )
-
-# model = AutoModelForCausalLM.from_pretrained(
-#     path,
-#     # quantization_config=bnb_config,
-#     device_map="auto",
-#     trust_remote_code=True,
-#     attn_implementation="flash_attention_2",
-#     torch_dtype=torch.bfloat16,
-
-# )
-pipe = pipeline("text-generation",
-                model=model,
-                tokenizer= tokenizer,
-                torch_dtype=torch.bfloat16,
-                device_map="auto",
-                max_new_tokens = 512,
-                do_sample=True,
-                top_k=30,
-                num_return_sequences=1,
-                eos_token_id=tokenizer.eos_token_id
-                )
-    
-llm = HuggingFacePipeline(pipeline = pipe, model_kwargs = {'temperature':0})
+llm=zepyhr_model()
 retriever=vectorstore.as_retriever()
 prompt = hub.pull("rlm/rag-prompt")
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
 rag_chain = (
     {"context": retriever | format_docs, "question": RunnablePassthrough()}
     | prompt
