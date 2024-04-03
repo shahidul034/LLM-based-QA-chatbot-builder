@@ -1,5 +1,5 @@
 from langchain_community.document_loaders import WebBaseLoader
-def data_ret():
+def data_ret_doc():
     start=1
     full_data=[]
     while True:
