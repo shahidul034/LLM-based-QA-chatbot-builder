@@ -175,9 +175,10 @@ with gr.Blocks() as demo:
         save_all_btn.click(save_all,None,None)
         move_btn.click(move_to,move,[id,ques,ans])
     with gr.Tab("Inference"):
-        def echo(message, history):
-            return message
+        def echo(message, history,model_name):
+            return model_name
         
-        gr.ChatInterface(fn=echo, examples=["What is KUET?","Tell me about CSE department in KUET"], title="KUET LLM")
+        model_name=gr.Dropdown(choices=['a','b','c'],label="Select the model")
+        gr.ChatInterface(fn=echo, additional_inputs=[model_name], title="KUET LLM")
 
 demo.launch(share=False)

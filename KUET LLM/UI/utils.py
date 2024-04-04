@@ -4,7 +4,7 @@ import gradio as gr
 def display_table():
     # Replace index names with custom labels
     df = pd.read_excel(r"data\data.xlsx")
-    df_with_custom_index = df.head()
+    df_with_custom_index = df.head(2)
     # df_with_custom_index.index = [f"Row {i+1}" for i in range(len(df_with_custom_index))]
             
         # Convert DataFrame with custom index to HTML table
