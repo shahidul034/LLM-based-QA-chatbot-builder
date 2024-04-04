@@ -102,7 +102,7 @@ with gr.Blocks() as demo:
                 save.click(save_the_ques,[ques,ans],lab)
         
     with gr.Tab("Fine-tuning"):
-        gr.Markdown("""
+        gr.Markdown(""" # Instructions: 
             1) Create a excel file in data folder and name it data.xlsx
             2) This excel file has two column: Prompt and Reply
             3) Prompt = Question; Reply = answer of the question. Data format is shown in below.
@@ -143,7 +143,10 @@ with gr.Blocks() as demo:
         zepyhr_btn.click(finetune_zepyhr)
         llama_btn.click(finetune_llama)
 
-    with gr.Tab("Testing"):
+    with gr.Tab("Human evaluation"):
+        gr.Markdown(""" # Instructions: 
+            In this section, humans evaluate the answers of the model given specific questions. Each answer is rated between 1 and 5 by anonymous students.
+         """)
         ques_temp,ans_temp,id_temp,flag=random_ques_ans()
         gr.Markdown(
         f"""

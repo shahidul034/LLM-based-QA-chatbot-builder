@@ -3,7 +3,7 @@ import datetime
 import gradio as gr
 def display_table():
     # Replace index names with custom labels
-    df = pd.read_excel(r"UI\data\data.xlsx")
+    df = pd.read_excel(r"data\data.xlsx")
     df_with_custom_index = df.head()
     # df_with_custom_index.index = [f"Row {i+1}" for i in range(len(df_with_custom_index))]
             
@@ -21,7 +21,7 @@ def file_df():
 def random_ques_ans2():
     import random
     import pandas as pd
-    df=pd.read_excel(r"UI\data\ques_list.xlsx")
+    df=pd.read_excel(r"data\ques_list.xlsx")
     id=random.randint(0,59)
     ques_temp=(df.loc[id])['question']
     ans_temp=(df.loc[id])['answer']
