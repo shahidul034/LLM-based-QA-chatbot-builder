@@ -29,8 +29,10 @@ def rag_chain_ret(model_name):
     )
     return rag_chain
 
-def ans_ret(inp,model_name):
+def ans_ret(inp,model_name,flag):
     rag_chain=rag_chain_ret(model_name)
+    if flag==0:
+        return rag_chain
     ans=rag_chain.invoke(inp)
     k=ans.split("Based on the text material")
     k2=ans.split("Hope that helped! Let me know if you have any more questions.")

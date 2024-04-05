@@ -6,7 +6,7 @@ from utils import display_table,current_time,random_ques_ans2
 # from fine_tune_file.mistral_finetune import mistral_finetune
 # from fine_tune_file.zepyhr_finetune import zepyhr_model
 # from fine_tune_file.llama_finetune import llama_model
-# from inference import ans_ret
+from inference import ans_ret
 ###### Testing code
 global cnt
 cnt=1
@@ -81,7 +81,7 @@ def next_ques(ques,ans):
     ques_temp,ans_temp=random_ques_ans2()
     return gr.Label(value=ques_temp)
 ######
-
+#***************************************************
 with gr.Blocks() as demo:
     with gr.Tab("Data collection"):
             with gr.Tab("Existing questions"):
@@ -107,7 +107,7 @@ with gr.Blocks() as demo:
                 with gr.Row():
                     lab=gr.Label(visible=False,value="You answer is submitted!!! Thank you for your contribution.",label="submitted")
                 save.click(save_the_ques,[ques,ans],lab)
-        
+#***************************************************      
     with gr.Tab("Fine-tuning"):
         gr.Markdown(""" # Instructions: 
             1) Create a excel file in data folder and name it finetune_data.xlsx
@@ -159,20 +159,37 @@ with gr.Blocks() as demo:
         mistral_btn.click(finetune_mistral)
         zepyhr_btn.click(finetune_zepyhr)
         llama_btn.click(finetune_llama)
+#***************************************************
     with gr.Tab("Testing data generation"):
+        def ans_gen_temp(inp,rag_chain):
+            ans=rag_chain.invoke(inp)
+            k=ans.split("Based on the text material")
+            k2=ans.split("Hope that helped! Let me know if you have any more questions.")
+
+            if len(k)>=2:
+                k3=k[0].split("Hope that helped! Let me know if you have any more questions.")
+                if len(k3)>=2:
+                    return k3[0]
+                else:
+                    return k[0]
+            if len(k2)>=2:
+                return k2[0]
+            return ans
+
         def ans_gen_fun(model_name):
             import time
             progress=gr.Progress()
             idx=1
             model_ques_ans_gen=[]
             df_temp=pd.read_excel(r"data\testing_dataset.xlsx")
+            rag_chain=ans_ret("",model_name,0)
             for x in progress.tqdm(df_temp['question'], desc="Loading..."):
-                time.sleep(0.1)
+                # time.sleep(0.1)
                 model_ques_ans_gen.append({
                     "id":idx,
                     "question":x
-                    ,'answer': "ready"
-                    # ,'answer':ans_ret(x,model_name)
+                    # ,'answer': "ready"
+                    ,'answer':ans_gen_temp(x,rag_chain)
                 })
                 idx+=1
             pd.DataFrame(model_ques_ans_gen).to_excel(os.path.join("model_ans",f"_{model_name+cur_time}.xlsx"),index=False)
@@ -189,7 +206,7 @@ with gr.Blocks() as demo:
         with gr.Row():
             lab_test = gr.Label(label="Progess bar")
         ans_gen.click(ans_gen_fun,model_name,lab_test)
-
+#***************************************************
     with gr.Tab("Human evaluation"):
         def answer_updated(model_ans):
             df_ques_ans=pd.read_excel(os.path.join("model_ans",str(model_ans)))
@@ -232,6 +249,7 @@ with gr.Blocks() as demo:
         question.click(new_ques,model_ans,[id,ques,ans])
         save_all_btn.click(save_all,model_ans,None)
         move_btn.click(move_to,[move,model_ans],[id,ques,ans])
+#***************************************************    
     with gr.Tab("Inference"):
         def echo(message, history,model_name):
             gr.Info("Please wait!!! Model is loading!!")
