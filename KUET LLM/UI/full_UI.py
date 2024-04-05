@@ -2,6 +2,7 @@ import gradio as gr
 import pandas as pd
 import os
 from utils import display_table,file_df,random_ques_ans2
+from inference import ans_ret
 ###### Testing code
 global cnt
 cnt=0
@@ -176,9 +177,15 @@ with gr.Blocks() as demo:
         move_btn.click(move_to,move,[id,ques,ans])
     with gr.Tab("Inference"):
         def echo(message, history,model_name):
-            return model_name
+            gr.Info("Please wait!!! Model is loading!!")
+            if model_name=="mistral":
+                return ans_ret(message)
+            elif model_name=="mistral":
+                return ans_ret(message)
+            else:
+                return ans_ret(message)
         
-        model_name=gr.Dropdown(choices=['a','b','c'],label="Select the model")
+        model_name=gr.Dropdown(choices=['Mistral','Zepyhr','Llama2'],label="Select the model")
         gr.ChatInterface(fn=echo, additional_inputs=[model_name], title="KUET LLM")
 
 demo.launch(share=False)
