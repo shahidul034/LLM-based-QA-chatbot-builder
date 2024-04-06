@@ -2,11 +2,11 @@ import gradio as gr
 import pandas as pd
 import os
 import random
-from utils import display_table,current_time,random_ques_ans2
+from utils import display_table,current_time,random_ques_ans2,move_to
 # from fine_tune_file.mistral_finetune import mistral_finetune
 # from fine_tune_file.zepyhr_finetune import zepyhr_model
 # from fine_tune_file.llama_finetune import llama_model
-from inference import ans_ret
+from inference import ans_ret,rag_chain_ret
 ###### Testing code
 global cnt
 cnt=1
@@ -121,7 +121,6 @@ with gr.Blocks() as demo:
             6) You can change the hyper parameter using edit button
         """)
         def finetune_mistral():
-            # exec(open('fine_tune_file\mistral_finetune.py').read())
             gr.Info("Finetune started!!!")
             # mistral_finetune()
             gr.Info("Finetune Ended!!!")
@@ -161,35 +160,20 @@ with gr.Blocks() as demo:
         llama_btn.click(finetune_llama)
 #***************************************************
     with gr.Tab("Testing data generation"):
-        def ans_gen_temp(inp,rag_chain):
-            ans=rag_chain.invoke(inp)
-            k=ans.split("Based on the text material")
-            k2=ans.split("Hope that helped! Let me know if you have any more questions.")
-
-            if len(k)>=2:
-                k3=k[0].split("Hope that helped! Let me know if you have any more questions.")
-                if len(k3)>=2:
-                    return k3[0]
-                else:
-                    return k[0]
-            if len(k2)>=2:
-                return k2[0]
-            return ans
-
         def ans_gen_fun(model_name):
             import time
             progress=gr.Progress()
             idx=1
             model_ques_ans_gen=[]
-            df_temp=pd.read_excel(r"data\testing_dataset.xlsx")
-            rag_chain=ans_ret("",model_name,0)
+            df_temp=pd.read_excel(r"data/testing_dataset.xlsx")
+            rag_chain=rag_chain_ret(model_name)
             for x in progress.tqdm(df_temp['question'], desc="Loading..."):
                 # time.sleep(0.1)
                 model_ques_ans_gen.append({
                     "id":idx,
                     "question":x
                     # ,'answer': "ready"
-                    ,'answer':ans_gen_temp(x,rag_chain)
+                    ,'answer':ans_ret(x,rag_chain)
                 })
                 idx+=1
             pd.DataFrame(model_ques_ans_gen).to_excel(os.path.join("model_ans",f"_{model_name+cur_time}.xlsx"),index=False)
@@ -266,4 +250,4 @@ with gr.Blocks() as demo:
         model_name=gr.Dropdown(choices=['Mistral','Zepyhr','Llama2'],label="Select the model")
         gr.ChatInterface(fn=echo, additional_inputs=[model_name],examples=[["what is KUET?"],["Where is KUET located?"],['What do you like the most about KUET?']], title="KUET LLM")
 
-demo.launch(share=False)
+demo.launch(share=True)

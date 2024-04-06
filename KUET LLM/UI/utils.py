@@ -1,7 +1,21 @@
 import pandas as pd
 import datetime
 import gradio as gr
+import os
 # It shows the demo data format in finetuning tab
+def move_to(move,model_ans):
+    df_temp=pd.read_excel(os.path.join("model_ans",str(model_ans)))
+    id_temp=int((df_temp.loc[move])['id'])
+    ques_temp=(df_temp.loc[move])['question']
+    ans_temp=(df_temp.loc[move])['answer']
+    if int(move)>=len(df_temp)+1:
+        gr.Info(f"Number of questions: {len(df_temp)}")
+        move=0
+    return [
+        gr.Label(value=str(id_temp),label="ID"),
+        gr.Label(value=ques_temp,label="Question"),
+        gr.Label(value=ans_temp,label="Answer")
+    ]
 def display_table():
     df = pd.read_excel(r"data/demo_table_data.xlsx")
     df_with_custom_index = df.head(2)
