@@ -1,0 +1,10 @@
+  0%|                                                                                                                                                                   | 0/4 [00:00<?, ?it/s]/home/sdm/anaconda3/envs/llmtesting/lib/python3.9/site-packages/torch/utils/checkpoint.py:429: UserWarning: torch.utils.checkpoint: please pass in use_reentrant=True or use_reentrant=False explicitly. The default value of use_reentrant will be updated to be False in the future. To maintain current behavior, pass use_reentrant=True. It is recommended that you use use_reentrant=False. Refer to docs for more details on the differences between the two variants.
+  warnings.warn(
+/home/sdm/anaconda3/envs/llmtesting/lib/python3.9/site-packages/bitsandbytes/autograd/_functions.py:322: UserWarning: MatMul8bitLt: inputs will be cast from torch.float32 to float16 during quantization
+  warnings.warn(f"MatMul8bitLt: inputs will be cast from {A.dtype} to float16 during quantization")
+
+
+
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 4/4 [00:17<00:00,  4.40s/it]
+{'train_runtime': 28.7732, 'train_samples_per_second': 2.711, 'train_steps_per_second': 0.139, 'train_loss': 3.8956401348114014, 'epoch': 1.6}
+
