@@ -1,3 +1,8 @@
+#&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+# rag_chain_ret,ans_ret, finetune#######
+# search for on/off finetune,inference##
+#&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
 import gradio as gr
 import pandas as pd
 import os
@@ -6,7 +11,8 @@ from utils import display_table,current_time,random_ques_ans2,move_to
 # from fine_tune_file.mistral_finetune import mistral_finetune
 # from fine_tune_file.zepyhr_finetune import zepyhr_model
 # from fine_tune_file.llama_finetune import llama_model
-from inference import ans_ret,rag_chain_ret
+#$$$$$$$$$$$$$$$$$
+# from inference import ans_ret,rag_chain_ret
 ###### Testing code
 global cnt
 cnt=1
@@ -84,6 +90,9 @@ def next_ques(ques,ans):
 #***************************************************
 with gr.Blocks() as demo:
     with gr.Tab("Data collection"):
+            gr.Markdown("""
+                    After clicking the "save the answer" button. Those questions and answers are saved in "save_ques_ans" folder.
+                 """)
             with gr.Tab("Existing questions"):
                 ques_temp,ans_temp=random_ques_ans2()
                 with gr.Row():
@@ -118,30 +127,57 @@ with gr.Blocks() as demo:
         gr.Markdown("""
             4) Need 24GB VRAM for training and 16 GB VRAM for inference
             5) Click the model name for finetuning
-            6) You can change the hyper parameter using edit button
+            6) You can change the hyper parameter using edit button(if it does not work.please check the "UI\\fine_tune_file" path for finetuning file.)
         """)
         def finetune_mistral():
             gr.Info("Finetune started!!!")
+            #$$$$$$$$$$$$$$$$$
             # mistral_finetune()
             gr.Info("Finetune Ended!!!")
         def finetune_zepyhr():
             gr.Info("Finetune started!!!")
+            #$$$$$$$$$$$$$$$$$
             # mistral_finetune()
             gr.Info("Finetune Ended!!!")
         def finetune_llama():
             gr.Info("Finetune started!!!")
+            #$$$$$$$$$$$$$$$$$
             # mistral_finetune()
             gr.Info("Finetune Ended!!!")
 
         def edit_mis_fun():
-            gr.Info("check \"fine_tune_file/mistral_finetune.py\" path for edit the source code and hyperparameter")
-            os.system(r"fine_tune_file/mistral_finetune.py")
+            gr.Info("check \"fine_tune_file/mistral_finetune.py\" path or below for edit the source code and hyperparameter")
+            f=open(r"fine_tune_file/mistral_finetune.py").read()
+            return [gr.Code(visible=True,value=f,interactive=True,language="python"),
+                    gr.Button("Change the code",visible=True)
+                    ]
         def edit_zep_fun():
             gr.Info("check \"fine_tune_file/zepyhr_finetune.py\" path for edit the source code and hyperparameter")
-            os.system(r"fine_tune_file/zepyhr_finetune.py")
+            f=open(r"fine_tune_file/zepyhr_finetune.py").read()
+            return [gr.Code(visible=True,value=f,interactive=True,language="python"),
+                    gr.Button("Change the code",visible=True)
+                    ]
         def edit_lla_fun():
             gr.Info("check \"fine_tune_file/llama_finetune.py\" path for edit the source code and hyperparameter")
-            os.system(r"fine_tune_file/llama_finetune.py")
+            f=open(r"fine_tune_file/llama_finetune.py").read()
+            return [gr.Code(visible=True,value=f,interactive=True,language="python"),
+                    gr.Button("Change the code",visible=True)
+                    ]
+        def save_code_file_mis(code_):
+            open(r"fine_tune_file/mistral_finetune.py","w").write(code_)
+            gr.Info("Successfully saved code!!!")
+        def save_code_file_zep(code_):
+            open(r"fine_tune_file/zepyhr_finetune.py","w").write(code_)
+            gr.Info("Successfully saved code!!!")
+        def save_code_file_lla(code_):
+            open(r"fine_tune_file/llama_finetune.py","w").write(code_)
+            gr.Info("Successfully saved code!!!")
+        with gr.Row():
+            code_temp=gr.Code(visible=False)
+        with gr.Row():
+            btn_temp_mis=gr.Button("Change the code",visible=False)
+            btn_temp_zep=gr.Button("Change the code",visible=False)
+            btn_temp_lla=gr.Button("Change the code",visible=False)
         with gr.Row():
             mistral_btn=gr.Button("mistralai/Mistral-7B-Instruct-v0.2")
             edit_mis=gr.Button("Edit Mistral hyper-parameter")
@@ -151,13 +187,18 @@ with gr.Blocks() as demo:
         with gr.Row():
             llama_btn=gr.Button("NousResearch/Llama-2-7b-chat-hf")
             edit_lla=gr.Button("Edit Llama hyper-parameter")
-        edit_mis.click(edit_mis_fun)
-        edit_zep.click(edit_zep_fun)
-        edit_lla.click(edit_lla_fun)
+        
+        edit_mis.click(edit_mis_fun,None,[code_temp,btn_temp_mis])
+        edit_zep.click(edit_zep_fun,None,[code_temp,btn_temp_zep])
+        edit_lla.click(edit_lla_fun,None,[code_temp,btn_temp_lla])
 
         mistral_btn.click(finetune_mistral)
         zepyhr_btn.click(finetune_zepyhr)
         llama_btn.click(finetune_llama)
+
+        btn_temp_mis.click(save_code_file_mis,code_temp,None)
+        btn_temp_zep.click(save_code_file_zep,code_temp,None)
+        btn_temp_lla.click(save_code_file_lla,code_temp,None)
 #***************************************************
     with gr.Tab("Testing data generation"):
         def ans_gen_fun(model_name):
@@ -166,14 +207,16 @@ with gr.Blocks() as demo:
             idx=1
             model_ques_ans_gen=[]
             df_temp=pd.read_excel(r"data/testing_dataset.xlsx")
-            rag_chain=rag_chain_ret(model_name)
+            #$$$$$$$$$$$$$$$$$
+            # rag_chain=rag_chain_ret(model_name)
             for x in progress.tqdm(df_temp['question'], desc="Loading..."):
                 # time.sleep(0.1)
                 model_ques_ans_gen.append({
                     "id":idx,
                     "question":x
-                    # ,'answer': "ready"
-                    ,'answer':ans_ret(x,rag_chain)
+                    ,'answer': "ready"
+                    #$$$$$$$$$$$$$$$$$
+                    # ,'answer':ans_ret(x,rag_chain)
                 })
                 idx+=1
             pd.DataFrame(model_ques_ans_gen).to_excel(os.path.join("model_ans",f"_{model_name+cur_time}.xlsx"),index=False)
@@ -237,17 +280,23 @@ with gr.Blocks() as demo:
     with gr.Tab("Inference"):
         def echo(message, history,model_name):
             gr.Info("Please wait!!! Model is loading!!")
+            #$$$$$$$$$$$$$$$$$
+            # rag_chain=rag_chain_ret()
             if model_name=="Mistral":
-                # return ans_ret(message,model_name)
-                return "mistral"
+                #$$$$$$$$$$$$$$$$$
+                # return ans_ret(message,rag_chain)
+                # return "mistral"
+                return """Khulna University of Engineering & Technology (KUET) is located in Fulbarigate, Teligati, Khulna, Bangladesh. The expansive campus covers an area of 101 acres. KUET is a prestigious educational institution renowned for its quality education and research in engineering."""
             elif model_name=="Zepyhr":
-                # return ans_ret(message,model_name)
+                #$$$$$$$$$$$$$$$$$
+                # return ans_ret(message,rag_chain)
                 return "Zepyhr"
             else:
-                # return ans_ret(message,model_name)
+                #$$$$$$$$$$$$$$$$$
+                # return ans_ret(message,rag_chain)
                 return "Llama2"
         
         model_name=gr.Dropdown(choices=['Mistral','Zepyhr','Llama2'],label="Select the model")
         gr.ChatInterface(fn=echo, additional_inputs=[model_name],examples=[["what is KUET?"],["Where is KUET located?"],['What do you like the most about KUET?']], title="KUET LLM")
 
-demo.launch(share=True)
+demo.launch(share=False)
