@@ -37,4 +37,88 @@ def random_ques_ans2():
     ques_temp=(df.loc[id])['question']
     ans_temp=(df.loc[id])['answer']
     return ques_temp,ans_temp
+def score_report_bar():
+    path="score_report"
+    import os
+    import math
+    dat=[]
+    for x in os.listdir(path):
+        wh=[]
+        flag=0
+        for x2 in x:
+            if x2>='a' and x2<='z':
+                flag=1
+                wh.append(x2)
+            elif flag==1:
+                wh.append(" ")
+        wh=''.join(wh)
+        wh=wh.replace("model ans","")
+        wh=wh.replace("finetuned","")
+        wh=wh.replace("  "," ")
+        wh=wh.replace("xlsx","")
+        df_temp=pd.read_excel(os.path.join(path,x))
+        rating=sum(df_temp["rating"])/len(df_temp)
+        dat.append({
+            "Model Name":wh,
+            "Average Rating":rating
+        })
+    temp=pd.DataFrame(dat)
+    return temp
+def parse_data(link,num=None):    
+    from bs4 import BeautifulSoup
+    import requests
+    import re
+    from docx import Document       
+    from langchain_community.document_loaders import WebBaseLoader
+    s=set()
+    import time
+    start_time = time.time()
+    duration = 5
+    def get_links(url):
+        response = requests.get(url)
+        data = response.text
+        soup = BeautifulSoup(data, 'lxml')
 
+        links = []
+        for link in soup.find_all('a'):
+            link_url = link.get('href')
+            if link_url is not None and link_url.startswith('http'):
+                s.add(link_url)
+                links.append(link_url)
+        
+        return links
+    # def write_to_file(links):
+    #     with open('data.txt', 'a') as f:
+    #         f.writelines(links)
+    def get_all_links(url):
+            for link in get_links(url):
+                if (time.time() - start_time) >= duration:
+                    return
+                get_all_links(link)
+
+    def data_ret2(link):
+        loader = WebBaseLoader(f"{link}")
+        data = loader.load()
+        return data[0].page_content
+    # link = 'https://kuet.ac.bd'
+    s.add(link)
+    get_all_links(link)
+    li=list(s)
+    all_data=[]
+    if num==None:
+        num=len(li)
+    for idx,x in enumerate(li):
+        if idx==num:
+            break
+        try:
+            print("Link: ",x)
+            all_data.append(data_ret2(x))
+        except:
+            print("pass")
+            continue
+    all_data2 = re.sub(r'\n+', '\n\n', "\n".join(all_data))
+    document = Document()
+    document.add_paragraph(all_data2)
+    document.save(r'rag_data\rag_data.docx')
+    print("Finished!!")
+    return

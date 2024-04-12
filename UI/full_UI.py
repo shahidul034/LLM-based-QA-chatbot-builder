@@ -7,7 +7,7 @@ import gradio as gr
 import pandas as pd
 import os
 import random
-from utils import display_table,current_time,random_ques_ans2,move_to
+from utils import display_table,current_time,random_ques_ans2,move_to,score_report_bar
 # from fine_tune_file.mistral_finetune import mistral_finetune
 # from fine_tune_file.zepyhr_finetune import zepyhr_model
 # from fine_tune_file.llama_finetune import llama_model
@@ -81,6 +81,14 @@ def save_the_ques(ques,ans):
         temp=pd.DataFrame(save_ques_ans)
         temp.to_excel(f"save_ques_ans\\{cur_time}.xlsx",index=False)
         gr.Info("Sucessfully saved in local folder!!!")
+    if len(os.listdir("save_ques_ans"))>=2:
+        df_all=[]
+        for x in os.listdir("save_ques_ans"):
+            path=os.path.join("save_ques_ans",x)
+            df_all.append(pd.read_excel(path))
+        df_temp=pd.concat(df_all,axis=0)
+        df_temp.to_excel("data//finetune_data.xlsx",index=False)
+
     return gr.Label(value="Submitted!! Generate new question",visible=True)
 
 def next_ques(ques,ans):
@@ -90,6 +98,9 @@ def next_ques(ques,ans):
 #***************************************************
 with gr.Blocks() as demo:
     with gr.Tab("Data collection"):
+            def parse_data_func(link_temp,num):
+                    parse_data(link_temp,num)
+                    gr.Info("Finished parsing!! Save as a docx file.")
             gr.Markdown("""
                     After clicking the "save the answer" button. Those questions and answers are saved in "save_ques_ans" folder.
                  """)
@@ -103,9 +114,15 @@ with gr.Blocks() as demo:
                     save=gr.Button("Save the answer")
                     question = gr.Button("Generate new question")
                 with gr.Row():
+                    link_temp=gr.Textbox(label="Enter link for parse data")
+                    num=gr.Number(label="Number of links want to parse")
+                    parse_data_btn=gr.Button("Parse data")
+                with gr.Row():
                     lab=gr.Label(visible=False,value="You ans is submitted!!! Thank you for your contribution.",label="submitted")
                 question.click(next_ques,None,ques)
                 save.click(save_the_ques,[ques,ans],lab)
+                from utils import parse_data
+                parse_data_btn.click(parse_data_func,[link_temp,num],None)
             with gr.Tab("Custom questions"):
                 with gr.Row():
                     ques=gr.Textbox(label="Question")
@@ -127,78 +144,91 @@ with gr.Blocks() as demo:
         gr.Markdown("""
             4) Need 24GB VRAM for training and 16 GB VRAM for inference
             5) Click the model name for finetuning
-            6) You can change the hyper parameter using edit button(if it does not work.please check the "UI\\fine_tune_file" path for finetuning file.)
+            6) You can change the hyper parameter in "UI\\fine_tune_file" folder.)
         """)
-        def finetune_mistral():
-            gr.Info("Finetune started!!!")
-            #$$$$$$$$$$$$$$$$$
-            # mistral_finetune()
-            gr.Info("Finetune Ended!!!")
-        def finetune_zepyhr():
-            gr.Info("Finetune started!!!")
-            #$$$$$$$$$$$$$$$$$
-            # mistral_finetune()
-            gr.Info("Finetune Ended!!!")
-        def finetune_llama():
-            gr.Info("Finetune started!!!")
-            #$$$$$$$$$$$$$$$$$
-            # mistral_finetune()
-            gr.Info("Finetune Ended!!!")
+            
+        def edit_model_parameter(model_name_temp,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
+            if model_name_temp=="Mistral":
+                open(r"fine_tune_file/mistral_finetune.py","w").write(code_temp)
+                gr.Info("Finetune started!!!")
+                #$$$$$$$$$$$$$$$$$
+                # mistral_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                gr.Info("Finetune Ended!!!")
+            elif model_name_temp=="Zephyr":
+                open(r"fine_tune_file/zepyhr_finetune.py","w").write(code_temp)
+                gr.Info("Finetune started!!!")
+                #$$$$$$$$$$$$$$$$$
+                # mistral_finetune()
+                gr.Info("Finetune Ended!!!")
+            elif model_name=="Llama":
+                gr.Info("Finetune started!!!")
+                #$$$$$$$$$$$$$$$$$
+                # mistral_finetune()
+                gr.Info("Finetune Ended!!!")
+        
+        def code_show(model_name):
+            if model_name=="Mistral":
+                # gr.Info("check \"fine_tune_file/mistral_finetune.py\" path or below for edit the source code and hyperparameter")
+                f=open(r"fine_tune_file/mistral_finetune.py").read()
+                return gr.Code(visible=True,value=f,interactive=True,language="python")
+            elif model_name=="Zephyr":
+                # gr.Info("check \"fine_tune_file/zepyhr_finetune.py\" path for edit the source code and hyperparameter")
+                f=open(r"fine_tune_file/zepyhr_finetune.py").read()
+                return gr.Code(visible=True,value=f,interactive=True,language="python")
+            elif model_name=="Llama":
+                # gr.Info("check \"fine_tune_file/llama_finetusne.py\" path for edit the source code and hyperparameter")
+                f=open(r"fine_tune_file/llama_finetune.py").read()
+                return gr.Code(visible=True,value=f,interactive=True,language="python")
 
-        def edit_mis_fun():
-            gr.Info("check \"fine_tune_file/mistral_finetune.py\" path or below for edit the source code and hyperparameter")
-            f=open(r"fine_tune_file/mistral_finetune.py").read()
-            return [gr.Code(visible=True,value=f,interactive=True,language="python"),
-                    gr.Button("Change the code",visible=True)
-                    ]
-        def edit_zep_fun():
-            gr.Info("check \"fine_tune_file/zepyhr_finetune.py\" path for edit the source code and hyperparameter")
-            f=open(r"fine_tune_file/zepyhr_finetune.py").read()
-            return [gr.Code(visible=True,value=f,interactive=True,language="python"),
-                    gr.Button("Change the code",visible=True)
-                    ]
-        def edit_lla_fun():
-            gr.Info("check \"fine_tune_file/llama_finetune.py\" path for edit the source code and hyperparameter")
-            f=open(r"fine_tune_file/llama_finetune.py").read()
-            return [gr.Code(visible=True,value=f,interactive=True,language="python"),
-                    gr.Button("Change the code",visible=True)
-                    ]
-        def save_code_file_mis(code_):
-            open(r"fine_tune_file/mistral_finetune.py","w").write(code_)
-            gr.Info("Successfully saved code!!!")
-        def save_code_file_zep(code_):
-            open(r"fine_tune_file/zepyhr_finetune.py","w").write(code_)
-            gr.Info("Successfully saved code!!!")
-        def save_code_file_lla(code_):
-            open(r"fine_tune_file/llama_finetune.py","w").write(code_)
-            gr.Info("Successfully saved code!!!")
+                
+
+        def change_code_fun(code_,model_name):
+            if model_name=="Mistral":
+                open(r"fine_tune_file/mistral_finetune.py","w").write(code_)
+                gr.Info("Successfully saved code!!!")
+            elif model_name=="Zephyr":
+                open(r"fine_tune_file/zepyhr_finetune.py","w").write(code_)
+                gr.Info("Successfully saved code!!!")
+            elif model_name=="Llama":
+                open(r"fine_tune_file/llama_finetune.py","w").write(code_)
+                gr.Info("Successfully saved code!!!")
+
         with gr.Row():
             code_temp=gr.Code(visible=False)
         with gr.Row():
-            btn_temp_mis=gr.Button("Change the code",visible=False)
-            btn_temp_zep=gr.Button("Change the code",visible=False)
-            btn_temp_lla=gr.Button("Change the code",visible=False)
-        with gr.Row():
-            mistral_btn=gr.Button("mistralai/Mistral-7B-Instruct-v0.2")
-            edit_mis=gr.Button("Edit Mistral hyper-parameter")
-        with gr.Row():
-            zepyhr_btn=gr.Button("HuggingFaceH4/zephyr-7b-beta")
-            edit_zep=gr.Button("Edit Zepyhr hyper-parameter")
-        with gr.Row():
-            llama_btn=gr.Button("NousResearch/Llama-2-7b-chat-hf")
-            edit_lla=gr.Button("Edit Llama hyper-parameter")
+            model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama"],label="Select the model for finetuning")
+            # model_btn=gr.Button("Finetune")
+            # mistral_btn=gr.Button("Mistral")
+            # zepyhr_btn=gr.Button("Zephyr")
+            # llama_btn=gr.Button("Llama2")
         
-        edit_mis.click(edit_mis_fun,None,[code_temp,btn_temp_mis])
-        edit_zep.click(edit_zep_fun,None,[code_temp,btn_temp_zep])
-        edit_lla.click(edit_lla_fun,None,[code_temp,btn_temp_lla])
 
-        mistral_btn.click(finetune_mistral)
-        zepyhr_btn.click(finetune_zepyhr)
-        llama_btn.click(finetune_llama)
-
-        btn_temp_mis.click(save_code_file_mis,code_temp,None)
-        btn_temp_zep.click(save_code_file_zep,code_temp,None)
-        btn_temp_lla.click(save_code_file_lla,code_temp,None)
+        with gr.Accordion("Parameter setup"):
+            with gr.Row():
+                lr=gr.Number(label="Learning rate",value=5e-6,interactive=True,info="The step size at which the model parameters are updated during training. It controls the magnitude of the updates to the model's weights.")
+                epoch=gr.Textbox(label="Epochs",value=2,interactive=True,info="One complete pass through the entire training dataset during the training process. It's a measure of how many times the algorithm has seen the entire dataset.")
+                batch_size=gr.Textbox(label="Batch size",value=4,interactive=True,info="The number of training examples used in one iteration of training. It affects the speed and stability of the training process.")
+                gradient_accumulation = gr.Textbox(info="Gradient accumulation involves updating model weights after accumulating gradients over multiple batches, instead of after each individual batch.",label="gradient_accumulation",value=4,interactive=True)
+            with gr.Row():
+                quantization = gr.Dropdown(info="Quantization is a technique used to reduce the precision of numerical values, typically from 32-bit floating-point numbers to lower bit representations.",label="quantization",choices=[4,8],value=8,interactive=True)
+                lora_r = gr.Textbox(info="LoRA_r is a hyperparameter associated with the rank of the low-rank approximation used in LoRA.",label="lora_r",value=16,interactive=True)
+                lora_alpha = gr.Textbox(info="LoRA_alpha is a hyperparameter used in LoRA for controlling the strength of the adaptation.",label="lora_alpha",value=32,interactive=True)
+                lora_dropout = gr.Textbox(info="LoRA_dropout is a hyperparameter used in LoRA to control the dropout rate during fine-tuning.",label="lora_dropout",value=.05,interactive=True)
+            # with gr.Row():
+            #     parameter_alter=gr.Button("Finetune")
+            
+        # with gr.Row():
+        #         model_name3=gr.Dropdown(choices=["Mistral","Zephyr","Llama"],label="Select the model for editing code")
+        with gr.Row():
+            edit_code=gr.Button("Advance code editing")
+        with gr.Row():
+            code_temp=gr.Code(visible=False)
+        with gr.Row():
+            parameter_alter=gr.Button("Finetune")
+        edit_code.click(code_show,model_name,code_temp)
+        parameter_alter.click(edit_model_parameter,[model_name,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout],None)
+        
+        
 #***************************************************
     with gr.Tab("Testing data generation"):
         def ans_gen_fun(model_name):
@@ -234,6 +264,21 @@ with gr.Blocks() as demo:
             lab_test = gr.Label(label="Progess bar")
         ans_gen.click(ans_gen_fun,model_name,lab_test)
 #***************************************************
+    def bar_plot_fn():
+        temp=score_report_bar()
+        return gr.BarPlot(
+            temp,
+            x="Model Name",
+            y="Average Rating",
+            x_title="Model name",
+            y_title="Average Rating",
+            title="Model performance",
+            tooltip=["Model Name", "Average Rating"],
+            y_lim=[1, 5],
+            width=200,
+            # height=1000,
+            visible=True
+        )
     with gr.Tab("Human evaluation"):
         def answer_updated(model_ans):
             df_ques_ans=pd.read_excel(os.path.join("model_ans",str(model_ans)))
@@ -271,6 +316,11 @@ with gr.Blocks() as demo:
         with gr.Row():
             move=gr.Number(label="Move to the question")
             move_btn=gr.Button("move")
+        with gr.Row():
+            btn_plot=gr.Button("Plot generation")
+        with gr.Row():
+            plot = gr.BarPlot(visible=False)
+        btn_plot.click(bar_plot_fn, None, outputs=plot)
         btn_1.click(answer_updated,model_ans,[lab_temp,id,ques,ans,model_ans,btn_1])
         btn.click(score_save, inputs=[ques,ans,score,model_ans], outputs=[id,ques,ans])
         question.click(new_ques,model_ans,[id,ques,ans])
@@ -294,9 +344,9 @@ with gr.Blocks() as demo:
             else:
                 #$$$$$$$$$$$$$$$$$
                 # return ans_ret(message,rag_chain)
-                return "Llama2"
+                return "Llama"
         
-        model_name=gr.Dropdown(choices=['Mistral','Zepyhr','Llama2'],label="Select the model")
+        model_name=gr.Dropdown(choices=['Mistral','Zepyhr','Llama'],label="Select the model")
         gr.ChatInterface(fn=echo, additional_inputs=[model_name],examples=[["what is KUET?"],["Where is KUET located?"],['What do you like the most about KUET?']], title="KUET LLM")
 
 demo.launch(share=False)

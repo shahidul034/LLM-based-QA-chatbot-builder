@@ -12,9 +12,9 @@ from create_retriever import ensemble_retriever
 def rag_chain_ret(model_name):
     if model_name=="Zepyhr":
         llm=zepyhr_model()
-    elif model_name=="Llama2":
+    elif model_name=="Llama":
         llm=llama_model()
-    else:
+    elif model_name=="Mistral":
         llm=mistral_model()
     retriever=ensemble_retriever()
     prompt = hub.pull("rlm/rag-prompt")
