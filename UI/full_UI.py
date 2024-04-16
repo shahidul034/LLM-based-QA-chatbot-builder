@@ -348,5 +348,13 @@ with gr.Blocks() as demo:
         
         model_name=gr.Dropdown(choices=['Mistral','Zepyhr','Llama'],label="Select the model")
         gr.ChatInterface(fn=echo, additional_inputs=[model_name],examples=[["what is KUET?"],["Where is KUET located?"],['What do you like the most about KUET?']], title="KUET LLM")
+    with gr.Tab("Deployment"):
+        def deploy_func(model_name,hf):
+            import shutil
+            
+        model_name=gr.Dropdown(choices=['Mistral','Zepyhr','Llama2'],label="Select the model")
+        hf=gr.Textbox(label="Huggingface token")
+        btn_model=gr.Button("Deploy")
+        btn_model.click(deploy_func,[model_name,hf])
 
 demo.launch(share=False)
