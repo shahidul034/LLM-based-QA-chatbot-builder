@@ -42,7 +42,7 @@ def ans_ret(inp,rag_chain):
     if len(k2)>=2:
         return k2[0]
     return ans
-def model_push(hf):
+def model_push(model_name,hf):
     from transformers import AutoTokenizer, AutoModelForCausalLM
     if model_name=="Mistral":
         path="models/full_KUET_LLM_mistral"
@@ -58,8 +58,8 @@ def model_push(hf):
                                                     load_in_8bit=True,
                                                     #  load_in_4bit=True
                                                     )
-    model.push_to_hub(repo_id=f"My_model",token=hf)
-    tokenizer.push_to_hub(repo_id=f"My_model",token=hf)
+    model.push_to_hub(repo_id=f"My_model_{model_name}",token=hf)
+    tokenizer.push_to_hub(repo_id=f"My_model_{model_name}",token=hf)
 
 
 

@@ -12,7 +12,7 @@ from utils import display_table,current_time,random_ques_ans2,move_to,score_repo
 # from fine_tune_file.zepyhr_finetune import zepyhr_model
 # from fine_tune_file.llama_finetune import llama_model
 #$$$$$$$$$$$$$$$$$
-# from inference import ans_ret,rag_chain_ret
+# from inference import ans_ret,rag_chain_ret,model_push
 ###### Testing code
 global cnt
 cnt=1
@@ -341,7 +341,7 @@ with gr.Blocks() as demo:
                 #$$$$$$$$$$$$$$$$$
                 # return ans_ret(message,rag_chain)
                 return "Zepyhr"
-            else:
+            elif model_name=="Llama2":
                 #$$$$$$$$$$$$$$$$$
                 # return ans_ret(message,rag_chain)
                 return "Llama"
@@ -349,12 +349,16 @@ with gr.Blocks() as demo:
         model_name=gr.Dropdown(choices=['Mistral','Zepyhr','Llama'],label="Select the model")
         gr.ChatInterface(fn=echo, additional_inputs=[model_name],examples=[["what is KUET?"],["Where is KUET located?"],['What do you like the most about KUET?']], title="KUET LLM")
     with gr.Tab("Deployment"):
-        def deploy_func(model_name,hf):
-            import shutil
+        def deploy_func(model_name,user_name,hf):
+            model_push(hf)
+            f=open("deploy//info.txt","w")
+            f.write(f"{user_name}\n{model_name}")
+
             
         model_name=gr.Dropdown(choices=['Mistral','Zepyhr','Llama2'],label="Select the model")
+        username=gr.Textbox(label="Huggingface username")
         hf=gr.Textbox(label="Huggingface token")
         btn_model=gr.Button("Deploy")
-        btn_model.click(deploy_func,[model_name,hf])
+        btn_model.click(deploy_func,[model_name,username,hf])
 
 demo.launch(share=False)
