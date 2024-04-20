@@ -8,9 +8,6 @@ import pandas as pd
 import os
 import random
 from utils import display_table,current_time,random_ques_ans2,move_to,score_report_bar
-# from fine_tune_file.mistral_finetune import mistral_finetune
-# from fine_tune_file.zepyhr_finetune import zepyhr_model
-# from fine_tune_file.llama_finetune import llama_model
 #$$$$$$$$$$$$$$$$$
 # from inference import ans_ret,rag_chain_ret,model_push
 ###### Testing code
@@ -147,23 +144,34 @@ with gr.Blocks() as demo:
             6) You can change the hyper parameter in "UI\\fine_tune_file" folder.)
         """)
             
-        def edit_model_parameter(model_name_temp,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
+        def edit_model_parameter(model_name_temp,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
+            # write code to files if code was edited
+            if edit_code:
+                if model_name_temp=="Mistral":
+                    open(r"fine_tune_file/mistral_finetune.py","w").write(code_temp)
+                elif model_name_temp=="Zephyr":
+                    open(r"fine_tune_file/zepyhr_finetune.py","w").write(code_temp)
+                elif model_name=="Llama":
+                    open(r"fine_tune_file/llama_finetune.py","w").write(code_temp)
+            # importing just before finetuning, to ensure the latest code is used
+            from fine_tune_file.mistral_finetune import mistral_tainer
+            from fine_tune_file.zepyhr_finetune import zephyr_trainer
+            from fine_tune_file.llama_finetune import llama_trainer
+            # create instance of the finetuning classes and then call the finetune function
             if model_name_temp=="Mistral":
-                open(r"fine_tune_file/mistral_finetune.py","w").write(code_temp)
                 gr.Info("Finetune started!!!")
-                #$$$$$$$$$$$$$$$$$
-                # mistral_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                trainer = mistral_tainer()
+                trainer.mistral_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Finetune Ended!!!")
             elif model_name_temp=="Zephyr":
-                open(r"fine_tune_file/zepyhr_finetune.py","w").write(code_temp)
                 gr.Info("Finetune started!!!")
-                #$$$$$$$$$$$$$$$$$
-                # mistral_finetune()
+                trainer = zephyr_trainer()
+                trainer.zepyhr_model(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Finetune Ended!!!")
             elif model_name=="Llama":
                 gr.Info("Finetune started!!!")
-                #$$$$$$$$$$$$$$$$$
-                # mistral_finetune()
+                trainer = llama_trainer()
+                trainer.llama_model(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Finetune Ended!!!")
         
         def code_show(model_name):
@@ -226,7 +234,7 @@ with gr.Blocks() as demo:
         with gr.Row():
             parameter_alter=gr.Button("Finetune")
         edit_code.click(code_show,model_name,code_temp)
-        parameter_alter.click(edit_model_parameter,[model_name,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout],None)
+        parameter_alter.click(edit_model_parameter,[model_name,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout],None)
         
         
 #***************************************************
