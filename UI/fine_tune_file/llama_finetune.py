@@ -10,21 +10,26 @@ import transformers
 from transformers import GenerationConfig
 from pynvml import *
 import glob
-def llama_model():
+def llama_model(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
     base_model = "NousResearch/Llama-2-7b-chat-hf"
     lora_output = 'models/lora_KUET_LLM_llama'
     full_output = 'models/full_KUET_LLM_llama'
     DEVICE = 'cuda'
 
-    bnb_config = BitsAndBytesConfig(  
-        load_in_8bit= True,
-    #     bnb_4bit_quant_type= "nf4",
-    #     bnb_4bit_compute_dtype= torch.bfloat16,
-    #     bnb_4bit_use_double_quant= False,
-    )
+    # set quantization config
+    if quantization == '8bit':
+        bnb_config = BitsAndBytesConfig(  
+            load_in_8bit= True,
+        )
+    elif quantization == '4bit':
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit= True,
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_quant_type="nf4",  
+            bnb_4bit_compute_dtype=torch.bfloat16
+        )
     model = AutoModelForCausalLM.from_pretrained(
             base_model,
-            # load_in_4bit=True,
             quantization_config=bnb_config,
             torch_dtype=torch.bfloat16,
             device_map="auto",
@@ -52,15 +57,13 @@ def llama_model():
     # Set PEFT adapter config (16:32)
     from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 
-    # target modules are currently selected for zephyr base model
     config = LoraConfig(
-        r=16,
-        lora_alpha=32,
+        r= lora_r if lora_r else 16,
+        lora_alpha= lora_alpha if lora_alpha else 32,
         target_modules=["q_proj", "v_proj","k_proj","o_proj","gate_proj","up_proj","down_proj"],   # target all the linear layers for full finetuning
-        lora_dropout=0.05,
+        lora_dropout= lora_dropout if lora_dropout else 0.05,
         bias="none",
-        task_type="CAUSAL_LM"
-        )
+        task_type="CAUSAL_LM")
 
     # stabilize output layer and layernorms
     model = prepare_model_for_kbit_training(model, 8)
@@ -69,10 +72,10 @@ def llama_model():
 
     # Set Hyperparameters
     MAXLEN=512
-    BATCH_SIZE=4
-    GRAD_ACC=4
-    OPTIMIZER='paged_adamw_8bit' # save memory
-    LR=5e-06                      # slightly smaller than pretraining lr | and close to LoRA standard
+    BATCH_SIZE = batch_size if batch_size else 4
+    GRAD_ACC = gradient_accumulation if gradient_accumulation else 4
+    OPTIMIZER ='paged_adamw_8bit' # save memory
+    LR=lr if lr else 5e-06                          # slightly smaller than pretraining lr | and close to LoRA standard
 
     # Set training config
     training_config = transformers.TrainingArguments(per_device_train_batch_size=BATCH_SIZE,
@@ -81,7 +84,7 @@ def llama_model():
                                                     learning_rate=LR,
                                                     fp16=True,            # consider compatibility when using bf16
                                                     logging_steps=10,
-                                                    num_train_epochs = 2,
+                                                    num_train_epochs = epoch if epoch else 2,
                                                     output_dir=lora_output,
                                                     remove_unused_columns=True,
                                                     

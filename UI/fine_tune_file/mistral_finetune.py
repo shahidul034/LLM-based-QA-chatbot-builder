@@ -19,7 +19,7 @@ def formatted_text(x,tokenizer):
         {"role": "assistant", "content": x["Reply"]}
         ]
         return tokenizer.apply_chat_template(temp, add_generation_prompt=False, tokenize=False)
-def mistral_finetune():
+def mistral_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
     base_model = "mistralai/Mistral-7B-Instruct-v0.2"
     lora_output = 'models/lora_KUET_LLM_Mistral'
     full_output = 'models/full_KUET_LLM_Mistral'
@@ -34,16 +34,20 @@ def mistral_finetune():
     print(data_df.iloc[0])
     dataset = Dataset.from_pandas(data_df)
 
-
-    bnb_config = BitsAndBytesConfig(  
-        load_in_8bit= True,
-    #     bnb_4bit_quant_type= "nf4",
-    #     bnb_4bit_compute_dtype= torch.bfloat16,
-    #     bnb_4bit_use_double_quant= False,
-    )
+    # set quantization config
+    if quantization == '8bit':
+        bnb_config = BitsAndBytesConfig(  
+            load_in_8bit= True,
+        )
+    elif quantization == '4bit':
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit= True,
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_quant_type="nf4",  
+            bnb_4bit_compute_dtype=torch.bfloat16
+        )
     model = AutoModelForCausalLM.from_pretrained(
             base_model,
-            # load_in_4bit=True,
             quantization_config=bnb_config,
             torch_dtype=torch.bfloat16,
             device_map="auto",
@@ -64,10 +68,10 @@ def mistral_finetune():
 
     # target modules are currently selected for zephyr base model
     config = LoraConfig(
-        r=16,
-        lora_alpha=32,
+        r= lora_r if lora_r else 16,
+        lora_alpha= lora_alpha if lora_alpha else 32,
         target_modules=["q_proj", "v_proj","k_proj","o_proj","gate_proj","up_proj","down_proj"],   # target all the linear layers for full finetuning
-        lora_dropout=0.05,
+        lora_dropout= lora_dropout if lora_dropout else 0.05,
         bias="none",
         task_type="CAUSAL_LM")
 
@@ -78,10 +82,10 @@ def mistral_finetune():
 
     # Set Hyperparameters
     MAXLEN=512
-    BATCH_SIZE=4
-    GRAD_ACC=4
-    OPTIMIZER='paged_adamw_8bit' # save memory
-    LR=5e-06                      # slightly smaller than pretraining lr | and close to LoRA standard
+    BATCH_SIZE = batch_size if batch_size else 4
+    GRAD_ACC = gradient_accumulation if gradient_accumulation else 4
+    OPTIMIZER ='paged_adamw_8bit' # save memory
+    LR=lr if lr else 5e-06                       # slightly smaller than pretraining lr | and close to LoRA standard
 
     training_config = transformers.TrainingArguments(per_device_train_batch_size=BATCH_SIZE,
                                                     gradient_accumulation_steps=GRAD_ACC,
@@ -89,7 +93,7 @@ def mistral_finetune():
                                                     learning_rate=LR,
                                                     fp16=True,            # consider compatibility when using bf16
                                                     logging_steps=10,
-                                                    num_train_epochs = 2,
+                                                    num_train_epochs = epoch if epoch else 2,
                                                     output_dir=lora_output,
                                                     remove_unused_columns=True,
                                                     )
