@@ -37,11 +37,11 @@ class zephyr_trainer:
 
 
         # set quantization config
-        if quantization == '8bit':
+        if quantization == '8':
             bnb_config = BitsAndBytesConfig(  
                 load_in_8bit= True,
             )
-        elif quantization == '4bit':
+        elif quantization == '4':
             bnb_config = BitsAndBytesConfig(
                 load_in_4bit= True,
                 bnb_4bit_use_double_quant=True,
