@@ -1,3 +1,4 @@
+#code changed
 import os
 import torch
 from datasets import load_dataset, Dataset
@@ -10,12 +11,32 @@ import transformers
 from transformers import GenerationConfig
 from pynvml import *
 import glob
-class llama_trainer: 
-    def llama_model(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
-        base_model = "NousResearch/Llama-2-7b-chat-hf"
-        lora_output = 'models/lora_KUET_LLM_llama'
-        full_output = 'models/full_KUET_LLM_llama'
+class custom_model_finetune:
+    lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout= # setup the parameter accoring to your model.
+    def formatted_text(x,tokenizer):
+            # change this templete according to your model
+            #Example: 
+            # temp = [
+            # {"role": "user", "content": """You are a KUET authority managed chatbot, help users by answering their queries about KUET.
+            # Question: """ + x["Prompt"]},
+            # {"role": "assistant", "content": x["Reply"]}
+            # ]
+            return tokenizer.apply_chat_template(temp, add_generation_prompt=False, tokenize=False)
+    def custom_model_trainer(self):
+        base_model = '' # Write the base model repo name from huggingface
+        lora_output = '' # Write the folder name for saving lora output
+        full_output = '' # Write the folder name for saving full model output
         DEVICE = 'cuda'
+        tokenizer = AutoTokenizer.from_pretrained(base_model)
+        tokenizer.padding_side = 'right'
+        ### read csv with Prompt, Answer pair 
+        data_location = r"data/finetune_data.xlsx" ## replace here
+        data_df=pd.read_excel( data_location )
+        ### set formatting
+        data_df["text"] = data_df[["Prompt", "Reply"]].apply(lambda x: self.formatted_text(x,tokenizer), axis=1) ## replace Prompt and Answer if collected dataset has different column names
+        print(data_df.iloc[0])
+        dataset = Dataset.from_pandas(data_df)
+
 
         # set quantization config
         if quantization == '8':
@@ -46,18 +67,10 @@ class llama_trainer:
         tokenizer.add_eos_token = True
         tokenizer.add_bos_token, tokenizer.add_eos_token
 
-        data_location = "data.xlsx" ## replace here
-        data_df=pd.read_excel( data_location )
-
-        for i in range(len(data_df)):
-
-            data_df.loc[i,'Text']="### Instruction:"+str(data_df.loc[i,'Prompt'])+"### Response:"+str(data_df.loc[i,'Reply'])
-
-        dataset = Dataset.from_pandas(data_df)
-
         # Set PEFT adapter config (16:32)
         from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 
+        # target modules are currently selected for zephyr base model
         config = LoraConfig(
             r= lora_r if lora_r else 16,
             lora_alpha= lora_alpha if lora_alpha else 32,
@@ -76,9 +89,9 @@ class llama_trainer:
         BATCH_SIZE = batch_size if batch_size else 4
         GRAD_ACC = gradient_accumulation if gradient_accumulation else 4
         OPTIMIZER ='paged_adamw_8bit' # save memory
-        LR=lr if lr else 5e-06                          # slightly smaller than pretraining lr | and close to LoRA standard
+        LR=lr if lr else 5e-06                       # slightly smaller than pretraining lr | and close to LoRA standard
 
-        # Set training config
+
         training_config = transformers.TrainingArguments(per_device_train_batch_size=BATCH_SIZE,
                                                         gradient_accumulation_steps=GRAD_ACC,
                                                         optim=OPTIMIZER,
@@ -88,7 +101,6 @@ class llama_trainer:
                                                         num_train_epochs = epoch if epoch else 2,
                                                         output_dir=lora_output,
                                                         remove_unused_columns=True,
-                                                        
                                                         )
 
         # Set collator
@@ -99,14 +111,13 @@ class llama_trainer:
                                     train_dataset=dataset,
                                     data_collator=data_collator,
                                     args=training_config,
-                                    dataset_text_field="Text",
+                                    dataset_text_field="text",
                                     #    callbacks=[early_stop], need to learn, lora easily overfits
                                     )
 
         trainer.train()
 
         trainer.save_model(lora_output)
-
 
         # Get peft config
         from peft import PeftConfig
@@ -124,8 +135,7 @@ class llama_trainer:
 
         merged_model.save_pretrained(full_output)
         tokenizer.save_pretrained(full_output)
-
-
-
-
-
+# if __name__=="__main__":
+#     tr=custom_model_finetune()
+#     lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout= # setup the parameter accoring to your model.
+#     tr.finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)

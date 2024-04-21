@@ -98,8 +98,16 @@ with gr.Blocks() as demo:
             def parse_data_func(link_temp,num):
                     parse_data(link_temp,num)
                     gr.Info("Finished parsing!! Save as a docx file.")
+            gr.Markdown(""" # Instructions: 
+            ## If you want to provide a custom Excel file to model.
+            1) Create an Excel file in the data folder and name it finetune_data.xlsx.
+            2) This Excel file has two columns: Prompt and Reply
+            3) Prompt = question; Reply = answer to the question. The data format is shown below.
+        """)
+            gr.HTML(value=display_table())
             gr.Markdown("""
-                    After clicking the "save the answer" button. Those questions and answers are saved in "save_ques_ans" folder.
+                    ## You can use the below interface to create the dataset.
+                    After clicking the "save the answer" button. Those questions and answers are saved in the "save_ques_ans" folder as a finetune_data.xlsx file.
                  """)
             with gr.Tab("Existing questions"):
                 ques_temp,ans_temp=random_ques_ans2()
@@ -111,7 +119,7 @@ with gr.Blocks() as demo:
                     save=gr.Button("Save the answer")
                     question = gr.Button("Generate new question")
                 with gr.Row():
-                    link_temp=gr.Textbox(label="Enter link for parse data")
+                    link_temp=gr.Textbox(label="Enter link for parse data",info="To provide the link for parsing the data from the website, this link can help create RAG data for the model.")
                     num=gr.Number(label="Number of links want to parse")
                     parse_data_btn=gr.Button("Parse data")
                 with gr.Row():
@@ -132,16 +140,11 @@ with gr.Blocks() as demo:
                 save.click(save_the_ques,[ques,ans],lab)
 #***************************************************      
     with gr.Tab("Fine-tuning"):
-        gr.Markdown(""" # Instructions: 
-            1) Create a excel file in data folder and name it finetune_data.xlsx
-            2) This excel file has two column: Prompt and Reply
-            3) Prompt = Question; Reply = answer of the question. Data format is shown in below.
-        """)
-        gr.HTML(value=display_table())
+        
         gr.Markdown("""
-            4) Need 24GB VRAM for training and 16 GB VRAM for inference
-            5) Click the model name for finetuning
-            6) You can change the hyper parameter in "UI\\fine_tune_file" folder.)
+            1) Need 24GB VRAM for training and 16 GB VRAM for inference
+            2) You can change the hyper parameter in "UI\\fine_tune_file" folder.
+            3) You can select the custom model for fine-tuning other models.
         """)
             
         def edit_model_parameter(model_name_temp,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
@@ -157,6 +160,7 @@ with gr.Blocks() as demo:
             from fine_tune_file.mistral_finetune import mistral_tainer
             from fine_tune_file.zepyhr_finetune import zephyr_trainer
             from fine_tune_file.llama_finetune import llama_trainer
+            from fine_tune_file.finetune_file import custom_model_trainer
             # create instance of the finetuning classes and then call the finetune function
             if model_name_temp=="Mistral":
                 gr.Info("Finetune started!!!")
@@ -173,6 +177,9 @@ with gr.Blocks() as demo:
                 trainer = llama_trainer()
                 trainer.llama_model(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Finetune Ended!!!")
+            else:
+                trainer=custom_model_trainer()
+                trainer.custom_model_trainer()
         
         def code_show(model_name):
             if model_name=="Mistral":
@@ -188,7 +195,12 @@ with gr.Blocks() as demo:
                 f=open(r"fine_tune_file/llama_finetune.py").read()
                 return gr.Code(visible=True,value=f,interactive=True,language="python")
 
-                
+        def custom_model(model_name):
+            if model_name=="Custom model":
+                f=open(r"fine_tune_file/finetune_file.py").read()
+                return gr.Code(visible=True,value=f,interactive=True,language="python")
+            else:
+                return gr.Code(visible=False)
 
         def change_code_fun(code_,model_name):
             if model_name=="Mistral":
@@ -204,12 +216,7 @@ with gr.Blocks() as demo:
         with gr.Row():
             code_temp=gr.Code(visible=False)
         with gr.Row():
-            model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama"],label="Select the model for finetuning")
-            # model_btn=gr.Button("Finetune")
-            # mistral_btn=gr.Button("Mistral")
-            # zepyhr_btn=gr.Button("Zephyr")
-            # llama_btn=gr.Button("Llama2")
-        
+            model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama","Custom model"],label="Select the model for finetuning")        
 
         with gr.Accordion("Parameter setup"):
             with gr.Row():
@@ -235,7 +242,7 @@ with gr.Blocks() as demo:
             parameter_alter=gr.Button("Finetune")
         edit_code.click(code_show,model_name,code_temp)
         parameter_alter.click(edit_model_parameter,[model_name,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout],None)
-        
+        model_name.change(custom_model,model_name,code_temp)
         
 #***************************************************
     with gr.Tab("Testing data generation"):

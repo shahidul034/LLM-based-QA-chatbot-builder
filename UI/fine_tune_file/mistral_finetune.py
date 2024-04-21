@@ -77,7 +77,7 @@ class mistral_tainer:
             task_type="CAUSAL_LM")
 
         # stabilize output layer and layernorms
-        model = prepare_model_for_kbit_training(model, 8)
+        model = prepare_model_for_kbit_training(model, quantization)
         # Set PEFT adapter on model (Last step)
         model = get_peft_model(model, config)
 
