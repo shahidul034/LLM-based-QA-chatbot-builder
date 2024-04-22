@@ -216,7 +216,7 @@ with gr.Blocks() as demo:
         with gr.Row():
             code_temp=gr.Code(visible=False)
         with gr.Row():
-            model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama","Custom model"],label="Select the model for finetuning")        
+            model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama","custom model"],label="Select the model for finetuning")        
 
         with gr.Accordion("Parameter setup"):
             with gr.Row():
@@ -272,7 +272,8 @@ with gr.Blocks() as demo:
         gr.Markdown("""Please create a excel file and place the testing dataset data folder and name it \"testing_dataset.xlsx\"
                     This excel file has two columns: question, answer and id(answer and id are optional. id means unique number).
                     """)
-        model_name=gr.Dropdown(choices=['Mistral','Zepyhr','Llama2'],label="Select the model")
+        
+        model_name=gr.Dropdown(choices=[os.listdir("models")],label="Select the model")
         with gr.Row():
             ans_gen=gr.Button("Generate the answer of the testing dataset")
         with gr.Row():

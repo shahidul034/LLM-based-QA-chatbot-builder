@@ -135,7 +135,4 @@ class custom_model_finetune:
 
         merged_model.save_pretrained(full_output)
         tokenizer.save_pretrained(full_output)
-# if __name__=="__main__":
-#     tr=custom_model_finetune()
-#     lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout= # setup the parameter accoring to your model.
-#     tr.finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+
