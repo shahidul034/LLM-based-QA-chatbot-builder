@@ -78,7 +78,7 @@ class zephyr_trainer:
             task_type="CAUSAL_LM")
 
         # stabilize output layer and layernorms
-        model = prepare_model_for_kbit_training(model, quantization)
+        model = prepare_model_for_kbit_training(model)
         # Set PEFT adapter on model (Last step)
         model = get_peft_model(model, config)
 
