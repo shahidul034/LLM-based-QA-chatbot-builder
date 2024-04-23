@@ -5,7 +5,7 @@ import transformers
 from pynvml import *
 import torch
 from langchain import hub
-from UI.deploy.model_ret_deploy import model_ret
+from model_ret_deploy import model_ret
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from create_retriever import ensemble_retriever

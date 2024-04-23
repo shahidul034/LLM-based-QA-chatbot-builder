@@ -15,6 +15,7 @@ global cnt
 cnt=1
 data=[]
 save_ques_ans=[]
+save_ques_ans_test=[]
 cur_time=current_time()
 def random_ques_ans(model_ans):
     df_temp=pd.read_excel(os.path.join("model_ans",str(model_ans)))
@@ -69,6 +70,7 @@ def move_to(move,model_ans):
 #######
 
 ######Data collection
+# Training question and answer saved
 def save_the_ques(ques,ans):
     save_ques_ans.append({
         'question':ques,
@@ -76,7 +78,7 @@ def save_the_ques(ques,ans):
     })
     if len(save_ques_ans)%3==0:
         temp=pd.DataFrame(save_ques_ans)
-        temp.to_excel(f"save_ques_ans\\{cur_time}.xlsx",index=False)
+        temp.to_excel(f"save_ques_ans\\{cur_time}_trainData.xlsx",index=False)
         gr.Info("Sucessfully saved in local folder!!!")
     if len(os.listdir("save_ques_ans"))>=2:
         df_all=[]
@@ -87,6 +89,25 @@ def save_the_ques(ques,ans):
         df_temp.to_excel("data//finetune_data.xlsx",index=False)
 
     return gr.Label(value="Submitted!! Generate new question",visible=True)
+# Testing question and answer saved
+def save_the_ques_test(ques,ans):
+    print(ans)
+    save_ques_ans_test.append({
+        'question':ques,
+        'ans':ans
+    })
+    # if len(save_ques_ans)%3==0:
+    temp=pd.DataFrame(save_ques_ans_test)
+    temp.to_excel(f"save_ques_ans_test\\{cur_time}_testData.xlsx",index=False)
+    gr.Info("Sucessfully saved in local folder!!!")
+    if len(os.listdir("save_ques_ans_test"))>=2:
+        df_all=[]
+        for x in os.listdir("save_ques_ans_test"):
+            path=os.path.join("save_ques_ans_test",x)
+            df_all.append(pd.read_excel(path))
+        df_temp=pd.concat(df_all,axis=0)
+        df_temp.to_excel("data//testing_dataset.xlsx",index=False)
+
 
 def next_ques(ques,ans):
     ques_temp,ans_temp=random_ques_ans2()
@@ -100,16 +121,19 @@ with gr.Blocks() as demo:
                     gr.Info("Finished parsing!! Save as a docx file.")
             gr.Markdown(""" # Instructions: 
             ## If you want to provide a custom Excel file to model.
-            1) Create an Excel file in the data folder and name it finetune_data.xlsx.
-            2) This Excel file has two columns: Prompt and Reply
-            3) Prompt = question; Reply = answer to the question. The data format is shown below.
+            1) Create an Excel file in the data folder and name it finetune_data.xlsx for finetuning the model.
+            2) Create an Excel file in the data folder and name it testing_data.xlsx for generating answers using the fine-tuned model.
+            3) This Excel file has two columns: Prompt and Reply
+            4) Prompt = question; Reply = answer to the question. The data format is shown below.
         """)
             gr.HTML(value=display_table())
             gr.Markdown("""
                     ## You can use the below interface to create the dataset.
-                    After clicking the "save the answer" button. Those questions and answers are saved in the "save_ques_ans" folder as a finetune_data.xlsx file.
                  """)
             with gr.Tab("Existing questions"):
+                gr.Markdown("""
+                    After clicking the "save the answer" button. Those questions and answers are saved in the "data" folder as a finetune_data.xlsx file.
+                """)
                 ques_temp,ans_temp=random_ques_ans2()
                 with gr.Row():
                     ques=gr.Label(value=ques_temp,label="Question")
@@ -129,6 +153,9 @@ with gr.Blocks() as demo:
                 from utils import parse_data
                 parse_data_btn.click(parse_data_func,[link_temp,num],None)
             with gr.Tab("Custom questions"):
+                gr.Markdown("""
+                    After clicking the "save the answer" button. Those questions and answers are saved in the "data" folder as a finetune_data.xlsx file.
+                """)
                 with gr.Row():
                     ques=gr.Textbox(label="Question")
                 with gr.Row():
@@ -138,13 +165,29 @@ with gr.Blocks() as demo:
                 with gr.Row():
                     lab=gr.Label(visible=False,value="You answer is submitted!!! Thank you for your contribution.",label="submitted")
                 save.click(save_the_ques,[ques,ans],lab)
+            with gr.Tab("Testing data generation"):
+                gr.Markdown("""
+                    You can create test data for generating answers using the Finetune model, which will be used for testing the model's performance. 
+                    After clicking the "save the answer" button. Those questions and answers are saved in the "data" folder as a testing_data.xlsx file. You can ignore the "Answer" textbox. If you do not want to give the answer.
+                """)
+                with gr.Row():
+                    ques=gr.Textbox(label="Question")
+                with gr.Row():
+                    ans=gr.TextArea(label="Answer",placeholder="None")
+                with gr.Row():
+                    save_test=gr.Button("Save the answer")
+                with gr.Row():
+                    lab=gr.Label(visible=False,value="You answer is submitted!!! Thank you for your contribution.",label="submitted")
+                save_test.click(save_the_ques_test,[ques,ans],None)
+                
+
 #***************************************************      
     with gr.Tab("Fine-tuning"):
         
         gr.Markdown("""
-            1) Need 24GB VRAM for training and 16 GB VRAM for inference
-            2) You can change the hyper parameter in "UI\\fine_tune_file" folder.
-            3) You can select the custom model for fine-tuning other models.
+            1) Need 24GB VRAM for training and 16 GB VRAM for inference.\n
+            2) You can select the custom model for fine-tuning other models.\n
+            3) After fine-tuning the model, it will be saved in the "models" folder.
         """)
             
         def edit_model_parameter(model_name_temp,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
@@ -183,20 +226,17 @@ with gr.Blocks() as demo:
         
         def code_show(model_name):
             if model_name=="Mistral":
-                # gr.Info("check \"fine_tune_file/mistral_finetune.py\" path or below for edit the source code and hyperparameter")
                 f=open(r"fine_tune_file/mistral_finetune.py").read()
                 return gr.Code(visible=True,value=f,interactive=True,language="python")
             elif model_name=="Zephyr":
-                # gr.Info("check \"fine_tune_file/zepyhr_finetune.py\" path for edit the source code and hyperparameter")
                 f=open(r"fine_tune_file/zepyhr_finetune.py").read()
                 return gr.Code(visible=True,value=f,interactive=True,language="python")
             elif model_name=="Llama":
-                # gr.Info("check \"fine_tune_file/llama_finetusne.py\" path for edit the source code and hyperparameter")
                 f=open(r"fine_tune_file/llama_finetune.py").read()
                 return gr.Code(visible=True,value=f,interactive=True,language="python")
 
         def custom_model(model_name):
-            if model_name=="Custom model":
+            if model_name=="custom model":
                 f=open(r"fine_tune_file/finetune_file.py").read()
                 return gr.Code(visible=True,value=f,interactive=True,language="python")
             else:
@@ -229,11 +269,6 @@ with gr.Blocks() as demo:
                 lora_r = gr.Textbox(info="LoRA_r is a hyperparameter associated with the rank of the low-rank approximation used in LoRA.",label="lora_r",value=16,interactive=True)
                 lora_alpha = gr.Textbox(info="LoRA_alpha is a hyperparameter used in LoRA for controlling the strength of the adaptation.",label="lora_alpha",value=32,interactive=True)
                 lora_dropout = gr.Textbox(info="LoRA_dropout is a hyperparameter used in LoRA to control the dropout rate during fine-tuning.",label="lora_dropout",value=.05,interactive=True)
-            # with gr.Row():
-            #     parameter_alter=gr.Button("Finetune")
-            
-        # with gr.Row():
-        #         model_name3=gr.Dropdown(choices=["Mistral","Zephyr","Llama"],label="Select the model for editing code")
         with gr.Row():
             edit_code=gr.Button("Advance code editing")
         with gr.Row():
@@ -245,7 +280,7 @@ with gr.Blocks() as demo:
         model_name.change(custom_model,model_name,code_temp)
         
 #***************************************************
-    with gr.Tab("Testing data generation"):
+    with gr.Tab("Testing data generation from model"):
         def ans_gen_fun(model_name):
             import time
             progress=gr.Progress()
@@ -265,20 +300,15 @@ with gr.Blocks() as demo:
                 })
                 idx+=1
             pd.DataFrame(model_ques_ans_gen).to_excel(os.path.join("model_ans",f"_{model_name+cur_time}.xlsx"),index=False)
-            gr.Info("Generating answer from model is finished!!! Now, it is ready for human evaluation.")
-            return "Finished"
-
-            
-        gr.Markdown("""Please create a excel file and place the testing dataset data folder and name it \"testing_dataset.xlsx\"
-                    This excel file has two columns: question, answer and id(answer and id are optional. id means unique number).
-                    """)
-        
-        model_name=gr.Dropdown(choices=[os.listdir("models")],label="Select the model")
+        gr.Info("Generating answer from model is finished!!! Now, it is ready for human evaluation.")
+               
+        gr.Markdown("""Please create a excel file and place the data folder and name it \"testing_dataset.xlsx\"
+                        This excel file has two columns: question, answer and id(answer and id are optional. id means unique number).
+                        """)
+        model_name=gr.Dropdown(choices=os.listdir("models"),label="Select the model")
         with gr.Row():
             ans_gen=gr.Button("Generate the answer of the testing dataset")
-        with gr.Row():
-            lab_test = gr.Label(label="Progess bar")
-        ans_gen.click(ans_gen_fun,model_name,lab_test)
+        ans_gen.click(ans_gen_fun,model_name,None)
 #***************************************************
     def bar_plot_fn():
         temp=score_report_bar()
@@ -351,7 +381,6 @@ with gr.Blocks() as demo:
             if model_name=="Mistral":
                 #$$$$$$$$$$$$$$$$$
                 # return ans_ret(message,rag_chain)
-                # return "mistral"
                 return """Khulna University of Engineering & Technology (KUET) is located in Fulbarigate, Teligati, Khulna, Bangladesh. The expansive campus covers an area of 101 acres. KUET is a prestigious educational institution renowned for its quality education and research in engineering."""
             elif model_name=="Zepyhr":
                 #$$$$$$$$$$$$$$$$$
@@ -362,19 +391,17 @@ with gr.Blocks() as demo:
                 # return ans_ret(message,rag_chain)
                 return "Llama"
         
-        model_name=gr.Dropdown(choices=['Mistral','Zepyhr','Llama'],label="Select the model")
-        gr.ChatInterface(fn=echo, additional_inputs=[model_name],examples=[["what is KUET?"],["Where is KUET located?"],['What do you like the most about KUET?']], title="KUET LLM")
+        model_name=gr.Dropdown(choices=os.listdir("models"),label="Select the model")
+        gr.ChatInterface(fn=echo, additional_inputs=[model_name], title="Chatbot")
     with gr.Tab("Deployment"):
-        def deploy_func(model_name,user_name,hf):
-            model_push(hf)
+        gr.Markdown("""\"deploy\" folder has all the code for the deployment of the model.""")
+        def deploy_func(model_name):
             f=open("deploy//info.txt","w")
-            f.write(f"{user_name}\n{model_name}")
+            f.write(f"{model_name}")
 
             
-        model_name=gr.Dropdown(choices=['Mistral','Zepyhr','Llama2'],label="Select the model")
-        username=gr.Textbox(label="Huggingface username")
-        hf=gr.Textbox(label="Huggingface token")
+        model_name=gr.Dropdown(choices=os.listdir("models"),label="Select the model")
         btn_model=gr.Button("Deploy")
-        btn_model.click(deploy_func,[model_name,username,hf])
+        btn_model.click(deploy_func,model_name)
 
 demo.launch(share=False)
