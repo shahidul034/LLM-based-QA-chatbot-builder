@@ -115,20 +115,25 @@ def next_ques(ques,ans):
 ######
 #***************************************************
 with gr.Blocks() as demo:
+    gr.Markdown("""
+        # QA chatbot builder
+            """)
     with gr.Tab("Data collection"):
             def parse_data_func(link_temp,num):
                     parse_data(link_temp,num)
                     gr.Info("Finished parsing!! Save as a docx file.")
             gr.Markdown(""" # Instructions: 
-            ## If you want to provide a custom Excel file to model.
+            In this page you can prepare data for finetuning and testing your model. The data can be provided through Excel file or directly via web interface.
+                        
+            ## 1. If you want to provide data in Excel file for model finetuning and testing.
             1) Create an Excel file in the data folder and name it finetune_data.xlsx for finetuning the model.
             2) Create an Excel file in the data folder and name it testing_data.xlsx for generating answers using the fine-tuned model.
-            3) This Excel file has two columns: Prompt and Reply
+            3) The Excel file has two columns: Prompt and Reply
             4) Prompt = question; Reply = answer to the question. The data format is shown below.
         """)
             gr.HTML(value=display_table())
             gr.Markdown("""
-                    ## You can use the below interface to create the dataset.
+                    ## 2. You can use the below interface to create the dataset.
                  """)
             with gr.Tab("Training data generation"):
                 with gr.Tab("Existing questions"):
@@ -188,7 +193,7 @@ with gr.Blocks() as demo:
         gr.Markdown("""
             # Instructions:
             1) Required VRAM for training: 24GB, for inference: 16GB.\n
-            2) For fine-tuning a custom model select 'custom modele' option in 'Select the model for fine-tuning' dropdown section.\n
+            2) For fine-tuning a custom model select 'custom modele' option in 'Select the model for fine-tuning' dropdown section. The custom model can be configured by editing the code section.\n
             3) After fine-tuning the model, it will be saved in the "models" folder.
         """)
             
@@ -304,8 +309,8 @@ with gr.Blocks() as demo:
             pd.DataFrame(model_ques_ans_gen).to_excel(os.path.join("model_ans",f"_{model_name+cur_time}.xlsx"),index=False)
         gr.Info("Generating answer from model is finished!!! Now, it is ready for human evaluation.")
                
-        gr.Markdown("""Please create a excel file and place the data folder and name it \"testing_dataset.xlsx\"
-                        This excel file has two columns: question, answer and id(answer and id are optional. id means unique number).
+        gr.Markdown("""Provide an Excel file named \"testing_dataset.xlsx\ in data folder"
+                        This excel file has two columns: question, answer (answer is optional).
                         """)
         model_name=gr.Dropdown(choices=os.listdir("models"),label="Select the model")
         with gr.Row():
@@ -421,4 +426,4 @@ with gr.Blocks() as demo:
         btn_model=gr.Button("Deploy")
         btn_model.click(deploy_func,model_name)
 
-demo.launch(share=False)
+demo.launch(share=True)
