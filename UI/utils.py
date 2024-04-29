@@ -60,7 +60,7 @@ def score_report_bar():
         rating=sum(df_temp["rating"])/len(df_temp)
         dat.append({
             "Model Name":wh,
-            "Average Rating":(rating/5)*100
+            "Average Rating":rating
         })
     temp=pd.DataFrame(dat)
     return temp

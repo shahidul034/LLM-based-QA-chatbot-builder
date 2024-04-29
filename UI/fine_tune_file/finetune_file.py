@@ -33,7 +33,7 @@ class custom_model_finetune:
         data_location = r"data/finetune_data.xlsx" ## replace here
         data_df=pd.read_excel( data_location )
         ### set formatting
-        data_df["text"] = data_df[["Prompt", "Reply"]].apply(lambda x: self.formatted_text(x,tokenizer), axis=1) ## replace Prompt and Answer if collected dataset has different column names
+        data_df["text"] = data_df[["question", "answer"]].apply(lambda x: self.formatted_text(x,tokenizer), axis=1) ## replace Prompt and Answer if collected dataset has different column names
         print(data_df.iloc[0])
         dataset = Dataset.from_pandas(data_df)
 

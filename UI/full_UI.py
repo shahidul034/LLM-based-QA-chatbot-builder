@@ -38,7 +38,6 @@ def score_save(ques,ans,score,model_ans):
         'answer':ans,
         'rating':score
     })
-    print('*'*10,":",data[len(data)-1])
     # if len(data)%5==0:
     temp=pd.DataFrame(data)
     temp.to_excel(f"score_report\\{model_ans+cur_time}.xlsx",index=False)
@@ -119,21 +118,20 @@ with gr.Blocks() as demo:
         # QA chatbot builder
             """)
     with gr.Tab("Data collection"):
-            def parse_data_func(link_temp,num):
-                    parse_data(link_temp,num)
+            def parse_data_func(link_temp):
+                    parse_data(link_temp)
                     gr.Info("Finished parsing!! Save as a docx file.")
             gr.Markdown(""" # Instructions: 
-            In this page you can prepare data for finetuning and testing your model. The data can be provided through Excel file or directly via web interface.
+            In this page you can prepare data for finetuning and testing your model. The data can be provided through Excel file or directly via web interface. Additionally, data can be parsed from the target website(Data parsing for RAG) to further enhance the model performance.  
                         
             ## 1. If you want to provide data in Excel file for model finetuning and testing.
             1) Create an Excel file in the data folder and name it finetune_data.xlsx for finetuning the model.
             2) Create an Excel file in the data folder and name it testing_data.xlsx for generating answers using the fine-tuned model.
-            3) The Excel file has two columns: Prompt and Reply
-            4) Prompt = question; Reply = answer to the question. The data format is shown below.
+            3) Both excel file has two columns: question and answer.
         """)
             gr.HTML(value=display_table())
             gr.Markdown("""
-                    ## 2. You can use the below interface to create the dataset.
+                    ## 2. You can use the below interface to create the dataset for training and testing models.
                  """)
             with gr.Tab("Training data generation"):
                 with gr.Tab("Existing questions"):
@@ -149,15 +147,10 @@ with gr.Blocks() as demo:
                         save=gr.Button("Save the answer")
                         question = gr.Button("Generate new question")
                     with gr.Row():
-                        link_temp=gr.Textbox(label="Enter link for parse data",info="To provide the link for parsing the data from the website, this link can help create RAG data for the model.")
-                        num=gr.Number(label="Number of links want to parse")
-                        parse_data_btn=gr.Button("Parse data")
-                    with gr.Row():
                         lab=gr.Label(visible=False,value="You ans is submitted!!! Thank you for your contribution.",label="submitted")
                     question.click(next_ques,None,ques)
                     save.click(save_the_ques,[ques,ans],lab)
-                    from utils import parse_data
-                    parse_data_btn.click(parse_data_func,[link_temp,num],None)
+                    
                 with gr.Tab("Custom questions"):
                     gr.Markdown("""
                         After clicking the "save the answer" button. Those questions and answers are saved in the "data" folder as a finetune_data.xlsx file.
@@ -185,7 +178,15 @@ with gr.Blocks() as demo:
                 with gr.Row():
                     lab=gr.Label(visible=False,value="You answer is submitted!!! Thank you for your contribution.",label="submitted")
                 save_test.click(save_the_ques_test,[ques,ans],None)
-                
+            with gr.Row():
+                gr.Markdown("""
+                        ## 3. Data parsing for RAG
+                    """)
+            with gr.Row():    
+                link_temp=gr.Textbox(label="Enter link for parse data",info="To provide the link for parsing the data from the website, this link can help create RAG data for the model.")
+                parse_data_btn=gr.Button("Parse data")
+            from utils import parse_data
+            parse_data_btn.click(parse_data_func,[link_temp],None)
 
 #***************************************************      
     with gr.Tab("Fine-tuning"):
@@ -288,7 +289,11 @@ with gr.Blocks() as demo:
         
 #***************************************************
     with gr.Tab("Testing data generation from model"):
+        
         def ans_gen_fun(model_name):
+            if not os.path.exists(r"data\testing_dataset.xlsx"):
+                gr.Warning("You need to create testing dataset first from Data collection.")
+                return
             import time
             progress=gr.Progress()
             idx=1
@@ -309,8 +314,8 @@ with gr.Blocks() as demo:
             pd.DataFrame(model_ques_ans_gen).to_excel(os.path.join("model_ans",f"_{model_name+cur_time}.xlsx"),index=False)
         gr.Info("Generating answer from model is finished!!! Now, it is ready for human evaluation.")
                
-        gr.Markdown("""Provide an Excel file named \"testing_dataset.xlsx\ in data folder"
-                        This excel file has two columns: question, answer (answer is optional).
+        gr.Markdown(""" # Instructions:\n
+                    In this page you can generate answer from fine-tuned models for human evaluation. The questions must be created using 'Testing data generation' section of 'Data collection' tab.
                         """)
         model_name=gr.Dropdown(choices=os.listdir("models"),label="Select the model")
         with gr.Row():
@@ -327,7 +332,7 @@ with gr.Blocks() as demo:
             y_title="Average Rating",
             title="Model performance",
             tooltip=["Model Name", "Average Rating"],
-            y_lim=[1, 100],
+            y_lim=[1, 200],
             width=150,
             # height=1000,
             visible=True

@@ -51,7 +51,7 @@ class llama_trainer:
 
         for i in range(len(data_df)):
 
-            data_df.loc[i,'Text']="### Instruction:"+str(data_df.loc[i,'Prompt'])+"### Response:"+str(data_df.loc[i,'Reply'])
+            data_df.loc[i,'Text']="### Instruction:"+str(data_df.loc[i,'question'])+"### Response:"+str(data_df.loc[i,'answer'])
 
         dataset = Dataset.from_pandas(data_df)
 
