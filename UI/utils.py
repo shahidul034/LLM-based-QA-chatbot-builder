@@ -64,7 +64,7 @@ def score_report_bar():
         })
     temp=pd.DataFrame(dat)
     return temp
-def parse_data(link,num=None):    
+def parse_data(link,progress):    
     from bs4 import BeautifulSoup
     import requests
     import re
@@ -105,11 +105,7 @@ def parse_data(link,num=None):
     get_all_links(link)
     li=list(s)
     all_data=[]
-    if num==None:
-        num=len(li)
-    for idx,x in enumerate(li):
-        if idx==num:
-            break
+    for x in progress.tqdm(li):
         try:
             print("Link: ",x)
             all_data.append(data_ret2(x))
@@ -117,6 +113,7 @@ def parse_data(link,num=None):
             print("pass")
             continue
     all_data2 = re.sub(r'\n+', '\n\n', "\n".join(all_data))
+    all_data2=re.sub(u'[^\u0020-\uD7FF\u0009\u000A\u000D\uE000-\uFFFD\U00010000-\U0010FFFF]+', '', all_data2)
     document = Document()
     document.add_paragraph(all_data2)
     document.save(r'rag_data\rag_data.docx')

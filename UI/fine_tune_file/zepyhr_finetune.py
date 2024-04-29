@@ -16,8 +16,8 @@ class zephyr_trainer:
             temp = [
             # {"role": "system", "content": "Answer as a medical assistant. Respond concisely."},
             {"role": "user", "content": """You are a KUET authority managed chatbot, help users by answering their queries about KUET.
-            Question: """ + x["Prompt"]},
-            {"role": "assistant", "content": x["Reply"]}
+            Question: """ + x["question"]},
+            {"role": "assistant", "content": x["answer"]}
             ]
             return tokenizer.apply_chat_template(temp, add_generation_prompt=False, tokenize=False)
     def zepyhr_model(self,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):

@@ -118,8 +118,9 @@ with gr.Blocks() as demo:
         # QA chatbot builder
             """)
     with gr.Tab("Data collection"):
-            def parse_data_func(link_temp):
-                    parse_data(link_temp)
+            def parse_data_func(link_temp,progress=gr.Progress()):
+                    progress(0, desc="Starting...")
+                    parse_data(link_temp,progress)
                     gr.Info("Finished parsing!! Save as a docx file.")
             gr.Markdown(""" # Instructions: 
             In this page you can prepare data for finetuning and testing your model. The data can be provided through Excel file or directly via web interface. Additionally, data can be parsed from the target website(Data parsing for RAG) to further enhance the model performance.  
@@ -186,7 +187,7 @@ with gr.Blocks() as demo:
                 link_temp=gr.Textbox(label="Enter link for parse data",info="To provide the link for parsing the data from the website, this link can help create RAG data for the model.")
                 parse_data_btn=gr.Button("Parse data")
             from utils import parse_data
-            parse_data_btn.click(parse_data_func,[link_temp],None)
+            parse_data_btn.click(parse_data_func,link_temp,link_temp)
 
 #***************************************************      
     with gr.Tab("Fine-tuning"):
@@ -198,9 +199,10 @@ with gr.Blocks() as demo:
             3) After fine-tuning the model, it will be saved in the "models" folder.
         """)
             
-        def edit_model_parameter(model_name_temp,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
+        def edit_model_parameter(model_name_temp,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout, progress=gr.Progress()):
+            progress(0, desc="Finetune started!! please wait ...")
             # write code to files if code was edited
-            if edit_code:
+            if edit_code and len(code_temp)!=0:
                 if model_name_temp=="Mistral":
                     open(r"fine_tune_file/mistral_finetune.py","w").write(code_temp)
                 elif model_name_temp=="Zephyr":
@@ -215,8 +217,8 @@ with gr.Blocks() as demo:
             # create instance of the finetuning classes and then call the finetune function
             if model_name_temp=="Mistral":
                 gr.Info("Finetune started!!!")
-                trainer = mistral_tainer()
-                trainer.mistral_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                # trainer = mistral_tainer()
+                # trainer.mistral_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Finetune Ended!!!")
             elif model_name_temp=="Zephyr":
                 gr.Info("Finetune started!!!")
@@ -230,7 +232,7 @@ with gr.Blocks() as demo:
                 gr.Info("Finetune Ended!!!")
             else:
                 trainer=custom_model_trainer()
-                trainer.custom_model_trainer()
+                # trainer.custom_model_trainer()
         
         def code_show(model_name):
             if model_name=="Mistral":
@@ -248,7 +250,7 @@ with gr.Blocks() as demo:
                 f=open(r"fine_tune_file/finetune_file.py").read()
                 return [gr.Code(visible=True,value=f,interactive=True,language="python"),gr.Button(visible=False)]
             else:
-                return gr.Code(visible=False)
+                return [gr.Code(visible=False),gr.Button("Advance code editing",visible=True)]
 
         def change_code_fun(code_,model_name):
             if model_name=="Mistral":
@@ -284,24 +286,24 @@ with gr.Blocks() as demo:
         with gr.Row():
             parameter_alter=gr.Button("Finetune")
         edit_code.click(code_show,model_name,code_temp)
-        parameter_alter.click(edit_model_parameter,[model_name,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout],None)
+        parameter_alter.click(edit_model_parameter,[model_name,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout],model_name)
         model_name.change(custom_model,model_name,[code_temp,edit_code])
         
 #***************************************************
     with gr.Tab("Testing data generation from model"):
         
-        def ans_gen_fun(model_name):
+        def ans_gen_fun(model_name,progress=gr.Progress()):
             if not os.path.exists(r"data\testing_dataset.xlsx"):
                 gr.Warning("You need to create testing dataset first from Data collection.")
                 return
             import time
-            progress=gr.Progress()
+            progress(0, desc="Starting...")
             idx=1
             model_ques_ans_gen=[]
             df_temp=pd.read_excel(r"data/testing_dataset.xlsx")
             #$$$$$$$$$$$$$$$$$
             # rag_chain=rag_chain_ret(model_name)
-            for x in progress.tqdm(df_temp['question'], desc="Loading..."):
+            for x in progress.tqdm(df_temp['question']):
                 # time.sleep(0.1)
                 model_ques_ans_gen.append({
                     "id":idx,
@@ -312,7 +314,7 @@ with gr.Blocks() as demo:
                 })
                 idx+=1
             pd.DataFrame(model_ques_ans_gen).to_excel(os.path.join("model_ans",f"_{model_name+cur_time}.xlsx"),index=False)
-        gr.Info("Generating answer from model is finished!!! Now, it is ready for human evaluation.")
+        gr.Info("Generating answer from model is finished!!! Now, it is ready for human evaluation. Model answer is saved in \"model_ans\" folder. ")
                
         gr.Markdown(""" # Instructions:\n
                     In this page you can generate answer from fine-tuned models for human evaluation. The questions must be created using 'Testing data generation' section of 'Data collection' tab.
@@ -320,7 +322,7 @@ with gr.Blocks() as demo:
         model_name=gr.Dropdown(choices=os.listdir("models"),label="Select the model")
         with gr.Row():
             ans_gen=gr.Button("Generate the answer of the testing dataset")
-        ans_gen.click(ans_gen_fun,model_name,None)
+        ans_gen.click(ans_gen_fun,model_name,model_name)
 #***************************************************
     def bar_plot_fn():
         temp=score_report_bar()
@@ -431,4 +433,4 @@ with gr.Blocks() as demo:
         btn_model=gr.Button("Deploy")
         btn_model.click(deploy_func,model_name)
 
-demo.launch(share=True)
+demo.launch(share=False)
