@@ -11,7 +11,7 @@ import transformers
 from transformers import GenerationConfig
 from pynvml import *
 import glob
-class mistral_trainer:
+class phi_trainer:
     def formatted_text(self,x,tokenizer):
             temp = [
             # {"role": "system", "content": "Answer as a medical assistant. Respond concisely."},
@@ -20,10 +20,10 @@ class mistral_trainer:
             {"role": "assistant", "content": x["answer"]}
             ]
             return tokenizer.apply_chat_template(temp, add_generation_prompt=False, tokenize=False)
-    def mistral_finetune(self,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
-        base_model = "mistralai/Mistral-7B-Instruct-v0.2"
-        lora_output = 'models/lora_KUET_LLM_Mistral'
-        full_output = 'models/full_KUET_LLM_Mistral'
+    def phi_finetune(self,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
+        base_model = "microsoft/Phi-3-mini-4k-instruct"
+        lora_output = 'models/lora_KUET_LLM_phi'
+        full_output = 'models/full_KUET_LLM_phi'
         DEVICE = 'cuda'
         tokenizer = AutoTokenizer.from_pretrained(base_model)
         tokenizer.padding_side = 'right'
@@ -60,8 +60,7 @@ class mistral_trainer:
         tokenizer = AutoTokenizer.from_pretrained(base_model, trust_remote_code=True)
         tokenizer.padding_side = 'right'
         tokenizer.pad_token = tokenizer.eos_token
-        tokenizer.add_eos_token = True
-        tokenizer.add_bos_token, tokenizer.add_eos_token
+  
 
         # Set PEFT adapter config (16:32)
         from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
@@ -111,14 +110,14 @@ class mistral_trainer:
                                     )
 
         trainer.train()
-
+        print("*"*10,": Finetune ended!!!!")
         trainer.save_model(lora_output)
 
         # Get peft config
         from peft import PeftConfig
         config = PeftConfig.from_pretrained(lora_output)
 
-        model = transformers.AutoModelForCausalLM.from_pretrained(config.base_model_name_or_path)
+        model = transformers.AutoModelForCausalLM.from_pretrained(config.base_model_name_or_path,trust_remote_code=True)
 
         # tokenizer = transformers.AutoTokenizer.from_pretrained(base_model)
 

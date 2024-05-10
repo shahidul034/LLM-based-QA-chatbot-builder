@@ -11,18 +11,18 @@ from transformers import GenerationConfig
 from pynvml import *
 import glob
 class llama_trainer: 
-    def llama_model(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
-        base_model = "NousResearch/Llama-2-7b-chat-hf"
+    def llama_model(self,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
+        # base_model = "NousResearch/Llama-2-7b-chat-hf"
+        base_model="NousResearch/Meta-Llama-3-8B"
         lora_output = 'models/lora_KUET_LLM_llama'
         full_output = 'models/full_KUET_LLM_llama'
         DEVICE = 'cuda'
 
         # set quantization config
-        if quantization == '8':
-            bnb_config = BitsAndBytesConfig(  
+        bnb_config = BitsAndBytesConfig(  
                 load_in_8bit= True,
             )
-        elif quantization == '4':
+        if quantization == 4:
             bnb_config = BitsAndBytesConfig(
                 load_in_4bit= True,
                 bnb_4bit_use_double_quant=True,
@@ -44,9 +44,9 @@ class llama_trainer:
         tokenizer.padding_side = 'right'
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.add_eos_token = True
-        tokenizer.add_bos_token, tokenizer.add_eos_token
+        tokenizer.add_eos_token
 
-        data_location = "data.xlsx" ## replace here
+        data_location = r"data/finetune_data.xlsx" ## replace here
         data_df=pd.read_excel( data_location )
 
         for i in range(len(data_df)):

@@ -35,7 +35,7 @@ def random_ques_ans2():
     df=pd.read_excel(r"data/existing_dataset.xlsx")
     id=random.randint(0,len(df))
     ques_temp=(df.loc[id])['question']
-    ans_temp=(df.loc[id])['answer']
+    ans_temp=""
     return ques_temp,ans_temp
 def score_report_bar():
     path="score_report"

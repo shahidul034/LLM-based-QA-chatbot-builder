@@ -8,9 +8,11 @@ import pandas as pd
 import os
 import random
 from utils import display_table,current_time,random_ques_ans2,move_to,score_report_bar
+from inference import model_chain
 #$$$$$$$$$$$$$$$$$
-# from inference import ans_ret,rag_chain_ret,model_push
+# from inference import rag_chain_ret
 ###### Testing code
+os.environ["WANDB_DISABLED"] = "true"
 global cnt
 cnt=1
 data=[]
@@ -137,6 +139,7 @@ with gr.Blocks() as demo:
             with gr.Tab("Training data generation"):
                 with gr.Tab("Existing questions"):
                     gr.Markdown("""
+                        Existing questions are provided by the administrator and placed in the data folder named "existing_dataset.xlsx". This file has only one column: "question".
                         After clicking the "save the answer" button. Those questions and answers are saved in the "data" folder as a finetune_data.xlsx file.
                     """)
                     ques_temp,ans_temp=random_ques_ans2()
@@ -210,28 +213,35 @@ with gr.Blocks() as demo:
                 elif model_name_temp=="Llama":
                     open(r"fine_tune_file/llama_finetune.py","w").write(code_temp)
             # importing just before finetuning, to ensure the latest code is used
-            from fine_tune_file.mistral_finetune import mistral_tainer
+            from fine_tune_file.mistral_finetune import mistral_trainer
             from fine_tune_file.zepyhr_finetune import zephyr_trainer
             from fine_tune_file.llama_finetune import llama_trainer
-            from fine_tune_file.finetune_file import custom_model_trainer
+            from fine_tune_file.phi_finetune import phi_trainer
+            # from fine_tune_file.finetune_file import custom_model_trainer
             # create instance of the finetuning classes and then call the finetune function
             if model_name_temp=="Mistral":
                 gr.Info("Finetune started!!!")
-                # trainer = mistral_tainer()
-                # trainer.mistral_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                trainer = mistral_trainer()
+                trainer.mistral_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Finetune Ended!!!")
             elif model_name_temp=="Zephyr":
                 gr.Info("Finetune started!!!")
                 trainer = zephyr_trainer()
-                trainer.zepyhr_model(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                trainer.zepyhr_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Finetune Ended!!!")
-            elif model_name=="Llama":
+            elif model_name_temp=="Llama":
                 gr.Info("Finetune started!!!")
                 trainer = llama_trainer()
-                trainer.llama_model(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                trainer.llama_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                gr.Info("Finetune Ended!!!")
+            elif model_name_temp=="Phi":
+                gr.Info("Finetune started!!!")
+                trainer = phi_trainer()
+                trainer.phi_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Finetune Ended!!!")
             else:
-                trainer=custom_model_trainer()
+                pass
+                # trainer=custom_model_trainer()
                 # trainer.custom_model_trainer()
         
         def code_show(model_name):
@@ -266,25 +276,27 @@ with gr.Blocks() as demo:
         with gr.Row():
             code_temp=gr.Code(visible=False)
         with gr.Row():
-            model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama","custom model"],label="Select the model for fine-tuning")        
+            model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama","Phi","custom model"],label="Select the model for fine-tuning")        
 
         with gr.Accordion("Parameter setup"):
             with gr.Row():
                 lr=gr.Number(label="Learning rate",value=5e-6,interactive=True,info="The step size at which the model parameters are updated during training. It controls the magnitude of the updates to the model's weights.")
-                epoch=gr.Textbox(label="Epochs",value=2,interactive=True,info="One complete pass through the entire training dataset during the training process. It's a measure of how many times the algorithm has seen the entire dataset.")
-                batch_size=gr.Textbox(label="Batch size",value=4,interactive=True,info="The number of training examples used in one iteration of training. It affects the speed and stability of the training process.")
-                gradient_accumulation = gr.Textbox(info="Gradient accumulation involves updating model weights after accumulating gradients over multiple batches, instead of after each individual batch.",label="gradient_accumulation",value=4,interactive=True)
+                epoch=gr.Number(label="Epochs",value=2,interactive=True,info="One complete pass through the entire training dataset during the training process. It's a measure of how many times the algorithm has seen the entire dataset.")
+                batch_size=gr.Number(label="Batch size",value=4,interactive=True,info="The number of training examples used in one iteration of training. It affects the speed and stability of the training process.")
+                gradient_accumulation = gr.Number(info="Gradient accumulation involves updating model weights after accumulating gradients over multiple batches, instead of after each individual batch.",label="gradient_accumulation",value=4,interactive=True)
             with gr.Row():
                 quantization = gr.Dropdown(info="Quantization is a technique used to reduce the precision of numerical values, typically from 32-bit floating-point numbers to lower bit representations.",label="quantization",choices=[4,8],value=8,interactive=True)
-                lora_r = gr.Textbox(info="LoRA_r is a hyperparameter associated with the rank of the low-rank approximation used in LoRA.",label="lora_r",value=16,interactive=True)
-                lora_alpha = gr.Textbox(info="LoRA_alpha is a hyperparameter used in LoRA for controlling the strength of the adaptation.",label="lora_alpha",value=32,interactive=True)
-                lora_dropout = gr.Textbox(info="LoRA_dropout is a hyperparameter used in LoRA to control the dropout rate during fine-tuning.",label="lora_dropout",value=.05,interactive=True)
+                lora_r = gr.Number(info="LoRA_r is a hyperparameter associated with the rank of the low-rank approximation used in LoRA.",label="lora_r",value=16,interactive=True)
+                lora_alpha = gr.Number(info="LoRA_alpha is a hyperparameter used in LoRA for controlling the strength of the adaptation.",label="lora_alpha",value=32,interactive=True)
+                lora_dropout = gr.Number(info="LoRA_dropout is a hyperparameter used in LoRA to control the dropout rate during fine-tuning.",label="lora_dropout",value=.05,interactive=True)
         with gr.Row():
             edit_code=gr.Button("Advance code editing")
         with gr.Row():
             code_temp=gr.Code(visible=False)
         with gr.Row():
             parameter_alter=gr.Button("Finetune")
+        with gr.Row():
+            fin_com=gr.Label(visible=False)
         edit_code.click(code_show,model_name,code_temp)
         parameter_alter.click(edit_model_parameter,[model_name,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout],model_name)
         model_name.change(custom_model,model_name,[code_temp,edit_code])
@@ -302,7 +314,8 @@ with gr.Blocks() as demo:
             model_ques_ans_gen=[]
             df_temp=pd.read_excel(r"data/testing_dataset.xlsx")
             #$$$$$$$$$$$$$$$$$
-            # rag_chain=rag_chain_ret(model_name)
+            # infer_model = model_chain(model_name)
+            # rag_chain=infer_model.rag_chain_ret()
             for x in progress.tqdm(df_temp['question']):
                 # time.sleep(0.1)
                 model_ques_ans_gen.append({
@@ -402,23 +415,15 @@ with gr.Blocks() as demo:
             return [gr.Button("Show answer from other users"),gr.Label(value="\n".join(temp),visible=True)] 
         human_ans_btn.click(human_ans_func,[id, ques],[human_ans_btn,human_ans_lab])
 #***************************************************    
+    infer_ragchain=None
     with gr.Tab("Inference"):
         def echo(message, history,model_name):
-            gr.Info("Please wait!!! Model is loading!!")
-            #$$$$$$$$$$$$$$$$$
-            # rag_chain=rag_chain_ret()
-            if model_name=="Mistral":
-                #$$$$$$$$$$$$$$$$$
-                # return ans_ret(message,rag_chain)
-                return """Khulna University of Engineering & Technology (KUET) is located in Fulbarigate, Teligati, Khulna, Bangladesh. The expansive campus covers an area of 101 acres. KUET is a prestigious educational institution renowned for its quality education and research in engineering."""
-            elif model_name=="Zepyhr":
-                #$$$$$$$$$$$$$$$$$
-                # return ans_ret(message,rag_chain)
-                return "Zepyhr"
-            elif model_name=="Llama2":
-                #$$$$$$$$$$$$$$$$$
-                # return ans_ret(message,rag_chain)
-                return "Llama"
+            global infer_ragchain
+            if infer_ragchain is None:
+                gr.Info("Please wait!!! Model is loading!!")
+                # infer_ragchain = model_chain(model_name)
+            rag_chain=infer_ragchain.rag_chain_ret()
+            return infer_ragchain.ans_ret(message,rag_chain) 
         
         model_name=gr.Dropdown(choices=os.listdir("models"),label="Select the model")
         gr.ChatInterface(fn=echo, additional_inputs=[model_name], title="Chatbot")
@@ -433,4 +438,4 @@ with gr.Blocks() as demo:
         btn_model=gr.Button("Deploy")
         btn_model.click(deploy_func,model_name)
 
-demo.launch(share=False)
+demo.launch(share=True)
