@@ -6,6 +6,7 @@
 import gradio as gr
 import pandas as pd
 import os
+from pathlib import Path
 import random
 from utils import display_table,current_time,random_ques_ans2,move_to,score_report_bar
 from inference import model_chain
@@ -86,6 +87,8 @@ def save_the_ques(ques,ans):
         for x in os.listdir("save_ques_ans"):
             path=os.path.join("save_ques_ans",x)
             df_all.append(pd.read_excel(path))
+        if Path("data//finetune_data.xlsx").is_file():
+            df_all.append(pd.read_excel("data//finetune_data.xlsx"))
         df_temp=pd.concat(df_all,axis=0)
         df_temp.to_excel("data//finetune_data.xlsx",index=False)
 
@@ -197,9 +200,10 @@ with gr.Blocks() as demo:
         
         gr.Markdown("""
             # Instructions:
-            1) Required VRAM for training: 24GB, for inference: 16GB.\n
-            2) For fine-tuning a custom model select 'custom modele' option in 'Select the model for fine-tuning' dropdown section. The custom model can be configured by editing the code section.\n
-            3) After fine-tuning the model, it will be saved in the "models" folder.
+            1) Required VRAM for training: 24GB, for inference: 16GB.(Mistral, Zepyhr and Lllama)\n
+            2) Required VRAM for training: 5GB, for inference: 4GB.(Phi)
+            3) For fine-tuning a custom model select 'custom modele' option in 'Select the model for fine-tuning' dropdown section. The custom model can be configured by editing the code section.\n
+            4) After fine-tuning the model, it will be saved in the "models" folder.
         """)
             
         def edit_model_parameter(model_name_temp,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout, progress=gr.Progress()):
@@ -212,12 +216,16 @@ with gr.Blocks() as demo:
                     open(r"fine_tune_file/zepyhr_finetune.py","w").write(code_temp)
                 elif model_name_temp=="Llama":
                     open(r"fine_tune_file/llama_finetune.py","w").write(code_temp)
+                elif model_name_temp=="Phi":
+                    open(r"fine_tune_file/phi_finetune.py","w").write(code_temp)
+                elif model_name_temp=="Custom model":
+                    open(r"fine_tune_file/finetune_file.py","w").write(code_temp)
             # importing just before finetuning, to ensure the latest code is used
             from fine_tune_file.mistral_finetune import mistral_trainer
             from fine_tune_file.zepyhr_finetune import zephyr_trainer
             from fine_tune_file.llama_finetune import llama_trainer
             from fine_tune_file.phi_finetune import phi_trainer
-            # from fine_tune_file.finetune_file import custom_model_trainer
+            from fine_tune_file.finetune_file import custom_model_trainer
             # create instance of the finetuning classes and then call the finetune function
             if model_name_temp=="Mistral":
                 gr.Info("Finetune started!!!")
@@ -239,10 +247,9 @@ with gr.Blocks() as demo:
                 trainer = phi_trainer()
                 trainer.phi_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Finetune Ended!!!")
-            else:
-                pass
-                # trainer=custom_model_trainer()
-                # trainer.custom_model_trainer()
+            elif model_name_temp=="Custom model":
+                trainer=custom_model_trainer()
+                trainer.custom_model_finetune()
         
         def code_show(model_name):
             if model_name=="Mistral":
@@ -254,9 +261,12 @@ with gr.Blocks() as demo:
             elif model_name=="Llama":
                 f=open(r"fine_tune_file/llama_finetune.py").read()
                 return gr.Code(visible=True,value=f,interactive=True,language="python")
+            elif model_name=="Phi":
+                f=open(r"fine_tune_file/phi_finetune.py").read()
+                return gr.Code(visible=True,value=f,interactive=True,language="python")
 
-        def custom_model(model_name):
-            if model_name=="custom model":
+        def custom_model(model_name): # It shows custom model code in the UI.
+            if model_name=="Custom model":
                 f=open(r"fine_tune_file/finetune_file.py").read()
                 return [gr.Code(visible=True,value=f,interactive=True,language="python"),gr.Button(visible=False)]
             else:
@@ -272,11 +282,14 @@ with gr.Blocks() as demo:
             elif model_name=="Llama":
                 open(r"fine_tune_file/llama_finetune.py","w").write(code_)
                 gr.Info("Successfully saved code!!!")
+            elif model_name=="Phi":
+                open(r"fine_tune_file/phi_finetune.py","w").write(code_)
+                gr.Info("Successfully saved code!!!")
 
         with gr.Row():
             code_temp=gr.Code(visible=False)
         with gr.Row():
-            model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama","Phi","custom model"],label="Select the model for fine-tuning")        
+            model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama","Phi","Custom model"],label="Select the model for fine-tuning")        
 
         with gr.Accordion("Parameter setup"):
             with gr.Row():
@@ -298,6 +311,7 @@ with gr.Blocks() as demo:
         with gr.Row():
             fin_com=gr.Label(visible=False)
         edit_code.click(code_show,model_name,code_temp)
+        # On click finetune button 
         parameter_alter.click(edit_model_parameter,[model_name,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout],model_name)
         model_name.change(custom_model,model_name,[code_temp,edit_code])
         
@@ -421,7 +435,7 @@ with gr.Blocks() as demo:
             global infer_ragchain
             if infer_ragchain is None:
                 gr.Info("Please wait!!! Model is loading!!")
-                # infer_ragchain = model_chain(model_name)
+                infer_ragchain = model_chain(model_name)
             rag_chain=infer_ragchain.rag_chain_ret()
             return infer_ragchain.ans_ret(message,rag_chain) 
         

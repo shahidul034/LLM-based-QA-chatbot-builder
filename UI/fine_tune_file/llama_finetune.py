@@ -14,8 +14,9 @@ class llama_trainer:
     def llama_model(self,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
         # base_model = "NousResearch/Llama-2-7b-chat-hf"
         base_model="NousResearch/Meta-Llama-3-8B"
-        lora_output = 'models/lora_KUET_LLM_llama'
-        full_output = 'models/full_KUET_LLM_llama'
+        from datetime import datetime
+        lora_output = f'models/lora_Llama_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
+        full_output = f'models/full_Llama_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
         DEVICE = 'cuda'
 
         # set quantization config

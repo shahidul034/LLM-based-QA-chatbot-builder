@@ -12,18 +12,19 @@ from transformers import GenerationConfig
 from pynvml import *
 import glob
 class zephyr_trainer:
-    def formatted_text(x,tokenizer):
+    def formatted_text(self,x,tokenizer):
             temp = [
             # {"role": "system", "content": "Answer as a medical assistant. Respond concisely."},
-            {"role": "user", "content": """You are a KUET authority managed chatbot, help users by answering their queries about KUET.
+            {"role": "user", "content": """You are a helpful chatbot, help users by answering their queries.
             Question: """ + x["question"]},
             {"role": "assistant", "content": x["answer"]}
             ]
             return tokenizer.apply_chat_template(temp, add_generation_prompt=False, tokenize=False)
     def zepyhr_model(self,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
         base_model = 'HuggingFaceH4/zephyr-7b-beta'
-        lora_output = 'models/lora_KUET_LLM_Zepyhr'
-        full_output = 'models/full_KUET_LLM_Zepyhr'
+        from datetime import datetime
+        lora_output = f'models/lora_Zepyhr_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
+        full_output = f'models/full_Zepyhr_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
         DEVICE = 'cuda'
         tokenizer = AutoTokenizer.from_pretrained(base_model)
         tokenizer.padding_side = 'right'
@@ -37,11 +38,10 @@ class zephyr_trainer:
 
 
         # set quantization config
-        if quantization == '8':
-            bnb_config = BitsAndBytesConfig(  
+        bnb_config = BitsAndBytesConfig(  
                 load_in_8bit= True,
             )
-        elif quantization == '4':
+        if quantization == 4:
             bnb_config = BitsAndBytesConfig(
                 load_in_4bit= True,
                 bnb_4bit_use_double_quant=True,
@@ -114,7 +114,7 @@ class zephyr_trainer:
                                     )
 
         trainer.train()
-
+        print("*"*10,": Finetune ended!!!!")
         trainer.save_model(lora_output)
 
         # Get peft config

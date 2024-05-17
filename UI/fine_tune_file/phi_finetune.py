@@ -15,15 +15,16 @@ class phi_trainer:
     def formatted_text(self,x,tokenizer):
             temp = [
             # {"role": "system", "content": "Answer as a medical assistant. Respond concisely."},
-            {"role": "user", "content": """You are a KUET authority managed chatbot, help users by answering their queries about KUET.
+            {"role": "user", "content": """You are a helpful chatbot, help users by answering their queries.
             Question: """ + x["question"]},
             {"role": "assistant", "content": x["answer"]}
             ]
             return tokenizer.apply_chat_template(temp, add_generation_prompt=False, tokenize=False)
     def phi_finetune(self,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
         base_model = "microsoft/Phi-3-mini-4k-instruct"
-        lora_output = 'models/lora_KUET_LLM_phi'
-        full_output = 'models/full_KUET_LLM_phi'
+        from datetime import datetime
+        lora_output = f'models/lora_Phi_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
+        full_output = f'models/full_Phi_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
         DEVICE = 'cuda'
         tokenizer = AutoTokenizer.from_pretrained(base_model)
         tokenizer.padding_side = 'right'

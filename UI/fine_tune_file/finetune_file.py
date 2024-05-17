@@ -11,21 +11,21 @@ import transformers
 from transformers import GenerationConfig
 from pynvml import *
 import glob
-class custom_model_finetune:
-    lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout= # setup the parameter accoring to your model.
+class custom_model_trainer:
+    lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout=5e-6,3,4,4,4,16,32,.05 # setup the parameter accoring to your model.
     def formatted_text(x,tokenizer):
             # change this templete according to your model
             #Example: 
-            # temp = [
-            # {"role": "user", "content": """You are a KUET authority managed chatbot, help users by answering their queries about KUET.
-            # Question: """ + x["Prompt"]},
-            # {"role": "assistant", "content": x["Reply"]}
-            # ]
+            temp = [
+            {"role": "user", "content": """You are a helpful chatbot, help users by answering their queries.
+            Question: """ + x["question"]},
+            {"role": "assistant", "content": x["answer"]}
+            ]
             return tokenizer.apply_chat_template(temp, add_generation_prompt=False, tokenize=False)
-    def custom_model_trainer(self):
-        base_model = '' # Write the base model repo name from huggingface
-        lora_output = '' # Write the folder name for saving lora output
-        full_output = '' # Write the folder name for saving full model output
+    def custom_model_finetune(self):
+        base_model = 'mistralai/Mistral-7B-Instruct-v0.2' # Write the base model repo name from huggingface
+        lora_output = 'mymodel_lora' # Write the folder name for saving lora output
+        full_output = 'mymodel_full' # Write the folder name for saving full model output
         DEVICE = 'cuda'
         tokenizer = AutoTokenizer.from_pretrained(base_model)
         tokenizer.padding_side = 'right'
@@ -39,11 +39,11 @@ class custom_model_finetune:
 
 
         # set quantization config
-        if quantization == '8':
+        if self.quantization == '8':
             bnb_config = BitsAndBytesConfig(  
                 load_in_8bit= True,
             )
-        elif quantization == '4':
+        elif self.quantization == '4':
             bnb_config = BitsAndBytesConfig(
                 load_in_4bit= True,
                 bnb_4bit_use_double_quant=True,
@@ -72,24 +72,24 @@ class custom_model_finetune:
 
         # target modules are currently selected for zephyr base model
         config = LoraConfig(
-            r= lora_r if lora_r else 16,
-            lora_alpha= lora_alpha if lora_alpha else 32,
+            r= self.lora_r if self.lora_r else 16,
+            lora_alpha= self.lora_alpha if self.lora_alpha else 32,
             target_modules=["q_proj", "v_proj","k_proj","o_proj","gate_proj","up_proj","down_proj"],   # target all the linear layers for full finetuning
-            lora_dropout= lora_dropout if lora_dropout else 0.05,
+            lora_dropout= self.lora_dropout if self.lora_dropout else 0.05,
             bias="none",
             task_type="CAUSAL_LM")
 
         # stabilize output layer and layernorms
-        model = prepare_model_for_kbit_training(model, quantization)
+        model = prepare_model_for_kbit_training(model, self.quantization)
         # Set PEFT adapter on model (Last step)
         model = get_peft_model(model, config)
 
         # Set Hyperparameters
         MAXLEN=512
-        BATCH_SIZE = batch_size if batch_size else 4
-        GRAD_ACC = gradient_accumulation if gradient_accumulation else 4
+        BATCH_SIZE = self.batch_size if self.batch_size else 4
+        GRAD_ACC = self.gradient_accumulation if self.gradient_accumulation else 4
         OPTIMIZER ='paged_adamw_8bit' # save memory
-        LR=lr if lr else 5e-06                       # slightly smaller than pretraining lr | and close to LoRA standard
+        LR=self.lr if self.lr else 5e-06                       # slightly smaller than pretraining lr | and close to LoRA standard
 
 
         training_config = transformers.TrainingArguments(per_device_train_batch_size=BATCH_SIZE,
@@ -98,7 +98,7 @@ class custom_model_finetune:
                                                         learning_rate=LR,
                                                         fp16=True,            # consider compatibility when using bf16
                                                         logging_steps=10,
-                                                        num_train_epochs = epoch if epoch else 2,
+                                                        num_train_epochs = self.epoch if self.epoch else 2,
                                                         output_dir=lora_output,
                                                         remove_unused_columns=True,
                                                         )
