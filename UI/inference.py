@@ -5,18 +5,24 @@ import transformers
 from pynvml import *
 import torch
 from langchain import hub
-from model_ret import zepyhr_model,llama_model,mistral_model
+from model_ret import zepyhr_model,llama_model,mistral_model,phi_model,flant5_model
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from create_retriever import ensemble_retriever
 class model_chain:
-    def __init__(self, model_name) -> None:
-        if model_name=="Zepyhr":
-            self.llm=zepyhr_model()
-        elif model_name=="Llama2":
-            self.llm=llama_model()
-        else:
-            self.llm=mistral_model()
+    model_name=""
+    def __init__(self, model_info) -> None:
+        quantization,self.model_name=model_info.split("_")[0],model_info.split("_")[1]
+        if self.model_name=="Zepyhr":
+            self.llm=zepyhr_model(model_info,quantization)
+        elif self.model_name=="Llama":
+            self.llm=llama_model(model_info,quantization)
+        elif self.model_name=="Mistral":
+            self.llm=mistral_model(model_info,quantization)
+        elif self.model_name=="Phi":
+            self.llm=phi_model(model_info,quantization)
+        elif self.model_name=="flant5":
+            self.llm=flant5_model(model_info)    
         retriever=ensemble_retriever()
         prompt = hub.pull("rlm/rag-prompt")
         def format_docs(docs):
@@ -33,6 +39,9 @@ class model_chain:
         
 
     def ans_ret(self,inp,rag_chain):
+        
+        # if self.model_name=='flant5':
+            
         ans=rag_chain.invoke(inp)
         ans=ans.split("Answer:")[1]
         return ans

@@ -9,8 +9,6 @@ import os
 from datetime import datetime
 os.environ["WANDB_DISABLED"] = "true"
 
-
-
 class flant5_trainer:
    def __init__(self) -> None:
         # Load the tokenizer, model, and data collator
@@ -51,7 +49,7 @@ class flant5_trainer:
    def flant5_finetune(self,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
       
       data_location = r"data/finetune_data.xlsx" 
-      data_df=pd.read_excel( data_location )
+      data_df=pd.read_excel(data_location)
       dataset = Dataset.from_pandas(data_df)
       # We prefix our tasks with "answer the question"
       self.prefix = "Please answer this question: "
@@ -93,6 +91,7 @@ class flant5_trainer:
       trainer.train()
       
       current_time = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-      full_output = f'models/flant5_{current_time}'
+      full_output = f'models/0_flant5_{current_time}'
       self.model.save_pretrained(full_output)
       self.model.save_pretrained(full_output)
+      print("*"*10,": Model is saved!!!")

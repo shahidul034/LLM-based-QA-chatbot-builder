@@ -23,14 +23,14 @@ class mistral_trainer:
     def mistral_finetune(self,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
         base_model = "mistralai/Mistral-7B-Instruct-v0.2"
         from datetime import datetime
-        lora_output = f'models/lora_Mistral_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
-        full_output = f'models/full_Mistral_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
+        lora_output = f'models/{quantization}_Mistral_lora_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
+        full_output = f'models/{quantization}_Mistral_full_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
         DEVICE = 'cuda'
         tokenizer = AutoTokenizer.from_pretrained(base_model)
         tokenizer.padding_side = 'right'
         ### read csv with Prompt, Answer pair 
         data_location = r"data/finetune_data.xlsx" ## replace here
-        data_df=pd.read_excel( data_location )
+        data_df=pd.read_excel(data_location)
         ### set formatting
         data_df["text"] = data_df[["question", "answer"]].apply(lambda x: self.formatted_text(x,tokenizer), axis=1) ## replace Prompt and Answer if collected dataset has different column names
         print(data_df.iloc[0])
@@ -86,7 +86,7 @@ class mistral_trainer:
         BATCH_SIZE = batch_size if batch_size else 4
         GRAD_ACC = gradient_accumulation if gradient_accumulation else 4
         OPTIMIZER ='paged_adamw_8bit' # save memory
-        LR=lr if lr else 5e-06                       # slightly smaller than pretraining lr | and close to LoRA standard
+        LR=lr if lr else 5e-06 # slightly smaller than pretraining lr | and close to LoRA standard
 
         training_config = transformers.TrainingArguments(per_device_train_batch_size=BATCH_SIZE,
                                                         gradient_accumulation_steps=GRAD_ACC,
@@ -121,8 +121,6 @@ class mistral_trainer:
 
         model = transformers.AutoModelForCausalLM.from_pretrained(config.base_model_name_or_path)
 
-        # tokenizer = transformers.AutoTokenizer.from_pretrained(base_model)
-
         # Load the Lora model
         from peft import PeftModel
         model = PeftModel.from_pretrained(model, lora_output)
@@ -133,3 +131,4 @@ class mistral_trainer:
 
         merged_model.save_pretrained(full_output)
         tokenizer.save_pretrained(full_output)
+        print("*"*10,": Model is saved!!!")

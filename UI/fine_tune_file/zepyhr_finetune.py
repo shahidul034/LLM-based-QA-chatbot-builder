@@ -23,8 +23,8 @@ class zephyr_trainer:
     def zepyhr_model(self,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
         base_model = 'HuggingFaceH4/zephyr-7b-beta'
         from datetime import datetime
-        lora_output = f'models/lora_Zepyhr_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
-        full_output = f'models/full_Zepyhr_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
+        lora_output = f'models/{quantization}_Zepyhr_lora_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
+        full_output = f'models/{quantization}_Zepyhr_full_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
         DEVICE = 'cuda'
         tokenizer = AutoTokenizer.from_pretrained(base_model)
         tokenizer.padding_side = 'right'
@@ -133,3 +133,4 @@ class zephyr_trainer:
 
         merged_model.save_pretrained(full_output)
         tokenizer.save_pretrained(full_output)
+        print("*"*10,": Model is saved!!!")

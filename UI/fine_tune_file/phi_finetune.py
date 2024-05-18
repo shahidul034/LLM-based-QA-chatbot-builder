@@ -23,8 +23,8 @@ class phi_trainer:
     def phi_finetune(self,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
         base_model = "microsoft/Phi-3-mini-4k-instruct"
         from datetime import datetime
-        lora_output = f'models/lora_Phi_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
-        full_output = f'models/full_Phi_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
+        lora_output = f'models/{quantization}_Phi_lora_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
+        full_output = f'models/{quantization}_Phi_full_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
         DEVICE = 'cuda'
         tokenizer = AutoTokenizer.from_pretrained(base_model)
         tokenizer.padding_side = 'right'
@@ -132,3 +132,4 @@ class phi_trainer:
 
         merged_model.save_pretrained(full_output)
         tokenizer.save_pretrained(full_output)
+        print("*"*10,": Model is saved!!!")

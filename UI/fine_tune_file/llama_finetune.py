@@ -15,8 +15,8 @@ class llama_trainer:
         # base_model = "NousResearch/Llama-2-7b-chat-hf"
         base_model="NousResearch/Meta-Llama-3-8B"
         from datetime import datetime
-        lora_output = f'models/lora_Llama_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
-        full_output = f'models/full_Llama_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
+        lora_output = f'models/{quantization}_Llama_lora_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
+        full_output = f'models/{quantization}_Llama_full_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
         DEVICE = 'cuda'
 
         # set quantization config
@@ -125,6 +125,7 @@ class llama_trainer:
 
         merged_model.save_pretrained(full_output)
         tokenizer.save_pretrained(full_output)
+        print("*"*10,": Model is saved!!!")
 
 
 

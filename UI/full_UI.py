@@ -226,6 +226,7 @@ with gr.Blocks() as demo:
             from fine_tune_file.llama_finetune import llama_trainer
             from fine_tune_file.phi_finetune import phi_trainer
             from fine_tune_file.finetune_file import custom_model_trainer
+            from fine_tune_file.flant5_finetune import flant5_trainer
             # create instance of the finetuning classes and then call the finetune function
             if model_name_temp=="Mistral":
                 gr.Info("Finetune started!!!")
@@ -247,9 +248,16 @@ with gr.Blocks() as demo:
                 trainer = phi_trainer()
                 trainer.phi_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Finetune Ended!!!")
+            elif model_name_temp=="Flan-T5":
+                gr.Info("Finetune started!!!")
+                trainer = flant5_trainer()
+                trainer.flant5_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                gr.Info("Finetune Ended!!!")
             elif model_name_temp=="Custom model":
+                gr.Info("Finetune started!!!")
                 trainer=custom_model_trainer()
                 trainer.custom_model_finetune()
+                gr.Info("Finetune Ended!!!")
         
         def code_show(model_name):
             if model_name=="Mistral":
@@ -263,6 +271,9 @@ with gr.Blocks() as demo:
                 return gr.Code(visible=True,value=f,interactive=True,language="python")
             elif model_name=="Phi":
                 f=open(r"fine_tune_file/phi_finetune.py").read()
+                return gr.Code(visible=True,value=f,interactive=True,language="python")
+            elif model_name=="Flan-T5":
+                f=open(r"fine_tune_file/flant5_finetune.py").read()
                 return gr.Code(visible=True,value=f,interactive=True,language="python")
 
         def custom_model(model_name): # It shows custom model code in the UI.
@@ -285,11 +296,14 @@ with gr.Blocks() as demo:
             elif model_name=="Phi":
                 open(r"fine_tune_file/phi_finetune.py","w").write(code_)
                 gr.Info("Successfully saved code!!!")
+            elif model_name=="Flan-T5":
+                open(r"fine_tune_file/flant5_finetune.py","w").write(code_)
+                gr.Info("Successfully saved code!!!")
 
         with gr.Row():
             code_temp=gr.Code(visible=False)
         with gr.Row():
-            model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama","Phi","Custom model"],label="Select the model for fine-tuning")        
+            model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama","Phi","Flan-T5","Custom model"],label="Select the model for fine-tuning")        
 
         with gr.Accordion("Parameter setup"):
             with gr.Row():
