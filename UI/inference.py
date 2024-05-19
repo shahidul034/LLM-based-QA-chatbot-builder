@@ -22,13 +22,13 @@ class model_chain:
         elif self.model_name=="Phi":
             self.llm=phi_model(model_info,quantization)
         elif self.model_name=="flant5":
-            self.llm=flant5_model(model_info)    
-        retriever=ensemble_retriever()
+            self.tokenizer, self.model,self.llm=flant5_model(model_info)    
+        self.retriever=ensemble_retriever()
         prompt = hub.pull("rlm/rag-prompt")
         def format_docs(docs):
             return "\n\n".join(doc.page_content for doc in docs)
         self.rag_chain = (
-            {"context": retriever | format_docs, "question": RunnablePassthrough()}
+            {"context": self.retriever | format_docs, "question": RunnablePassthrough()}
             | prompt
             | self.llm
             | StrOutputParser()
@@ -37,10 +37,21 @@ class model_chain:
     def rag_chain_ret(self):
         return self.rag_chain
         
-
     def ans_ret(self,inp,rag_chain):
         
-        # if self.model_name=='flant5':
+        if self.model_name=='flant5':
+            my_question = "What is KUET?"
+            data=self.retriever.invoke(inp)
+            context=""
+            for x in data[:2]:
+                context+=(x.page_content)+"\n"
+            inputs = f"""Please answer to this question using this context:\n{context}\n{my_question}"""
+            inputs = self.tokenizer(inputs, return_tensors="pt")
+            outputs = self.model.generate(**inputs)
+            answer = self.tokenizer.decode(outputs[0])
+            from textwrap import fill
+            ans=fill(answer, width=100)
+            return ans
             
         ans=rag_chain.invoke(inp)
         ans=ans.split("Answer:")[1]

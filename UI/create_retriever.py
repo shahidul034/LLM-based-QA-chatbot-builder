@@ -95,3 +95,8 @@ def ensemble_retriever():
         retriever = EnsembleRetriever(retrievers=[retriever1, retriever2],
                                             weights=[0.50, 0.50])
         return retriever
+# dat=ensemble_retriever()
+# data=dat.invoke("What is KUET?")
+# context=""
+# for x in data[:2]:
+#     context+=(x.page_content)+"\n"

@@ -153,7 +153,6 @@ def flant5_model(model_info):
     model = T5ForConditionalGeneration.from_pretrained(path)
     MODEL_NAME = "google/flan-t5-base"
     tokenizer = T5Tokenizer.from_pretrained(MODEL_NAME)  
-
     pipe = pipeline("text-generation",
                     model=model,
                     tokenizer= tokenizer,
@@ -167,7 +166,7 @@ def flant5_model(model_info):
                     )
         
     llm = HuggingFacePipeline(pipeline = pipe, model_kwargs = {'temperature':0})
-    return llm
+    return tokenizer,model,llm
 
  # model = AutoModelForCausalLM.from_pretrained(
     #     path,
