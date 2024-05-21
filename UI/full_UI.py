@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 import random
 from utils import display_table,current_time,random_ques_ans2,move_to,score_report_bar
-from inference import model_chain
+# from inference import model_chain
 #$$$$$$$$$$$$$$$$$
 # from inference import rag_chain_ret
 ###### Testing code
@@ -221,42 +221,42 @@ with gr.Blocks() as demo:
                 elif model_name_temp=="Custom model":
                     open(r"fine_tune_file/finetune_file.py","w").write(code_temp)
             # importing just before finetuning, to ensure the latest code is used
-            from fine_tune_file.mistral_finetune import mistral_trainer
-            from fine_tune_file.zepyhr_finetune import zephyr_trainer
-            from fine_tune_file.llama_finetune import llama_trainer
-            from fine_tune_file.phi_finetune import phi_trainer
-            from fine_tune_file.finetune_file import custom_model_trainer
-            from fine_tune_file.flant5_finetune import flant5_trainer
+            # from fine_tune_file.mistral_finetune import mistral_trainer
+            # from fine_tune_file.zepyhr_finetune import zephyr_trainer
+            # from fine_tune_file.llama_finetune import llama_trainer
+            # from fine_tune_file.phi_finetune import phi_trainer
+            # from fine_tune_file.finetune_file import custom_model_trainer
+            # from fine_tune_file.flant5_finetune import flant5_trainer
             # create instance of the finetuning classes and then call the finetune function
             if model_name_temp=="Mistral":
                 gr.Info("Finetune started!!!")
-                trainer = mistral_trainer()
-                trainer.mistral_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                # trainer = mistral_trainer()
+                # trainer.mistral_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Finetune Ended!!!")
             elif model_name_temp=="Zephyr":
                 gr.Info("Finetune started!!!")
-                trainer = zephyr_trainer()
-                trainer.zepyhr_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                # trainer = zephyr_trainer()
+                # trainer.zepyhr_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Finetune Ended!!!")
             elif model_name_temp=="Llama":
                 gr.Info("Finetune started!!!")
-                trainer = llama_trainer()
-                trainer.llama_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                # trainer = llama_trainer()
+                # trainer.llama_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Finetune Ended!!!")
             elif model_name_temp=="Phi":
                 gr.Info("Finetune started!!!")
-                trainer = phi_trainer()
-                trainer.phi_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                # trainer = phi_trainer()
+                # trainer.phi_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Finetune Ended!!!")
             elif model_name_temp=="Flan-T5":
                 gr.Info("Finetune started!!!")
-                trainer = flant5_trainer()
-                trainer.flant5_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                # trainer = flant5_trainer()
+                # trainer.flant5_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Finetune Ended!!!")
             elif model_name_temp=="Custom model":
                 gr.Info("Finetune started!!!")
-                trainer=custom_model_trainer()
-                trainer.custom_model_finetune()
+                # trainer=custom_model_trainer()
+                # trainer.custom_model_finetune()
                 gr.Info("Finetune Ended!!!")
         
         def code_show(model_name):
