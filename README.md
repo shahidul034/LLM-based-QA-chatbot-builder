@@ -8,9 +8,23 @@ There are various stages involved in developing an LLM-based QA chatbot: a) coll
 
 ## Features
 
+
+| 🦾 Model Support             | Implemented | Description                                   |
+|------------------------------|-------------|-----------------------------------------------|
+| **Mistral**                  | ✅           | Fine-tuning Model powered by Mistral         |
+| **Zephyr**                   | ✅           | Fine-tuning Model powered by HuggingFace      |
+| **Llama-3**                  | ✅           | Fine-tuning Model powered by Llama-3    |
+| **Microsoft Phi-3**          | ✅           | Fine-tuning Model powered by Microsoft  |
+| **Flan-T5**                  | ✅           | Fine-tuning Model powered by Google    |
+| **ColBERT**                  | ✅           | Embedding Model     |
+| **bge-large-en-v1.5**        | ✅           | Embedding Model |
+
+Here is the diagram of the software architecture.
 ![Software Architecture](https://github.com/shahidul034/LLM-based-QA-chatbot-builder/blob/main/software%20screenshot/KUET%20LLM2.png)
 
-**Data collection:** Collect data from users or as Excel files.
+## Feature Lists
+
+**Data collection:** Collect data from users or as Excel files and automatic RAG data builder by web crawler
 ![Data collection](https://github.com/shahidul034/LLM-based-QA-chatbot-builder/blob/main/software%20screenshot/data%20collection.png)
 
 **Finetune:** Finetune the latest model(Mistral,Llama, Zepyhr,Phi-3) and lightweight model(Flan-T5)
@@ -36,7 +50,7 @@ git clone https://github.com/shahidul034/LLM-based-QA-chatbot-builder
 ```bash
 conda create -n llm python=3.10
 conda activate llm
-pip install torch torchvision torchaudio jupyter langchainhub sentence-transformers faiss-gpu docx2txt langchain bitsandbytes transformers peft accelerate pynvml trl datasets packaging ninja wandb colbert-ai[torch,faiss-gpu] gradio RAGatouille
+pip install torch torchvision torchaudio jupyter langchainhub sentence-transformers faiss-gpu docx2txt langchain bitsandbytes transformers peft accelerate pynvml trl datasets packaging ninja wandb colbert-ai[torch,faiss-gpu] RAGatouille
 pip install -U flash-attn --no-build-isolation
 
 ```
