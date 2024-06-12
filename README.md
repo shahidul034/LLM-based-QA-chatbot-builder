@@ -24,23 +24,23 @@ Here is the diagram of the software architecture.
 
 ## Feature Lists
 
-**Data collection:** Collect data from users or as Excel files and automatic RAG data builder by web crawler
+1) **Data collection:** Collect data from users or Excel files, and automatically build RAG data using a web crawler.
 ![Data collection](https://github.com/shahidul034/LLM-based-QA-chatbot-builder/blob/main/software%20screenshot/data%20collection.png)
 
-**Finetune:** Finetune the latest model(Mistral,Llama, Zepyhr,Phi-3) and lightweight model(Flan-T5)
+2) **Finetune:** Fine-tune state-of-the-art models (e.g., Mistral, Llama, Zephyr, Phi-3) and lightweight models (e.g., Flan-T5).
 ![Finetune](https://github.com/shahidul034/LLM-based-QA-chatbot-builder/blob/main/software%20screenshot/Finetuning.png)
 
 
-**Testing data generation:** Generate the data from testing data using the fine-tune models
+3) **Testing data generation:** Generate test data using the fine-tuned models.
 ![Testing data generation](https://github.com/shahidul034/LLM-based-QA-chatbot-builder/blob/main/software%20screenshot/Testing%20data%20generation%20from%20model.png)
 
-**Human evaluation:** Evaluate the models from users(Rating based)
+4) **Human evaluation:** Evaluate model performance based on user ratings.
 ![Human evaluation](https://github.com/shahidul034/LLM-based-QA-chatbot-builder/blob/main/software%20screenshot/Human%20evaluation.png)
 
-**Inference:** Inference from the models
+5) **Inference:** Perform inference using the fine-tuned models.
 ![Inference](https://github.com/shahidul034/LLM-based-QA-chatbot-builder/blob/main/software%20screenshot/inference.png)
 
-**Deployment:** Deploy the finetuned models.
+6) **Deployment:** Deploy the fine-tuned models.
 ![Deployment](https://github.com/shahidul034/LLM-based-QA-chatbot-builder/blob/main/software%20screenshot/deployment.png)
 ## Getting started
 ### Installation
