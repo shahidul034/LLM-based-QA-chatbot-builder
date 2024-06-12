@@ -11,23 +11,24 @@ There are various stages involved in developing an LLM-based QA chatbot: a) coll
 
 ![Software Architecture](https://github.com/shahidul034/LLM-based-QA-chatbot-builder/blob/main/software%20screenshot/KUET%20LLM2.png)
 
-Data collection: Collect data from users or as Excel files.
+**Data collection:** Collect data from users or as Excel files.
+![Data collection](https://github.com/shahidul034/LLM-based-QA-chatbot-builder/blob/main/software%20screenshot/data%20collection.png)
+
+**Finetune:** Finetune the latest model(Mistral,Llama, Zepyhr,Phi-3) and lightweight model(Flan-T5)
+![Finetune](https://github.com/shahidul034/LLM-based-QA-chatbot-builder/blob/main/software%20screenshot/Finetuning.png)
 
 
-Finetune: Finetune the latest model(Mistral,Llama, Zepyhr,Phi-3) and lightweight model(Flan-T5)
+**Testing data generation:** Generate the data from testing data using the fine-tune models
+![Testing data generation](https://github.com/shahidul034/LLM-based-QA-chatbot-builder/blob/main/software%20screenshot/Testing%20data%20generation%20from%20model.png)
 
+**Human evaluation:** Evaluate the models from users(Rating based)
+![Human evaluation](https://github.com/shahidul034/LLM-based-QA-chatbot-builder/blob/main/software%20screenshot/Human%20evaluation.png)
 
-Testing data generation: Generate the data from testing data using the fine-tune models
+**Inference:** Inference from the models
+![Inference](https://github.com/shahidul034/LLM-based-QA-chatbot-builder/blob/main/software%20screenshot/inference.png)
 
-
-Human evaluation: Evaluate the models from users(Rating based)
-
-
-Inference: Inference from the models
-
-
-Deployment: Deploy the finetuned models.
-
+**Deployment:** Deploy the finetuned models.
+![Deployment](https://github.com/shahidul034/LLM-based-QA-chatbot-builder/blob/main/software%20screenshot/deployment.png)
 
 
 ## Getting started
@@ -55,3 +56,4 @@ Contributions are always welcome!
 ## License
 
 [MIT](https://github.com/shahidul034/LLM-based-QA-chatbot-builder/blob/main/LICENSE)
+
