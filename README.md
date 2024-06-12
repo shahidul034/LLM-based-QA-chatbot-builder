@@ -13,7 +13,7 @@ There are various stages involved in developing an LLM-based QA chatbot: a) coll
 |------------------------------|-------------|-----------------------------------------------|
 | **Mistral**                  | ✅           | Fine-tuning Model powered by Mistral         |
 | **Zephyr**                   | ✅           | Fine-tuning Model powered by HuggingFace      |
-| **Llama-3**                  | ✅           | Fine-tuning Model powered by Llama-3    |
+| **Llama-3**                  | ✅           | Fine-tuning Model powered by Facebook    |
 | **Microsoft Phi-3**          | ✅           | Fine-tuning Model powered by Microsoft  |
 | **Flan-T5**                  | ✅           | Fine-tuning Model powered by Google    |
 | **ColBERT**                  | ✅           | Embedding Model     |
