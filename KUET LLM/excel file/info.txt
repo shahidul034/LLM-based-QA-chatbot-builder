@@ -1,6 +1,0 @@
-KUET information2k20 --> data collected from CSE 2k20
-model_ans1 --> use finetuned zepyhr model and tanim generate ques
-model_ans2 --> use finetuned zepyhr model and CSE 2k20 ques
-model_ans2_mKUET --> modify prompt and use KUET name in prompt
-model_ans3_mistral --> use direct mistral model without finetune
-model_ans3_zephyr --> use direct zepyhr model without finetune

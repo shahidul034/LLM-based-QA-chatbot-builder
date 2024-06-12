@@ -72,7 +72,7 @@ pip install -r requirements.txt
 ```
 ## Run
 ```
-cd UI
+cd src
 python full_UI.py
 ```
 ## 🎯 Contributing
