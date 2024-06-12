@@ -11,13 +11,13 @@ There are various stages involved in developing an LLM-based QA chatbot: a) coll
 
 | 🦾 Model Support             | Implemented | Description                                   |
 |------------------------------|-------------|-----------------------------------------------|
-| **Mistral**                  | ✅           | Fine-tuning Model powered by Mistral         |
-| **Zephyr**                   | ✅           | Fine-tuning Model powered by HuggingFace      |
-| **Llama-3**                  | ✅           | Fine-tuning Model powered by Facebook    |
-| **Microsoft Phi-3**          | ✅           | Fine-tuning Model powered by Microsoft  |
-| **Flan-T5**                  | ✅           | Fine-tuning Model powered by Google    |
-| **ColBERT**                  | ✅           | Embedding Model     |
-| **bge-large-en-v1.5**        | ✅           | Embedding Model |
+| **Mistral**                  | ✅           | Fine-tuning model powered by Mistral         |
+| **Zephyr**                   | ✅           | Fine-tuning model powered by HuggingFace      |
+| **Llama-3**                  | ✅           | Fine-tuning model powered by Facebook    |
+| **Microsoft Phi-3**          | ✅           | Fine-tuning model powered by Microsoft  |
+| **Flan-T5**                  | ✅           | Fine-tuning model powered by Google    |
+| **ColBERT**                  | ✅           | Embedding model     |
+| **bge-large-en-v1.5**        | ✅           | Embedding model |
 
 🔀 Here is the diagram of the software architecture.
 ![Software Architecture](https://github.com/shahidul034/LLM-based-QA-chatbot-builder/blob/main/software%20screenshot/KUET%20LLM2.png)
