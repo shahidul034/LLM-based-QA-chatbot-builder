@@ -1,6 +1,6 @@
 
 # ✨ LLM based QA chatbot builder
-## 🏁 An end-to-end solution to develop a fully open-source application based on open-source models and libraries without an API key.
+## 🏁 An end-to-end solution to develop a fully open-source application based on open-source models and libraries.
 
 ### 🎯 What Is LLM based QA chatbot builder?
 There are various stages involved in developing an LLM-based QA chatbot: a) collecting and preprocessing data; b) fine-tuning, testing, and inference of the LLM; and c) developing the chat interface. In this work, we offer the LLM QA builder, a web application that assembles all the processes and simplifies the building of the LLM QA chatbot for both technical and non-technical users, in an effort to speed this development process. Zepyhr, Mistral, Llama-3, Phi, Flan-T5, and a user-provided model for retrieving information relevant to an organization can all be fine-tuned using the system; these LLMs can then be further improved through the application of retrieval-augmented generation (RAG) approaches. We have included an automatic RAG data scraper that is based on web crawling. Furthermore, our system has a human evaluation component to determine the quality of the model. 
