@@ -1,4 +1,5 @@
 import os
+import torch
 import pandas as pd
 import transformers
 from pynvml import *

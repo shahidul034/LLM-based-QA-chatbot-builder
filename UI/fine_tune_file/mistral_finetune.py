@@ -21,7 +21,8 @@ class mistral_trainer:
             ]
             return tokenizer.apply_chat_template(temp, add_generation_prompt=False, tokenize=False)
     def mistral_finetune(self,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
-        base_model = "mistralai/Mistral-7B-Instruct-v0.2"
+        # base_model = "mistralai/Mistral-7B-Instruct-v0.2"
+        base_model="unsloth/mistral-7b-instruct-v0.3"
         from datetime import datetime
         lora_output = f'models/{quantization}_Mistral_lora_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
         full_output = f'models/{quantization}_Mistral_full_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
@@ -132,3 +133,6 @@ class mistral_trainer:
         merged_model.save_pretrained(full_output)
         tokenizer.save_pretrained(full_output)
         print("*"*10,": Model is saved!!!")
+
+mis=mistral_trainer()
+mis.mistral_finetune(5e-6,2,4,4,8,16,32,.05)

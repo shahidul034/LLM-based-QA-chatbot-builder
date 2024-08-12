@@ -14,6 +14,7 @@ class llama_trainer:
     def llama_model(self,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout):
         # base_model = "NousResearch/Llama-2-7b-chat-hf"
         base_model="NousResearch/Meta-Llama-3-8B"
+        # base_model="unsloth/Meta-Llama-3.1-8B-Instruct"
         from datetime import datetime
         lora_output = f'models/{quantization}_Llama_lora_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
         full_output = f'models/{quantization}_Llama_full_{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
@@ -128,6 +129,8 @@ class llama_trainer:
         print("*"*10,": Model is saved!!!")
 
 
+lm=llama_trainer()
+lm.llama_model(5e-6,2,4,4,8,16,32,.05)
 
 
 

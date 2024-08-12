@@ -24,8 +24,8 @@ class custom_model_trainer:
             return tokenizer.apply_chat_template(temp, add_generation_prompt=False, tokenize=False)
     def custom_model_finetune(self):
         base_model = 'mistralai/Mistral-7B-Instruct-v0.2' # Write the base model repo name from huggingface
-        lora_output = 'mymodel_lora' # Write the folder name for saving lora output
-        full_output = 'mymodel_full' # Write the folder name for saving full model output
+        lora_output = f'{self.quantization}_mymodel_lora' # Write the folder name for saving lora output
+        full_output = f'{self.quantization}_mymodel_full' # Write the folder name for saving full model output
         DEVICE = 'cuda'
         tokenizer = AutoTokenizer.from_pretrained(base_model)
         tokenizer.padding_side = 'right'
@@ -135,4 +135,5 @@ class custom_model_trainer:
 
         merged_model.save_pretrained(full_output)
         tokenizer.save_pretrained(full_output)
+        print("*"*10,": Model is saved!!!")
 
