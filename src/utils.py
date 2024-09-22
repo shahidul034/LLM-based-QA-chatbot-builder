@@ -119,3 +119,20 @@ def parse_data(link,progress):
     document.save(r'rag_data\rag_data.docx')
     print("Finished!!")
     return
+def all_contri_ans(id, ques):
+    folder_path = 'save_ques_ans'
+    data_frames = []
+    for filename in os.listdir(folder_path):
+        if filename.endswith(".xlsx") or filename.endswith(".xls"):
+            file_path = os.path.join(folder_path, filename)
+            df = pd.read_excel(file_path)
+            data_frames.append(df)       
+            
+    df_hum = pd.concat(data_frames, ignore_index=True)
+    temp=[]
+    for x,y in zip(df_hum['question'],df_hum['answer']):
+        if x==ques:
+            temp.append(y)
+    if len(temp)==0:
+        temp=["This question's answer is not available."]
+    return temp    

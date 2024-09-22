@@ -21,40 +21,40 @@ def docs_return(flag):
         return all_doc
     else:
          return docs
-def mpnet_retriever(flag):
-        if flag == False:
-            all_doc=docs_return(0)
-            text_splitter=CharacterTextSplitter(chunk_size=500,chunk_overlap=30,separator="\n")
-            docs=text_splitter.split_documents(documents=all_doc)
-            model_name = "sentence-transformers/all-mpnet-base-v2"
-            hf = HuggingFaceEmbeddings(model_name=model_name)
-            vectorstore=FAISS.from_documents(docs,hf)
-            retriever=vectorstore.as_retriever()
-            vectorstore.save_local('vectorstore')
-            return retriever
-        else:
-            model_name = "sentence-transformers/all-mpnet-base-v2"
-            hf = HuggingFaceEmbeddings(model_name=model_name)
-            new_vectorstore=FAISS.load_local("vectorstore",hf)
-            retriever=new_vectorstore.as_retriever()
-            return retriever
+# def mpnet_retriever(flag):
+#         if flag == False:
+#             all_doc=docs_return(0)
+#             text_splitter=CharacterTextSplitter(chunk_size=500,chunk_overlap=30,separator="\n")
+#             docs=text_splitter.split_documents(documents=all_doc)
+#             model_name = "sentence-transformers/all-mpnet-base-v2"
+#             hf = HuggingFaceEmbeddings(model_name=model_name)
+#             vectorstore=FAISS.from_documents(docs,hf)
+#             retriever=vectorstore.as_retriever()
+#             vectorstore.save_local('vectorstore')
+#             return retriever
+#         else:
+#             model_name = "sentence-transformers/all-mpnet-base-v2"
+#             hf = HuggingFaceEmbeddings(model_name=model_name)
+#             new_vectorstore=FAISS.load_local("vectorstore",hf)
+#             retriever=new_vectorstore.as_retriever()
+#             return retriever
 
-def bai_retriever_faiss(flag):
-    if flag == False:
-        all_doc=docs_return(0)
-        text_splitter=CharacterTextSplitter(chunk_size=500,chunk_overlap=30,separator="\n")
-        docs=text_splitter.split_documents(documents=all_doc)
-        hf = HuggingFaceEmbeddings(model_name="BAAI/bge-large-en-v1.5")
-        vectorstore=FAISS.from_documents(docs,hf)
-        retriever=vectorstore.as_retriever()
-        vectorstore.save_local('vectorstore')
-        return retriever
-    else:
-        model_name = "BAAI/bge-large-en-v1.5"
-        hf = HuggingFaceEmbeddings(model_name=model_name)
-        new_vectorstore=FAISS.load_local("vectorstore",hf)
-        retriever=new_vectorstore.as_retriever()
-        return retriever
+# def bai_retriever_faiss(flag):
+#     if flag == False:
+#         all_doc=docs_return(0)
+#         text_splitter=CharacterTextSplitter(chunk_size=500,chunk_overlap=30,separator="\n")
+#         docs=text_splitter.split_documents(documents=all_doc)
+#         hf = HuggingFaceEmbeddings(model_name="BAAI/bge-large-en-v1.5")
+#         vectorstore=FAISS.from_documents(docs,hf)
+#         retriever=vectorstore.as_retriever()
+#         vectorstore.save_local('vectorstore')
+#         return retriever
+#     else:
+#         model_name = "BAAI/bge-large-en-v1.5"
+#         hf = HuggingFaceEmbeddings(model_name=model_name)
+#         new_vectorstore=FAISS.load_local("vectorstore",hf)
+#         retriever=new_vectorstore.as_retriever()
+#         return retriever
 
 def bai_retriever_chroma(flag):
     if flag == False:

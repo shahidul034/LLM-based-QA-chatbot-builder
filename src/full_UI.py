@@ -154,7 +154,7 @@ with gr.Blocks() as demo:
                         save=gr.Button("Save the Answer")
                         question = gr.Button("Generate New Question")
                     with gr.Row():
-                        lab=gr.Label(visible=False,value="You ans is submitted!!! Thank you for your contribution.",label="submitted")
+                        lab=gr.Label(visible=False,value="You ans is submitted!!! Thank you for your contribution.",label="Submitted")
                     question.click(next_ques,None,ques)
                     save.click(save_the_ques,[ques,ans],lab)
                     
@@ -174,7 +174,7 @@ with gr.Blocks() as demo:
             with gr.Tab("Testing Data Generation"):
                 gr.Markdown("""
                     You can create test data for generating answers using the fine-tune model, which will be used for testing the model's performance. 
-                    After clicking the "save the answer" button. Those questions and answers are saved in the "data" folder as a testing_data.xlsx file. You can ignore the "Answer" textbox. If you do not want to give the answer.
+                    After clicking the "Save the Answer" button. Those questions and answers are saved in the "data" folder as a testing_data.xlsx file. You can ignore the "Answer" textbox. If you do not want to give the answer.
                             """)
                 with gr.Row():
                     ques=gr.Textbox(label="Question")
@@ -207,7 +207,7 @@ with gr.Blocks() as demo:
         """)
             
         def edit_model_parameter(model_name_temp,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout, progress=gr.Progress()):
-            progress(0, desc="Fine=tune started!! please wait ...")
+            progress(0, desc="Fine-tune started!! please wait ...")
             # write code to files if code was edited
             if edit_code and len(code_temp)!=0:
                 if model_name_temp=="Mistral":
@@ -221,36 +221,42 @@ with gr.Blocks() as demo:
                 elif model_name_temp=="Custom model":
                     open(r"fine_tune_file/finetune_file.py","w").write(code_temp)
             # importing just before finetuning, to ensure the latest code is used
-            from fine_tune_file.mistral_finetune import mistral_trainer
-            from fine_tune_file.zepyhr_finetune import zephyr_trainer
-            from fine_tune_file.llama_finetune import llama_trainer
-            from fine_tune_file.phi_finetune import phi_trainer
+            # from fine_tune_file.mistral_finetune import mistral_trainer
+            # from fine_tune_file.zepyhr_finetune import zephyr_trainer
+            # from fine_tune_file.llama_finetune import llama_trainer
+            # from fine_tune_file.phi_finetune import phi_trainer
             from fine_tune_file.finetune_file import custom_model_trainer
-            from fine_tune_file.flant5_finetune import flant5_trainer
+            # from fine_tune_file.flant5_finetune import flant5_trainer
+            from fine_tune_file.modular_finetune import get_trainer
             # create instance of the finetuning classes and then call the finetune function
             if model_name_temp=="Mistral":
                 gr.Info("Fine-tune started!!!")
-                trainer = mistral_trainer()
+                trainer=get_trainer("mistral")
+                # trainer = mistral_trainer()
                 trainer.mistral_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Fine-tune Ended!!!")
             elif model_name_temp=="Zephyr":
                 gr.Info("Fine-tune started!!!")
-                trainer = zephyr_trainer()
+                trainer=get_trainer("zephyr")
+                # trainer = zephyr_trainer()
                 trainer.zepyhr_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Fine-tune Ended!!!")
             elif model_name_temp=="Llama":
                 gr.Info("Fine-tune started!!!")
-                trainer = llama_trainer()
+                trainer=get_trainer("llama")
+                # trainer = llama_trainer()
                 trainer.llama_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Fine-tune Ended!!!")
             elif model_name_temp=="Phi":
                 gr.Info("Fine-tune started!!!")
-                trainer = phi_trainer()
+                # trainer = phi_trainer()
+                trainer=get_trainer("phi")
                 trainer.phi_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Fine-tune Ended!!!")
             elif model_name_temp=="Flan-T5":
                 gr.Info("Fine-tune started!!!")
-                trainer = flant5_trainer()
+                # trainer = flant5_trainer()
+                trainer=get_trainer("flan-T5")
                 trainer.flant5_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Fine-tune Ended!!!")
             elif model_name_temp=="Custom model":
@@ -281,7 +287,7 @@ with gr.Blocks() as demo:
                 f=open(r"fine_tune_file/finetune_file.py").read()
                 return [gr.Code(visible=True,value=f,interactive=True,language="python"),gr.Button(visible=False)]
             else:
-                return [gr.Code(visible=False),gr.Button("Advance code editing",visible=True)]
+                return [gr.Code(visible=False),gr.Button("Advance Code Editing",visible=True)]
 
         def change_code_fun(code_,model_name):
             if model_name=="Mistral":
@@ -330,7 +336,7 @@ with gr.Blocks() as demo:
         model_name.change(custom_model,model_name,[code_temp,edit_code])
         
 #***************************************************
-    with gr.Tab("Testing data generation from model"):
+    with gr.Tab("Testing Data Generation from Model"):
         
         def ans_gen_fun(model_name,progress=gr.Progress()):
             if not os.path.exists(r"data\testing_dataset.xlsx"):
@@ -360,9 +366,9 @@ with gr.Blocks() as demo:
         gr.Markdown(""" # Instructions:\n
                     In this page you can generate answer from fine-tuned models for human evaluation. The questions must be created using 'Testing data generation' section of 'Data collection' tab.
                         """)
-        model_name=gr.Dropdown(choices=os.listdir("models"),label="Select the model")
+        model_name=gr.Dropdown(choices=os.listdir("models"),label="Select the Model")
         with gr.Row():
-            ans_gen=gr.Button("Generate the answer of the testing dataset")
+            ans_gen=gr.Button("Generate the Answer of the Testing Dataset")
         ans_gen.click(ans_gen_fun,model_name,model_name)
 #***************************************************Human evaluation
     import secrets
@@ -379,7 +385,7 @@ with gr.Blocks() as demo:
                     }
                 df = pd.DataFrame(data)
                 df.to_excel("save_ques_ans//"+str(token)+".xlsx", index=False)
-                return gr.Label(label="Please keep the token for tracking ques ans data",value=token,visible=True)
+                return gr.Label(label="Please keep the token for tracking question answer data",value=token,visible=True)
                 
         
     def bar_plot_fn():
@@ -416,8 +422,8 @@ with gr.Blocks() as demo:
         with gr.Row():
             new_user_token=gr.Label(visible=False)
         with gr.Row():
-            token_key=gr.Textbox(label="Enter Your Token")
-            model_ans=gr.Dropdown(choices=os.listdir("model_ans"),label="Select the model answer for human evaluation")
+            token_key=gr.Textbox(label="Enter your Token")
+            model_ans=gr.Dropdown(choices=os.listdir("model_ans"),label="Select the Model Answer for Human Evaluation")
         btn_1=gr.Button("Submit")
         gr.Markdown(""" # Instructions: 
             In this section, humans evaluate the answers of the model given specific questions. Each answer is rated between 1 and 5 by anonymous students.
@@ -467,7 +473,7 @@ with gr.Blocks() as demo:
         def echo(message, history,model_name):
             global infer_ragchain
             if infer_ragchain is None:
-                gr.Info("Please wait!!! Model is loading!!")
+                gr.Info("Please wait!!! model is loading!!")
                 infer_ragchain = model_chain(model_name)
             rag_chain=infer_ragchain.rag_chain_ret()
             return infer_ragchain.ans_ret(message,rag_chain) 
