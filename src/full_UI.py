@@ -309,13 +309,15 @@ with gr.Blocks() as demo:
         with gr.Row():
             code_temp=gr.Code(visible=False)
         with gr.Row():
-            model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama","Phi","Flan-T5","Custom model"],label="Select the model for fine-tuning")        
+            embedding_model=gr.Dropdown(choices=["BAAI/bge-base-en-v1.5","dunzhang/stella_en_1.5B_v5","dunzhang/stella_en_400M_v5","nvidia/NV-Embed-v2","Alibaba-NLP/gte-Qwen2-1.5B-instruct"],label="Select the embedding model for fine-tuning")        
+        with gr.Row():
+            model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama","Phi","Flan-T5","Custom model"],label="Select the LLM for fine-tuning")        
 
         with gr.Accordion("Parameter Setup"):
             with gr.Row():
-                lr=gr.Number(label="Learning rate",value=5e-6,interactive=True,info="The step size at which the model parameters are updated during training. It controls the magnitude of the updates to the model's weights.")
-                epoch=gr.Number(label="Epochs",value=2,interactive=True,info="One complete pass through the entire training dataset during the training process. It's a measure of how many times the algorithm has seen the entire dataset.")
-                batch_size=gr.Number(label="Batch size",value=4,interactive=True,info="The number of training examples used in one iteration of training. It affects the speed and stability of the training process.")
+                lr=gr.Number(label="learning_rate",value=5e-6,interactive=True,info="The step size at which the model parameters are updated during training. It controls the magnitude of the updates to the model's weights.")
+                epoch=gr.Number(label="epochs",value=2,interactive=True,info="One complete pass through the entire training dataset during the training process. It's a measure of how many times the algorithm has seen the entire dataset.")
+                batch_size=gr.Number(label="batch_size",value=4,interactive=True,info="The number of training examples used in one iteration of training. It affects the speed and stability of the training process.")
                 gradient_accumulation = gr.Number(info="Gradient accumulation involves updating model weights after accumulating gradients over multiple batches, instead of after each individual batch.",label="gradient_accumulation",value=4,interactive=True)
             with gr.Row():
                 quantization = gr.Dropdown(info="Quantization is a technique used to reduce the precision of numerical values, typically from 32-bit floating-point numbers to lower bit representations.",label="quantization",choices=[4,8],value=8,interactive=True)
@@ -470,16 +472,16 @@ with gr.Blocks() as demo:
 #***************************************************    
     infer_ragchain=None
     with gr.Tab("Inference"):
-        def echo(message, history,model_name):
+        def echo(message, history,model_name,embedding_name):
             global infer_ragchain
             if infer_ragchain is None:
                 gr.Info("Please wait!!! model is loading!!")
-                infer_ragchain = model_chain(model_name)
+                infer_ragchain = model_chain(model_name,embedding_name)
             rag_chain=infer_ragchain.rag_chain_ret()
             return infer_ragchain.ans_ret(message,rag_chain) 
-        
+        embedding_name=gr.Dropdown(choices=os.listdir("models"),label="Select the Embedding Model")
         model_name=gr.Dropdown(choices=os.listdir("models"),label="Select the Model")
-        gr.ChatInterface(fn=echo, additional_inputs=[model_name], title="Chatbot")
+        gr.ChatInterface(fn=echo, additional_inputs=[model_name,embedding_name], title="Chatbot")
     with gr.Tab("Deployment"):
         gr.Markdown("""\"deploy\" folder has all the code for the deployment of the model.
                     For installing dependencies use the following command: "pip install -r requirements.txt".

@@ -5,16 +5,16 @@ import transformers
 from pynvml import *
 import torch
 from langchain import hub
-from model_ret import zepyhr_model,llama_model,mistral_model,phi_model,flant5_model
+from model_ret import zephyr_model,llama_model,mistral_model,phi_model,flant5_model
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from create_retriever import ensemble_retriever
 class model_chain:
     model_name=""
-    def __init__(self, model_info) -> None:
+    def __init__(self, model_info,embedding_name) -> None:
         quantization,self.model_name=model_info.split("_")[0],model_info.split("_")[1]
         if self.model_name=="Zepyhr":
-            self.llm=zepyhr_model(model_info,quantization)
+            self.llm=zephyr_model(model_info,quantization)
         elif self.model_name=="Llama":
             self.llm=llama_model(model_info,quantization)
         elif self.model_name=="Mistral":
@@ -23,7 +23,7 @@ class model_chain:
             self.llm=phi_model(model_info,quantization)
         elif self.model_name=="flant5":
             self.tokenizer, self.model,self.llm=flant5_model(model_info)    
-        self.retriever=ensemble_retriever()
+        self.retriever=ensemble_retriever(embedding_name)
         prompt = hub.pull("rlm/rag-prompt")
         def format_docs(docs):
             return "\n\n".join(doc.page_content for doc in docs)
