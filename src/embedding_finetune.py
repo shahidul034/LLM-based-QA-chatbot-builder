@@ -11,6 +11,7 @@ from datasets import concatenate_datasets
 import torch
 
 def train_model_with_custom_dataset(file_path, model_name, sheet_name=None):
+    file_path=os.path.join("data",file_path)
     # Load the dataset from Excel or CSV
     if file_path.endswith(".csv"):
         df = pd.read_csv(file_path)
@@ -90,7 +91,7 @@ def train_model_with_custom_dataset(file_path, model_name, sheet_name=None):
     train_loss = MatryoshkaLoss(model, inner_train_loss, matryoshka_dims=matryoshka_dimensions)
 
     # Define the model save directory as "embedding_model/<model_name>"
-    save_dir = os.path.join("embedding_model", model_name.replace("/","_"))
+    save_dir = f"embedding_model/{model_name.replace('/', '_')}"
     os.makedirs(save_dir, exist_ok=True)  # Create the directory if it doesn't exist
 
     args = SentenceTransformerTrainingArguments(

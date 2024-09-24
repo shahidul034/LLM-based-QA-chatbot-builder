@@ -10,6 +10,8 @@ from pathlib import Path
 import random
 from utils import display_table,current_time,random_ques_ans2,move_to,score_report_bar,all_contri_ans
 from inference import model_chain
+import warnings
+warnings.filterwarnings('ignore')
 #$$$$$$$$$$$$$$$$$
 # from inference import rag_chain_ret
 ###### Testing code
@@ -288,7 +290,6 @@ with gr.Blocks() as demo:
                 return [gr.Code(visible=True,value=f,interactive=True,language="python"),gr.Button(visible=False)]
             else:
                 return [gr.Code(visible=False),gr.Button("Advance Code Editing",visible=True)]
-
         def change_code_fun(code_,model_name):
             if model_name=="Mistral":
                 open(r"fine_tune_file/mistral_finetune.py","w").write(code_)
@@ -306,13 +307,18 @@ with gr.Blocks() as demo:
                 open(r"fine_tune_file/flant5_finetune.py","w").write(code_)
                 gr.Info("Successfully saved code!!!")
 
+        def finetune_emb(emb_name):
+            from embedding_finetune import train_model_with_custom_dataset
+            gr.Info("Embedding fine-tune is started!!!")
+            train_model_with_custom_dataset("emb_data.xlsx",emb_name)
+
         with gr.Row():
             code_temp=gr.Code(visible=False)
         with gr.Row():
             embedding_model=gr.Dropdown(choices=["BAAI/bge-base-en-v1.5","dunzhang/stella_en_1.5B_v5","dunzhang/stella_en_400M_v5","nvidia/NV-Embed-v2","Alibaba-NLP/gte-Qwen2-1.5B-instruct"],label="Select the embedding model for fine-tuning")        
+            btn_emb=gr.Button("Fine-tune the embedding model")        
         with gr.Row():
             model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama","Phi","Flan-T5","Custom model"],label="Select the LLM for fine-tuning")        
-
         with gr.Accordion("Parameter Setup"):
             with gr.Row():
                 lr=gr.Number(label="learning_rate",value=5e-6,interactive=True,info="The step size at which the model parameters are updated during training. It controls the magnitude of the updates to the model's weights.")
@@ -336,7 +342,7 @@ with gr.Blocks() as demo:
         # On click finetune button 
         parameter_alter.click(edit_model_parameter,[model_name,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout],model_name)
         model_name.change(custom_model,model_name,[code_temp,edit_code])
-        
+        btn_emb.click(finetune_emb,[embedding_model], None)
 #***************************************************
     with gr.Tab("Testing Data Generation from Model"):
         
@@ -472,16 +478,31 @@ with gr.Blocks() as demo:
 #***************************************************    
     infer_ragchain=None
     with gr.Tab("Inference"):
-        def echo(message, history,model_name,embedding_name):
+        def echo(message, history,model_name_local,model_name_online,embedding_name,inf_checkbox):
             global infer_ragchain
             if infer_ragchain is None:
                 gr.Info("Please wait!!! model is loading!!")
-                infer_ragchain = model_chain(model_name,embedding_name)
+                if inf_checkbox:
+                    gr.info("local model is loading!!")
+                infer_ragchain = model_chain(model_name_local,model_name_online,embedding_name,inf_checkbox)
             rag_chain=infer_ragchain.rag_chain_ret()
             return infer_ragchain.ans_ret(message,rag_chain) 
-        embedding_name=gr.Dropdown(choices=os.listdir("models"),label="Select the Embedding Model")
-        model_name=gr.Dropdown(choices=os.listdir("models"),label="Select the Model")
-        gr.ChatInterface(fn=echo, additional_inputs=[model_name,embedding_name], title="Chatbot")
+        embedding_name=gr.Dropdown(choices=["BAAI/bge-base-en-v1.5","dunzhang/stella_en_1.5B_v5","dunzhang/stella_en_400M_v5",
+                                            "nvidia/NV-Embed-v2","Alibaba-NLP/gte-Qwen2-1.5B-instruct"],
+                                   label="Select the Embedding Model")
+        inf_checkbox=gr.Checkbox(label="Do you want to use fine-tuned model?")
+        model_name_local=gr.Dropdown(choices=os.listdir("models"),label="Select the local LLM",visible=True)
+        model_name_online=gr.Dropdown(visible=False)
+        def model_online_local_show(inf_checkbox):
+            if inf_checkbox:
+                return [gr.Dropdown(choices=os.listdir("models"),label="Select the local LLM",visible=True),
+                        gr.Dropdown(visible=False)]
+            else:
+                return [gr.Dropdown(visible=False),
+                        gr.Dropdown(choices=["Zephyr","Llama","Mistral", "Phi", "Flant5"],
+                        label="Select the LLM from Huggingface",visible=True)]
+        inf_checkbox.change(model_online_local_show,[inf_checkbox],[model_name_local,model_name_online])
+        gr.ChatInterface(fn=echo, additional_inputs=[model_name_local,model_name_online,embedding_name,inf_checkbox], title="Chatbot")
     with gr.Tab("Deployment"):
         gr.Markdown("""\"deploy\" folder has all the code for the deployment of the model.
                     For installing dependencies use the following command: "pip install -r requirements.txt".
