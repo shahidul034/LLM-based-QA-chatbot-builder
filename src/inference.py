@@ -9,24 +9,29 @@ from model_ret import zephyr_model,llama_model,mistral_model,phi_model,flant5_mo
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from create_retriever import ensemble_retriever
+# HuggingFace model mapping
 hf_model_map = {
-            "Zephyr": "HuggingFaceH4/zephyr-7b-beta",
-            "Llama": "NousResearch/Meta-Llama-3-8B",
-            "Mistral": "unsloth/mistral-7b-instruct-v0.3",
-            "Phi": "microsoft/Phi-3-mini-4k-instruct",
-            "Flant5": "google/flan-t5-base"
-        }
-# path = hf_model_map.get(model_info.split("_")[1], model_info)
+    "Zephyr": "HuggingFaceH4/zephyr-7b-beta",
+    "Llama": "NousResearch/Meta-Llama-3-8B",
+    "Mistral": "unsloth/mistral-7b-instruct-v0.3",
+    "Phi": "microsoft/Phi-3-mini-4k-instruct",
+    "Flant5": "google/flan-t5-base"
+}
+
+# Model chain class
 class model_chain:
-    model_name=""
-    def __init__(self, model_name_local,model_name_online,embedding_name, use_local=True) -> None:
+    model_name = ""
+
+    def __init__(self, model_name_local, model_name_online, use_local, embedding_name,
+                 splitter_type_dropdown, chunk_size_slider, chunk_overlap_slider, separator_textbox, max_tokens_slider) -> None:
         if use_local:
             quantization, self.model_name = model_name_local.split("_")[0], model_name_local.split("_")[1]
-            model_name_temp=model_name_local
+            model_name_temp = model_name_local
         else:
-            self.model_name= model_name_online
-            model_name_temp= hf_model_map[model_name_online]
-        if self.model_name == "Zepyhr":
+            self.model_name = model_name_online
+            model_name_temp = hf_model_map[model_name_online]
+
+        if self.model_name == "Zephyr":
             self.llm = zephyr_model(model_name_temp, quantization, use_local=use_local)
         elif self.model_name == "Llama":
             self.llm = llama_model(model_name_temp, quantization, use_local=use_local)
@@ -37,22 +42,32 @@ class model_chain:
         elif self.model_name == "Flant5":
             self.tokenizer, self.model, self.llm = flant5_model(model_name_temp, use_local=use_local)
 
-        self.retriever = ensemble_retriever(embedding_name)
+        # Creating the retriever
+        self.retriever = ensemble_retriever(embedding_name,
+                                            splitter_type=splitter_type_dropdown,
+                                            chunk_size=chunk_size_slider,
+                                            chunk_overlap=chunk_overlap_slider,
+                                            separator=separator_textbox,
+                                            max_tokens=max_tokens_slider)
+
+        # Defining the RAG chain
         prompt = hub.pull("rlm/rag-prompt")
-
-        def format_docs(docs):
-            return "\n\n".join(doc.page_content for doc in docs)
-
         self.rag_chain = (
-            {"context": self.retriever | format_docs, "question": RunnablePassthrough()}
+            {"context": self.retriever | self.format_docs, "question": RunnablePassthrough()}
             | prompt
             | self.llm
             | StrOutputParser()
         )
 
+    # Helper function to format documents
+    def format_docs(self, docs):
+        return "\n\n".join(doc.page_content for doc in docs)
+
+    # Retrieve RAG chain
     def rag_chain_ret(self):
         return self.rag_chain
 
+    # Answer retrieval function
     def ans_ret(self, inp, rag_chain):
         if self.model_name == 'Flant5':
             my_question = "What is KUET?"

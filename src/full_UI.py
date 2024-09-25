@@ -475,24 +475,38 @@ with gr.Blocks() as demo:
         human_ans_btn.click(human_ans_func,[id, ques],[human_ans_btn,human_ans_lab])
         new_user.click(generate_token,None,new_user_token)
         
-#***************************************************    
+#***************************************************
     infer_ragchain=None
     with gr.Tab("Inference"):
-        def echo(message, history,model_name_local,model_name_online,embedding_name,inf_checkbox):
+        def echo(message, history,model_name_local,model_name_online,
+                                            inf_checkbox,embedding_name,splitter_type_dropdown,chunk_size_slider,
+                                            chunk_overlap_slider,separator_textbox,max_tokens_slider):
             global infer_ragchain
             if infer_ragchain is None:
                 gr.Info("Please wait!!! model is loading!!")
                 if inf_checkbox:
                     gr.info("local model is loading!!")
-                infer_ragchain = model_chain(model_name_local,model_name_online,embedding_name,inf_checkbox)
+                infer_ragchain = model_chain(model_name_local,model_name_online,
+                                            inf_checkbox,embedding_name,splitter_type_dropdown,chunk_size_slider,
+                                            chunk_overlap_slider,separator_textbox,max_tokens_slider)
             rag_chain=infer_ragchain.rag_chain_ret()
             return infer_ragchain.ans_ret(message,rag_chain) 
-        embedding_name=gr.Dropdown(choices=["BAAI/bge-base-en-v1.5","dunzhang/stella_en_1.5B_v5","dunzhang/stella_en_400M_v5",
-                                            "nvidia/NV-Embed-v2","Alibaba-NLP/gte-Qwen2-1.5B-instruct"],
-                                   label="Select the Embedding Model")
+        with gr.Row():
+            embedding_name=gr.Dropdown(choices=["BAAI/bge-base-en-v1.5","dunzhang/stella_en_1.5B_v5","dunzhang/stella_en_400M_v5",
+                                                "nvidia/NV-Embed-v2","Alibaba-NLP/gte-Qwen2-1.5B-instruct"],
+                                    label="Select the Embedding Model")
+            splitter_type_dropdown = gr.Dropdown(choices=["character", "recursive", "token"],
+                                             value="character", label="Splitter Type",interactive=True)
+            
+            chunk_size_slider = gr.Slider(minimum=100, maximum=2000, value=500, step=50, label="Chunk Size")
+            chunk_overlap_slider = gr.Slider(minimum=0, maximum=500, value=30, step=10, label="Chunk Overlap",interactive=True)
+            separator_textbox = gr.Textbox(value="\n", label="Separator (e.g., newline '\\n')",interactive=True)
+            max_tokens_slider = gr.Slider(minimum=100, maximum=5000, value=1000, step=100, label="Max Tokens",interactive=True)
+
         inf_checkbox=gr.Checkbox(label="Do you want to use fine-tuned model?")
-        model_name_local=gr.Dropdown(choices=os.listdir("models"),label="Select the local LLM",visible=True)
-        model_name_online=gr.Dropdown(visible=False)
+        model_name_local=gr.Dropdown(visible=False)
+        model_name_online=gr.Dropdown(choices=["Zephyr","Llama","Mistral", "Phi", "Flant5"],
+                        label="Select the LLM from Huggingface",visible=True)
         def model_online_local_show(inf_checkbox):
             if inf_checkbox:
                 return [gr.Dropdown(choices=os.listdir("models"),label="Select the local LLM",visible=True),
@@ -502,7 +516,11 @@ with gr.Blocks() as demo:
                         gr.Dropdown(choices=["Zephyr","Llama","Mistral", "Phi", "Flant5"],
                         label="Select the LLM from Huggingface",visible=True)]
         inf_checkbox.change(model_online_local_show,[inf_checkbox],[model_name_local,model_name_online])
-        gr.ChatInterface(fn=echo, additional_inputs=[model_name_local,model_name_online,embedding_name,inf_checkbox], title="Chatbot")
+        gr.ChatInterface(fn=echo, 
+                         additional_inputs=[model_name_local,model_name_online,inf_checkbox,embedding_name,
+                                            splitter_type_dropdown,chunk_size_slider,
+                                            chunk_overlap_slider,separator_textbox,max_tokens_slider],
+                           title="Chatbot")
     with gr.Tab("Deployment"):
         gr.Markdown("""\"deploy\" folder has all the code for the deployment of the model.
                     For installing dependencies use the following command: "pip install -r requirements.txt".
@@ -516,4 +534,4 @@ with gr.Blocks() as demo:
         btn_model=gr.Button("Deploy")
         btn_model.click(deploy_func,model_name)
 
-demo.launch(share=True)
+demo.launch(share=False)

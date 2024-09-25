@@ -49,8 +49,15 @@ class BaseTrainer:
         return self.tokenizer.apply_chat_template(temp, add_generation_prompt=False, tokenize=False,chat_template='content')
 
     def train(self, lr, epoch, batch_size, gradient_accumulation, quantization, lora_r, lora_alpha, lora_dropout):
-        data_location = "data/finetune_data.xlsx"
-        data_df = pd.read_excel(data_location)
+        csv_file = "data/finetune_data.csv"
+        xlsx_file = "data/finetune_data.xlsx"
+        if os.path.exists(csv_file):
+            data_df = pd.read_csv(csv_file)
+            print("Reading CSV file...")
+        elif os.path.exists(xlsx_file):
+            data_df = pd.read_excel(xlsx_file)
+            print("CSV file not found, reading Excel file...")
+            
         data_df["text"] = data_df[["question", "answer"]].apply(lambda x: self.formatted_text(x), axis=1)
         dataset = Dataset.from_pandas(data_df)
 
