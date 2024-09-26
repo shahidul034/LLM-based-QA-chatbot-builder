@@ -20,7 +20,7 @@ def display_table(path=r"data/demo_table_data.xlsx"):
     df = pd.read_excel(path)
     df_with_custom_index = df.head(2)
     # df_with_custom_index.index = [f"Row {i+1}" for i in range(len(df_with_custom_index))]
-    html_table = df_with_custom_index.to_html(index=True)
+    html_table = df_with_custom_index.to_html(index=False)
     return f"<div style='overflow-x:auto;'>{html_table}</div>"
 def current_time():
     # ff="model_ans_llama_finetuned486_rag_ensemble"

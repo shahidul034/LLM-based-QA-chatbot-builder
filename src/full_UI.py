@@ -133,9 +133,9 @@ with gr.Blocks() as demo:
             In this page you can prepare data for finetuning and testing your model. The data can be provided through Excel file or directly via web interface. Additionally, data can be parsed from the target website(Data parsing for RAG) to further enhance the model performance.  
                         
             ## 1. If you want to provide data in Excel file or CSV file for model finetuning and testing.
-            1) Create an Excel or CSV file in the data folder and name it "finetune_data.xlsx" for finetuning the model.
-            2) Create an Excel file or CSV file in the data folder and name it "testing_data.xlsx" for generating answers using the fine-tuned model.
-            3) "finetune_data.xlsx" has two columns: question and answer. "testing_data.xlsx" has four columns: question, contexts, ground_truths. 
+            1) Create an Excel or CSV file in the data folder and name it "finetune_data.xlsx" or "finetune_data.csv" for finetuning the model.
+            2) Create an Excel or CSV file in the data folder and name it "testing_data.xlsx" or "testing_data.csv" for generating answers using the fine-tuned model.
+            3) "finetune_data.xlsx" has two columns: question and answer. "testing_data.xlsx" has three columns: question, contexts, ground_truths. 
         """)
             gr.Markdown("""
                     ## finetune_data.xlsx
@@ -382,12 +382,11 @@ with gr.Blocks() as demo:
         gr.Info("Generating answer from model is finished!!! Now, it is ready for human evaluation. Model answer is saved in \"model_ans\" folder. ")
                
         gr.Markdown(""" # Instructions:\n
-                    In this page you can generate answer from fine-tuned models for human evaluation. The questions must be created using 'Testing data generation' section of 'Data collection' tab.
-                    Here, we include RAGAS for evaluating RAG (answer_correctness, answer_similarity, answer_relevancy, faithfulness, context_recall,context_precision).     
+                    In this page you can generate answer from fine-tuned models for human evaluation. The questions must be created using 'Testing data generation' section of 'Data collection' tab.     
                     """)
         model_name=gr.Dropdown(choices=os.listdir("models"),label="Select the Model")
         with gr.Row():
-            ans_gen=gr.Button("Generate the Answer of the Testing Dataset")
+            ans_gen=gr.Button("Generate Answer for Testing Dataset")
         ans_gen.click(ans_gen_fun,model_name,model_name)
 #***************************************************Human evaluation
     import secrets
@@ -518,14 +517,7 @@ with gr.Blocks() as demo:
         model_name_local=gr.Dropdown(visible=False)
         model_name_online=gr.Dropdown(choices=["Zephyr","Llama","Mistral", "Phi", "Flant5"],
                         label="Select the LLM from Huggingface",visible=True)
-        def model_online_local_show(inf_checkbox):
-            if inf_checkbox:
-                return [gr.Dropdown(choices=os.listdir("models"),label="Select the local LLM",visible=True),
-                        gr.Dropdown(visible=False)]
-            else:
-                return [gr.Dropdown(visible=False),
-                        gr.Dropdown(choices=["Zephyr","Llama","Mistral", "Phi", "Flant5"],
-                        label="Select the LLM from Huggingface",visible=True)]
+        from gradio_fun import model_online_local_show
         inf_checkbox.change(model_online_local_show,[inf_checkbox],[model_name_local,model_name_online])
         gr.ChatInterface(fn=echo, 
                          additional_inputs=[model_name_local,model_name_online,inf_checkbox,embedding_name,
