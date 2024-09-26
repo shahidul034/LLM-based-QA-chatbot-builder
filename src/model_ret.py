@@ -74,3 +74,41 @@ def phi_model(model_info, quantization, use_local=True):
 
 def flant5_model(model_info, use_local=True):
     return load_model_and_pipeline(model_info, is_t5=True, use_local=use_local)
+
+
+import pandas as pd
+from datasets import Dataset
+
+def calculate_rag_metrics(model_ques_ans_gen, llm_model, embedding_model="BAAI/bge-base-en-v1.5"):
+    # Create a dictionary from the model_ques_ans_gen list
+    from ragas import evaluate
+    from ragas.metrics import faithfulness, answer_correctness,answer_similarity,answer_relevancy,context_recall, context_precision
+    data_samples = {
+        'question': [item['question'] for item in model_ques_ans_gen],
+        'answer': [item['answer'] for item in model_ques_ans_gen],
+        'contexts': [item['contexts'] for item in model_ques_ans_gen],
+        'ground_truths': [item['ground_truths'] for item in model_ques_ans_gen]
+    }
+
+    # Convert the dictionary to a pandas DataFrame
+    rag_df = pd.DataFrame(data_samples)
+
+    # Convert the DataFrame to a HuggingFace Dataset
+    rag_eval_dataset = Dataset.from_pandas(rag_df)
+
+    # Define the list of metrics to calculate
+    metrics = [
+        "answer_correctness", "answer_similarity", 
+        "answer_relevancy", "faithfulness", 
+        "context_recall", "context_precision"
+    ]
+
+    # Perform the evaluation using the provided LLM and embedding models
+    result = evaluate(
+        rag_eval_dataset,
+        metrics=metrics,
+        llm=llm_model,
+        embeddings=embedding_model
+    )
+    result.to_pandas()
+    return result

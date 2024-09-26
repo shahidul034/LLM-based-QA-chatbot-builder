@@ -16,8 +16,8 @@ def move_to(move,model_ans):
         gr.Label(value=ques_temp,label="Question"),
         gr.Label(value=ans_temp,label="Answer")
     ]
-def display_table():
-    df = pd.read_excel(r"data/demo_table_data.xlsx")
+def display_table(path=r"data/demo_table_data.xlsx"):
+    df = pd.read_excel(path)
     df_with_custom_index = df.head(2)
     # df_with_custom_index.index = [f"Row {i+1}" for i in range(len(df_with_custom_index))]
     html_table = df_with_custom_index.to_html(index=True)
@@ -135,4 +135,5 @@ def all_contri_ans(id, ques):
             temp.append(y)
     if len(temp)==0:
         temp=["This question's answer is not available."]
-    return temp    
+    return temp  
+  

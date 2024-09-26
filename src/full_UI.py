@@ -132,12 +132,19 @@ with gr.Blocks() as demo:
             gr.Markdown(""" # Instructions: 
             In this page you can prepare data for finetuning and testing your model. The data can be provided through Excel file or directly via web interface. Additionally, data can be parsed from the target website(Data parsing for RAG) to further enhance the model performance.  
                         
-            ## 1. If you want to provide data in Excel file for model finetuning and testing.
-            1) Create an Excel file in the data folder and name it finetune_data.xlsx for finetuning the model.
-            2) Create an Excel file in the data folder and name it testing_data.xlsx for generating answers using the fine-tuned model.
-            3) Both excel file has two columns: question and answer.
+            ## 1. If you want to provide data in Excel file or CSV file for model finetuning and testing.
+            1) Create an Excel or CSV file in the data folder and name it "finetune_data.xlsx" for finetuning the model.
+            2) Create an Excel file or CSV file in the data folder and name it "testing_data.xlsx" for generating answers using the fine-tuned model.
+            3) "finetune_data.xlsx" has two columns: question and answer. "testing_data.xlsx" has four columns: question, contexts, ground_truths. 
         """)
-            gr.HTML(value=display_table())
+            gr.Markdown("""
+                    ## finetune_data.xlsx
+                 """)
+            gr.HTML(value=display_table(), label="finetune_data.xlsx")
+            gr.Markdown("""
+                    ## testing_data.xlsx
+                 """)
+            gr.HTML(value=display_table(r"data\testing_dataset.xlsx"), label="testing_data.xlsx")
             gr.Markdown("""
                     ## 2. You can use the below interface to create the dataset for training and testing models.
                  """)
@@ -181,7 +188,9 @@ with gr.Blocks() as demo:
                 with gr.Row():
                     ques=gr.Textbox(label="Question")
                 with gr.Row():
-                    ans=gr.TextArea(label="Answer",placeholder="(optional) Although the answer is optional it will help users during model evaluation.")
+                    ans=gr.TextArea(label="Ground Truth")
+                with gr.Row():
+                    ans=gr.TextArea(label="Contexts")
                 with gr.Row():
                     save_test=gr.Button("Save the Answer")
                 with gr.Row():
@@ -345,35 +354,37 @@ with gr.Blocks() as demo:
         btn_emb.click(finetune_emb,[embedding_model], None)
 #***************************************************
     with gr.Tab("Testing Data Generation from Model"):
-        
         def ans_gen_fun(model_name,progress=gr.Progress()):
             if not os.path.exists(r"data\testing_dataset.xlsx"):
                 gr.Warning("You need to create testing dataset first from Data collection.")
                 return
             import time
+            from model_ret import calculate_rag_metrics
             progress(0, desc="Starting...")
             idx=1
             model_ques_ans_gen=[]
             df_temp=pd.read_excel(r"data/testing_dataset.xlsx")
             #$$$$$$$$$$$$$$$$$
-            # infer_model = model_chain(model_name)
-            # rag_chain=infer_model.rag_chain_ret()
-            for x in progress.tqdm(df_temp['question']):
+            infer_model = model_chain(model_name)
+            rag_chain=infer_model.rag_chain_ret()
+            for x in progress.tqdm(df_temp.values):
                 # time.sleep(0.1)
                 model_ques_ans_gen.append({
                     "id":idx,
-                    "question":x
-                    ,'answer': "ready"
-                    #$$$$$$$$$$$$$$$$$
-                    # ,'answer':ans_ret(x,rag_chain)
+                    "question":x[0]
+                    ,'answer':rag_chain.ans_ret(x,rag_chain)
+                    , "contexts":x[2]
+                    , "ground_truths":x[1]
                 })
                 idx+=1
-            pd.DataFrame(model_ques_ans_gen).to_excel(os.path.join("model_ans",f"_{model_name+cur_time}.xlsx"),index=False)
+            temp=calculate_rag_metrics(model_ques_ans_gen,model_name)
+            pd.DataFrame(temp).to_excel(os.path.join("model_ans",f"_{model_name+cur_time}.xlsx"),index=False)
         gr.Info("Generating answer from model is finished!!! Now, it is ready for human evaluation. Model answer is saved in \"model_ans\" folder. ")
                
         gr.Markdown(""" # Instructions:\n
                     In this page you can generate answer from fine-tuned models for human evaluation. The questions must be created using 'Testing data generation' section of 'Data collection' tab.
-                        """)
+                    Here, we include RAGAS for evaluating RAG (answer_correctness, answer_similarity, answer_relevancy, faithfulness, context_recall,context_precision).     
+                    """)
         model_name=gr.Dropdown(choices=os.listdir("models"),label="Select the Model")
         with gr.Row():
             ans_gen=gr.Button("Generate the Answer of the Testing Dataset")

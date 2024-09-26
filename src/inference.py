@@ -22,8 +22,16 @@ hf_model_map = {
 class model_chain:
     model_name = ""
 
-    def __init__(self, model_name_local, model_name_online, use_local, embedding_name,
-                 splitter_type_dropdown, chunk_size_slider, chunk_overlap_slider, separator_textbox, max_tokens_slider) -> None:
+    def __init__(self, 
+                 model_name_local, 
+                 model_name_online="Llama", 
+                 use_local=True, 
+                 embedding_name="BAAI/bge-base-en-v1.5", 
+                 splitter_type_dropdown="character", 
+                 chunk_size_slider=512, 
+                 chunk_overlap_slider=30, 
+                 separator_textbox="\n", 
+                 max_tokens_slider=2048) -> None:
         if use_local:
             quantization, self.model_name = model_name_local.split("_")[0], model_name_local.split("_")[1]
             model_name_temp = model_name_local
