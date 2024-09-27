@@ -269,10 +269,10 @@ with gr.Blocks() as demo:
                 trainer=get_trainer("phi")
                 trainer.phi_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Fine-tune Ended!!!")
-            elif model_name_temp=="Flan-T5":
+            elif model_name_temp=="Flant5":
                 gr.Info("Fine-tune started!!!")
                 # trainer = flant5_trainer()
-                trainer=get_trainer("flan-T5")
+                trainer=get_trainer("flant5")
                 trainer.flant5_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                 gr.Info("Fine-tune Ended!!!")
             elif model_name_temp=="Custom model":
@@ -294,7 +294,7 @@ with gr.Blocks() as demo:
             elif model_name=="Phi":
                 f=open(r"fine_tune_file/phi_finetune.py").read()
                 return gr.Code(visible=True,value=f,interactive=True,language="python")
-            elif model_name=="Flan-T5":
+            elif model_name=="Flant5":
                 f=open(r"fine_tune_file/flant5_finetune.py").read()
                 return gr.Code(visible=True,value=f,interactive=True,language="python")
 
@@ -317,13 +317,13 @@ with gr.Blocks() as demo:
             elif model_name=="Phi":
                 open(r"fine_tune_file/phi_finetune.py","w").write(code_)
                 gr.Info("Successfully saved code!!!")
-            elif model_name=="Flan-T5":
+            elif model_name=="Flant5":
                 open(r"fine_tune_file/flant5_finetune.py","w").write(code_)
                 gr.Info("Successfully saved code!!!")
 
         def finetune_emb(emb_name):
             from embedding_finetune import train_model_with_custom_dataset
-            gr.Info("Embedding fine-tune is started!!!")
+            gr.Info("Embedding model fine-tune is started!!!")
             train_model_with_custom_dataset("emb_data.xlsx",emb_name)
 
         with gr.Row():
@@ -332,7 +332,7 @@ with gr.Blocks() as demo:
             embedding_model=gr.Dropdown(choices=["BAAI/bge-base-en-v1.5","dunzhang/stella_en_1.5B_v5","dunzhang/stella_en_400M_v5","nvidia/NV-Embed-v2","Alibaba-NLP/gte-Qwen2-1.5B-instruct"],label="Select the embedding model for fine-tuning")        
             btn_emb=gr.Button("Fine-tune the embedding model")        
         with gr.Row():
-            model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama","Phi","Flan-T5","Custom model"],label="Select the LLM for fine-tuning")        
+            model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama","Phi","Flant5","Custom model"],label="Select the LLM for fine-tuning")        
         with gr.Accordion("Parameter Setup"):
             with gr.Row():
                 lr=gr.Number(label="learning_rate",value=5e-6,interactive=True,info="The step size at which the model parameters are updated during training. It controls the magnitude of the updates to the model's weights.")
@@ -363,11 +363,11 @@ with gr.Blocks() as demo:
         def ans_gen_fun(model_name,embedding_name,
                                             splitter_type_dropdown,chunk_size_slider,
                                             chunk_overlap_slider,separator_textbox,max_tokens_slider,save_as_fav,progress=gr.Progress()):
-            if not os.path.exists(r"data\testing_dataset.xlsx"):
+            if not os.path.exists(os.path.join("data","testing_dataset.xlsx")):
                 gr.Warning("You need to create testing dataset first from Data collection.")
                 return
             if save_as_fav:
-                save_params_to_file(embedding_name,
+                save_params_to_file(model_name,embedding_name,
                                             splitter_type_dropdown,chunk_size_slider,
                                             chunk_overlap_slider,separator_textbox,max_tokens_slider)
             if not os.path.exists(model_name):
@@ -378,13 +378,11 @@ with gr.Blocks() as demo:
             idx=1
             model_ques_ans_gen=[]
             df_temp=pd.read_excel(r"data/testing_dataset.xlsx")
-            #$$$$$$$$$$$$$$$$$
             infer_model = model_chain(model_name,None,
                                             True,embedding_name,splitter_type_dropdown,chunk_size_slider,
                                             chunk_overlap_slider,separator_textbox,max_tokens_slider)
             rag_chain=infer_model.rag_chain_ret()
             for x in progress.tqdm(df_temp.values):
-                # time.sleep(0.1)
                 model_ques_ans_gen.append({
                     "id":idx,
                     "question":x[0]
@@ -454,7 +452,6 @@ with gr.Blocks() as demo:
                 df = pd.DataFrame(data)
                 df.to_excel("save_ques_ans//"+str(token)+".xlsx", index=False)
                 return gr.Label(label="Please keep the token for tracking question answer data",value=token,visible=True)
-                
         
     def bar_plot_fn():
         temp=score_report_bar()
@@ -554,6 +551,7 @@ with gr.Blocks() as demo:
         from utils import load_params_from_file
         saved_params = load_params_from_file()
     # If saved parameters exist, use them; otherwise, set default values
+        default_model_name = saved_params['model_name'] if saved_params else "Llama"
         default_embedding_name = saved_params['embedding_name'] if saved_params else "BAAI/bge-base-en-v1.5"
         default_splitter_type = saved_params['splitter_type_dropdown'] if saved_params else "character"
         default_chunk_size = saved_params['chunk_size_slider'] if saved_params else 500
@@ -579,7 +577,7 @@ with gr.Blocks() as demo:
             max_tokens_slider = gr.Slider(minimum=100, maximum=5000, value=default_max_tokens, step=100, label="Max Tokens",interactive=True)
 
         inf_checkbox=gr.Checkbox(label="Do you want to use without fine-tuned model from Hugging face?")
-        model_name_local=gr.Dropdown(choices=os.listdir("models"),visible=True,label="Select the fine-tuned LLM")
+        model_name_local=gr.Dropdown(choices=os.listdir("models"),visible=True,label="Select the fine-tuned LLM",value=default_model_name)
         model_name_online=gr.Dropdown(visible=False)
         def model_online_local_show(inf_checkbox):
             if inf_checkbox:
@@ -610,8 +608,10 @@ with gr.Blocks() as demo:
             for file_name in files_to_copy:
                 src_file_path = os.path.join(src_folder, file_name)
                 dest_file_path = os.path.join(deploy_folder, file_name)
-            f=open("deploy//info.txt","w")
-            f.write(f"{model_name}")
+            param_list=load_params_from_file()
+            param_list["model_name"]=model_name
+            save_params_to_file(param_list)
+            # f.write(f"{model_name}")
 
             
         model_name=gr.Dropdown(choices=os.listdir("models"),label="Select the Model")

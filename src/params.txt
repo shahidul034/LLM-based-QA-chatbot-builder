@@ -1,1 +1,1 @@
-{"embedding_name": "BAAI/bge-base-en-v1.5", "splitter_type_dropdown": "character", "chunk_size_slider": 500, "chunk_overlap_slider": 30, "separator_textbox": "\\n\n", "max_tokens_slider": 1000}
+{"model_name": "M1", "embedding_name": "BAAI/bge-base-en-v1.5", "splitter_type_dropdown": "character", "chunk_size_slider": 500, "chunk_overlap_slider": 30, "separator_textbox": "\n", "max_tokens_slider": 1000}

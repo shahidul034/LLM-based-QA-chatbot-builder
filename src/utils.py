@@ -139,9 +139,10 @@ def all_contri_ans(id, ques):
 import json
 import os
 
-def save_params_to_file(embedding_name, splitter_type_dropdown, chunk_size_slider,
+def save_params_to_file(model_name,embedding_name, splitter_type_dropdown, chunk_size_slider,
                         chunk_overlap_slider, separator_textbox, max_tokens_slider, filename="params.txt"):
     params = {
+        "model_name":model_name,
         "embedding_name": embedding_name,
         "splitter_type_dropdown": splitter_type_dropdown,
         "chunk_size_slider": chunk_size_slider,

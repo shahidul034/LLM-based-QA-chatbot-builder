@@ -8,7 +8,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from trl import SFTTrainer
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training, PeftConfig, PeftModel
 import os
-cache_folder="/mnt/FA00A16100A1259B/shakib/model_cache"
+# cache_folder="/mnt/FA00A16100A1259B/shakib/model_cache"
 # os.environ['HF_HOME'] = cache_folder
 # os.environ['HF_DATASETS_CACHE'] = cache_folder
 # os.environ['TRANSFORMERS_CACHE'] = cache_folder
@@ -124,7 +124,7 @@ class LlamaTrainer(BaseTrainer):
             torch_dtype=torch.bfloat16,
             device_map="auto",
             trust_remote_code=True,
-            cache_dir=cache_folder
+            # cache_dir=cache_folder
         )
         model.config.use_cache = False
         model.config.pretraining_tp = 1
@@ -163,11 +163,11 @@ class FlanT5Trainer(BaseTrainer):
 
 def get_trainer(model_name):
     model_map = {
-        "llama": ("NousResearch/Meta-Llama-3-8B", LlamaTrainer),
-        "mistral": ("unsloth/mistral-7b-instruct-v0.3", MistralTrainer),
-        "phi": ("microsoft/Phi-3-mini-4k-instruct", PhiTrainer),
-        "zephyr": ("HuggingFaceH4/zephyr-7b-beta", ZephyrTrainer),
-        "flan-t5": ("google/flan-t5-base", FlanT5Trainer),
+        "Llama": ("NousResearch/Meta-Llama-3-8B", LlamaTrainer),
+        "Mistral": ("unsloth/mistral-7b-instruct-v0.3", MistralTrainer),
+        "Phi": ("microsoft/Phi-3-mini-4k-instruct", PhiTrainer),
+        "Zephyr": ("HuggingFaceH4/zephyr-7b-beta", ZephyrTrainer),
+        "Flant5": ("google/flan-t5-base", FlanT5Trainer),
     }
     
     base_model, trainer_class = model_map.get(model_name.lower(), (None, None))
@@ -178,7 +178,7 @@ def get_trainer(model_name):
 
 def main():
     # Example usage
-    model_name = "llama"  # or "mistral", "phi", "zephyr", "flan-t5"
+    model_name = "Llama"  # or "mistral", "phi", "zephyr", "flan-t5"
     trainer = get_trainer(model_name)
     trainer.train(lr=5e-6, epoch=2, batch_size=4, gradient_accumulation=4, quantization=8, lora_r=16, lora_alpha=32, lora_dropout=0.05)
 
