@@ -365,6 +365,8 @@ with gr.Blocks() as demo:
                 save_params_to_file(embedding_name,
                                             splitter_type_dropdown,chunk_size_slider,
                                             chunk_overlap_slider,separator_textbox,max_tokens_slider)
+            if not os.path.exists(model_name):
+                gr.Error("Model not found in local folder!!")
             import time
             from model_ret import calculate_rag_metrics
             progress(0, desc="Starting...")
@@ -538,7 +540,7 @@ with gr.Blocks() as demo:
             if infer_ragchain is None:
                 gr.Info("Please wait!!! model is loading!!")
                 if inf_checkbox:
-                    gr.info("local model is loading!!")
+                    gr.Info("Model is loading from Huggingface!!")
                 infer_ragchain = model_chain(model_name_local,model_name_online,
                                             inf_checkbox,embedding_name,splitter_type_dropdown,chunk_size_slider,
                                             chunk_overlap_slider,separator_textbox,max_tokens_slider)
@@ -566,18 +568,18 @@ with gr.Blocks() as demo:
             separator_textbox = gr.Textbox(value=default_separator, label="Separator (e.g., newline '\\n')",interactive=True)
             max_tokens_slider = gr.Slider(minimum=100, maximum=5000, value=default_max_tokens, step=100, label="Max Tokens",interactive=True)
 
-        inf_checkbox=gr.Checkbox(label="Do you want to use fine-tuned model?")
-        model_name_local=gr.Dropdown(visible=False)
-        model_name_online=gr.Dropdown(choices=["Zephyr","Llama","Mistral", "Phi", "Flant5"],
-                        label="Select the LLM from Huggingface",visible=True)
+        inf_checkbox=gr.Checkbox(label="Do you want to use without fine-tuned model from Hugging face?")
+        model_name_local=gr.Dropdown(choices=os.listdir("models"),visible=True,label="Select the fine-tuned LLM")
+        model_name_online=gr.Dropdown(visible=False)
         def model_online_local_show(inf_checkbox):
             if inf_checkbox:
-                return [gr.Dropdown(choices=os.listdir("models"),label="Select the local LLM",visible=True),
-                        gr.Dropdown(visible=False)]
-            else:
                 return [gr.Dropdown(visible=False),
                         gr.Dropdown(choices=["Zephyr","Llama","Mistral", "Phi", "Flant5"],
                         label="Select the LLM from Huggingface",visible=True)]
+            else:
+                return [gr.Dropdown(choices=os.listdir("models"),label="Select the fine-tuned LLM",visible=True),
+                        gr.Dropdown(visible=False)]
+                
         inf_checkbox.change(model_online_local_show,[inf_checkbox],[model_name_local,model_name_online])
         gr.ChatInterface(fn=echo, 
                          additional_inputs=[model_name_local,model_name_online,inf_checkbox,embedding_name,
@@ -589,6 +591,14 @@ with gr.Blocks() as demo:
                     For installing dependencies use the following command: "pip install -r requirements.txt".
                     """)
         def deploy_func(model_name):
+            import shutil
+            import os
+            src_folder = 'src'
+            deploy_folder = 'deploy'
+            files_to_copy = ['model_ret.py', 'create_retriever.py', 'inference.py']
+            for file_name in files_to_copy:
+                src_file_path = os.path.join(src_folder, file_name)
+                dest_file_path = os.path.join(deploy_folder, file_name)
             f=open("deploy//info.txt","w")
             f.write(f"{model_name}")
 

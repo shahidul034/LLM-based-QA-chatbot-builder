@@ -25,30 +25,32 @@ class model_chain:
     def __init__(self, 
                  model_name_local, 
                  model_name_online="Llama", 
-                 use_local=True, 
+                 use_online=True, 
                  embedding_name="BAAI/bge-base-en-v1.5", 
                  splitter_type_dropdown="character", 
                  chunk_size_slider=512, 
                  chunk_overlap_slider=30, 
                  separator_textbox="\n", 
                  max_tokens_slider=2048) -> None:
-        if use_local:
+        if not use_online and os.path.exists(f"models//{model_name_local}") and len(os.listdir(f"models//{model_name_local}")):
+            import gradio as gr
+            gr.Info("Model *()* from online!!")
             quantization, self.model_name = model_name_local.split("_")[0], model_name_local.split("_")[1]
             model_name_temp = model_name_local
         else:
             self.model_name = model_name_online
             model_name_temp = hf_model_map[model_name_online]
-
+            
         if self.model_name == "Zephyr":
-            self.llm = zephyr_model(model_name_temp, quantization, use_local=use_local)
+            self.llm = zephyr_model(model_name_temp, quantization, use_online=use_online)
         elif self.model_name == "Llama":
-            self.llm = llama_model(model_name_temp, quantization, use_local=use_local)
+            self.llm = llama_model(model_name_temp, quantization, use_online=use_online)
         elif self.model_name == "Mistral":
-            self.llm = mistral_model(model_name_temp, quantization, use_local=use_local)
+            self.llm = mistral_model(model_name_temp, quantization, use_online=use_online)
         elif self.model_name == "Phi":
-            self.llm = phi_model(model_name_temp, quantization, use_local=use_local)
+            self.llm = phi_model(model_name_temp, quantization, use_online=use_online)
         elif self.model_name == "Flant5":
-            self.tokenizer, self.model, self.llm = flant5_model(model_name_temp, use_local=use_local)
+            self.tokenizer, self.model, self.llm = flant5_model(model_name_temp, use_online=use_online)
 
         # Creating the retriever
         self.retriever = ensemble_retriever(embedding_name,
