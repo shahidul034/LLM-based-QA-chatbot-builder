@@ -136,4 +136,29 @@ def all_contri_ans(id, ques):
     if len(temp)==0:
         temp=["This question's answer is not available."]
     return temp  
-  
+import json
+import os
+
+def save_params_to_file(embedding_name, splitter_type_dropdown, chunk_size_slider,
+                        chunk_overlap_slider, separator_textbox, max_tokens_slider, filename="params.txt"):
+    params = {
+        "embedding_name": embedding_name,
+        "splitter_type_dropdown": splitter_type_dropdown,
+        "chunk_size_slider": chunk_size_slider,
+        "chunk_overlap_slider": chunk_overlap_slider,
+        "separator_textbox": separator_textbox,
+        "max_tokens_slider": max_tokens_slider
+    }
+    
+    with open(filename, 'w') as f:
+        json.dump(params, f)
+    with open("deploy//params.txt", 'w') as f:
+        json.dump(params, f)
+
+def load_params_from_file(filename="params.txt"):
+    if os.path.exists(filename):
+        with open(filename, 'r') as f:
+            params = json.load(f)
+        return params
+    else:
+        return None
