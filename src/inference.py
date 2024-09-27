@@ -14,7 +14,7 @@ hf_model_map = {
     "Zephyr": "HuggingFaceH4/zephyr-7b-beta",
     "Llama": "NousResearch/Meta-Llama-3-8B",
     "Mistral": "unsloth/mistral-7b-instruct-v0.3",
-    "Phi": "microsoft/Phi-3-mini-4k-instruct",
+    "Phi": "microsoft/Phi-3.5-mini-instruct",
     "Flant5": "google/flan-t5-base"
 }
 
@@ -40,6 +40,7 @@ class model_chain:
         else:
             self.model_name = model_name_online
             model_name_temp = hf_model_map[model_name_online]
+            quantization=4
             
         if self.model_name == "Zephyr":
             self.llm = zephyr_model(model_name_temp, quantization, use_online=use_online)

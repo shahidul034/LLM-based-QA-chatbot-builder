@@ -6,8 +6,8 @@ import torch
 def load_model_and_pipeline(model_info, quantization=4, is_t5=False, use_online=True,temperature=0):
     
     tokenizer = AutoTokenizer.from_pretrained(model_info, use_auth_token=True)
-
-    if quantization == "8" and not is_t5:
+    print("*"*20, quantization,"  t5: ", is_t5,"  type: ", type(quantization))
+    if quantization == 8 and not is_t5:
         model = AutoModelForCausalLM.from_pretrained(
             model_info,
             device_map='auto',
@@ -15,7 +15,7 @@ def load_model_and_pipeline(model_info, quantization=4, is_t5=False, use_online=
             use_auth_token=True,
             load_in_8bit=True
         )
-    elif not is_t5 and quantization=="4":
+    elif not is_t5 and quantization==4:
         model = AutoModelForCausalLM.from_pretrained(
             model_info,
             device_map='auto',

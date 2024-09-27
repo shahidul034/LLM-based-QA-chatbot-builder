@@ -144,7 +144,7 @@ with gr.Blocks() as demo:
             gr.Markdown("""
                     ## testing_data.xlsx
                  """)
-            gr.HTML(value=display_table(r"data\testing_dataset.xlsx"), label="testing_data.xlsx")
+            gr.HTML(value=display_table(r"data//testing_dataset.xlsx"), label="testing_data.xlsx")
             gr.Markdown("""
                     ## 2. You can use the below interface to create the dataset for training and testing models.
                  """)
@@ -208,7 +208,12 @@ with gr.Blocks() as demo:
 
 #***************************************************      
     with gr.Tab("Fine-tuning"):
-        
+        with gr.Row():
+            def login_hug(token):
+                from huggingface_hub import login
+                login(token=token)
+            token_tb=gr.Textbox(label="Enter your Huggingface token to access Huggingface models")
+            token_tb.change(login_hug,token_tb,None)
         gr.Markdown("""
             # Instructions:
             1) Required VRAM for training: 24GB, for inference: 16GB.(Mistral, Zepyhr and Lllama)\n
@@ -555,7 +560,12 @@ with gr.Blocks() as demo:
         default_chunk_overlap = saved_params['chunk_overlap_slider'] if saved_params else 30
         default_separator = saved_params['separator_textbox'] if saved_params else "\n"
         default_max_tokens = saved_params['max_tokens_slider'] if saved_params else 1000
-   
+        with gr.Row():
+            def login_hug(token):
+                from huggingface_hub import login
+                login(token=token)
+            token_tb=gr.Textbox(label="Enter your Huggingface token to access Huggingface models")
+            token_tb.change(login_hug,token_tb,None)
         with gr.Row():
             embedding_name=gr.Dropdown(choices=["BAAI/bge-base-en-v1.5","dunzhang/stella_en_1.5B_v5","dunzhang/stella_en_400M_v5",
                                                 "nvidia/NV-Embed-v2","Alibaba-NLP/gte-Qwen2-1.5B-instruct"],value=default_embedding_name,
@@ -586,6 +596,7 @@ with gr.Blocks() as demo:
                                             splitter_type_dropdown,chunk_size_slider,
                                             chunk_overlap_slider,separator_textbox,max_tokens_slider],
                            title="Chatbot")
+    #----------------------------------------------
     with gr.Tab("Deployment"):
         gr.Markdown("""\"deploy\" folder has all the code for the deployment of the model.
                     For installing dependencies use the following command: "pip install -r requirements.txt".
