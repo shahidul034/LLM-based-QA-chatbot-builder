@@ -78,7 +78,7 @@ def train_model_with_custom_dataset(file_path, model_name, sheet_name=None):
     results = evaluator(model)
 
     # Print the main score for each dimension
-    for dim in matryoshka_dimensions:
+    for dim in matryoshka_evaluators:
         key = f"dim_{dim}_cosine_ndcg@10"
         if key in results:
             print(f"{key}: {results[key]}")

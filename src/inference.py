@@ -32,7 +32,7 @@ class model_chain:
                  chunk_overlap_slider=30, 
                  separator_textbox="\n", 
                  max_tokens_slider=2048) -> None:
-        if not use_online and os.path.exists(f"models//{model_name_local}") and len(os.listdir(f"models//{model_name_local}")):
+        if os.path.exists(f"models//{model_name_local}") and len(os.listdir(f"models//{model_name_local}")):
             import gradio as gr
             gr.Info("Model *()* from online!!")
             quantization, self.model_name = model_name_local.split("_")[0], model_name_local.split("_")[1]

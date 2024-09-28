@@ -75,44 +75,105 @@ def new_ques(model_ans):
 
 ######Data collection
 # Training question and answer saved
-def save_the_ques(ques,ans):
-    save_ques_ans.append({
-        'question':ques,
-        'ans':ans
-    })
-    if len(save_ques_ans)%3==0:
-        temp=pd.DataFrame(save_ques_ans)
-        temp.to_excel(f"save_ques_ans\\{cur_time}_trainData.xlsx",index=False)
-        gr.Info("Sucessfully saved in local folder!!!")
-    if len(os.listdir("save_ques_ans"))>=2:
-        df_all=[]
-        for x in os.listdir("save_ques_ans"):
-            path=os.path.join("save_ques_ans",x)
-            df_all.append(pd.read_excel(path))
-        if Path("data//finetune_data.xlsx").is_file():
-            df_all.append(pd.read_excel("data//finetune_data.xlsx"))
-        df_temp=pd.concat(df_all,axis=0)
-        df_temp.to_excel("data//finetune_data.xlsx",index=False)
+# def save_the_ques(ques,ans):
+#     print("testing")
+#     save_ques_ans.append({
+#         'question':ques,
+#         'ans':ans
+#     })
+#     if len(save_ques_ans)%3==0:
+#         temp=pd.DataFrame(save_ques_ans)
+#         temp.to_excel(f"save_ques_ans\\{cur_time}_trainData.xlsx",index=False)
+#         gr.Info("Sucessfully saved in local folder!!!")
+#     if len(os.listdir("save_ques_ans"))>=2:
+#         df_all=[]
+#         for x in os.listdir("save_ques_ans"):
+#             path=os.path.join("save_ques_ans",x)
+#             df_all.append(pd.read_excel(path))
+#         if Path("data//finetune_data.xlsx").is_file():
+#             df_all.append(pd.read_excel("data//finetune_data.xlsx"))
+#         df_temp=pd.concat(df_all,axis=0)
+#         df_temp.to_excel("data//finetune_data.xlsx",index=False)
+#     return gr.Label(value="Submitted!! Generate new question",visible=True)
 
-    return gr.Label(value="Submitted!! Generate new question",visible=True)
-# Testing question and answer saved
-def save_the_ques_test(ques,ans):
-    print(ans)
-    save_ques_ans_test.append({
-        'question':ques,
-        'ans':ans
+import pandas as pd
+from pathlib import Path
+import gradio as gr
+import os
+
+def save_the_ques(ques, ans):
+    """
+    Saves a question-answer pair to the finetune_data.xlsx file.
+
+    Args:
+        ques: The question string.
+        ans: The answer string.
+
+    Returns:
+        gradio.Info: Success message if saved successfully.
+    """
+    save_ques_ans = []
+    save_ques_ans.append({
+        'question': ques,
+        'answer': ans
     })
-    # if len(save_ques_ans)%3==0:
-    temp=pd.DataFrame(save_ques_ans_test)
-    temp.to_excel(f"save_ques_ans_test\\{cur_time}_testData.xlsx",index=False)
-    gr.Info("Sucessfully saved in local folder!!!")
-    if len(os.listdir("save_ques_ans_test"))>=2:
-        df_all=[]
-        for x in os.listdir("save_ques_ans_test"):
-            path=os.path.join("save_ques_ans_test",x)
-            df_all.append(pd.read_excel(path))
-        df_temp=pd.concat(df_all,axis=0)
-        df_temp.to_excel("data//testing_dataset.xlsx",index=False)
+    df_new = pd.DataFrame(save_ques_ans)
+    if Path("data//finetune_data.xlsx").is_file():
+        df_existing = pd.read_excel("data//finetune_data.xlsx")
+    else:
+        df_existing = pd.DataFrame()
+    df_combined = pd.concat([df_existing, df_new], ignore_index=True)
+    df_combined.to_excel("data//finetune_data.xlsx", index=False)
+    return gr.Info("Sucessfully saved in local folder!!!")
+
+# Testing question and answer saved
+# def save_the_ques_test(ques,ans):
+#     print(ans)
+#     save_ques_ans_test.append({
+#         'question':ques,
+#         'ans':ans
+#     })
+#     # if len(save_ques_ans)%3==0:
+#     temp=pd.DataFrame(save_ques_ans_test)
+#     temp.to_excel(f"save_ques_ans_test\\{cur_time}_testData.xlsx",index=False)
+#     gr.Info("Sucessfully saved in local folder!!!")
+#     if len(os.listdir("save_ques_ans_test"))>=2:
+#         df_all=[]
+#         for x in os.listdir("save_ques_ans_test"):
+#             path=os.path.join("save_ques_ans_test",x)
+#             df_all.append(pd.read_excel(path))
+#         df_temp=pd.concat(df_all,axis=0)
+#         df_temp.to_excel("data//testing_dataset.xlsx",index=False)
+
+import pandas as pd
+from pathlib import Path
+import gradio as gr
+import os
+
+def save_the_ques_test(ques, ans):
+    """
+    Saves a question-answer pair to the testing_dataset.xlsx file.
+
+    Args:
+        ques: The question string.
+        ans: The answer string.
+
+    Returns:
+        gradio.Info: Success message if saved successfully.
+    """
+    save_ques_ans_test = []
+    save_ques_ans_test.append({
+        'question': ques,
+        'answer': ans
+    })
+    df_new = pd.DataFrame(save_ques_ans_test)
+    if Path("data//testing_dataset.xlsx").is_file():
+        df_existing = pd.read_excel("data//testing_dataset.xlsx")
+    else:
+        df_existing = pd.DataFrame()
+    df_combined = pd.concat([df_existing, df_new], ignore_index=True)
+    df_combined.to_excel("data//testing_dataset.xlsx", index=False)
+    return gr.Info("Sucessfully saved in local folder!!!")
 
 
 def next_ques(ques,ans):
@@ -144,7 +205,7 @@ with gr.Blocks() as demo:
             gr.Markdown("""
                     ## testing_data.xlsx
                  """)
-            gr.HTML(value=display_table(r"data//testing_dataset.xlsx"), label="testing_data.xlsx")
+            gr.HTML(value=display_table(r"data//demo_test_data.xlsx"), label="testing_data.xlsx")
             gr.Markdown("""
                     ## 2. You can use the below interface to create the dataset for training and testing models.
                  """)
@@ -183,7 +244,7 @@ with gr.Blocks() as demo:
             with gr.Tab("Testing Data Generation"):
                 gr.Markdown("""
                     You can create test data for generating answers using the fine-tune model, which will be used for testing the model's performance. 
-                    After clicking the "Save the Answer" button. Those questions and answers are saved in the "data" folder as a testing_data.xlsx file. You can ignore the "Answer" textbox. If you do not want to give the answer.
+                    After clicking the "Save the Answer" button. Those questions and answers are saved in the "data" folder as a testing_data.xlsx file. You can ignore the "Ground Truth" textbox. If you do not want to give the answer.
                             """)
                 with gr.Row():
                     ques=gr.Textbox(label="Question")
@@ -208,154 +269,157 @@ with gr.Blocks() as demo:
 
 #***************************************************      
     with gr.Tab("Fine-tuning"):
-        with gr.Row():
-            def login_hug(token):
-                from huggingface_hub import login
-                login(token=token)
-            token_tb=gr.Textbox(label="Enter your Huggingface token to access Huggingface models")
-            token_tb.change(login_hug,token_tb,None)
-        gr.Markdown("""
-            # Instructions:
-            1) Required VRAM for training: 24GB, for inference: 16GB.(Mistral, Zepyhr and Lllama)\n
-            2) Required VRAM for training: 5GB, for inference: 4GB.(Phi,Flan-T5)
-            3) For fine-tuning a custom model select 'custom model' option in 'Select the model for fine-tuning' dropdown section. The custom model can be configured by editing the code section.\n
-            4) After fine-tuning the model, it will be saved in the "models" folder.
-        """)
-            
-        def edit_model_parameter(model_name_temp,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout, progress=gr.Progress()):
-            progress(0, desc="Fine-tune started!! please wait ...")
-            # write code to files if code was edited
-            if edit_code and len(code_temp)!=0:
+        with gr.Tab("Fine-tune LLM"):
+            with gr.Row():
+                def login_hug(token):
+                    from huggingface_hub import login
+                    login(token=token)
+                token_tb=gr.Textbox(label="Enter your Huggingface token to access Huggingface models")
+                token_tb.change(login_hug,token_tb,None)
+            gr.Markdown("""
+                # Instructions:
+                1) Required VRAM for training: 24GB, for inference: 16GB.(Mistral, Zepyhr and Lllama)\n
+                2) Required VRAM for training: 5GB, for inference: 4GB.(Phi,Flan-T5)
+                3) For fine-tuning a custom model select 'custom model' option in 'Select the model for fine-tuning' dropdown section. The custom model can be configured by editing the code section.\n
+                4) After fine-tuning the model, it will be saved in the "models" folder.
+            """)
+                
+            def edit_model_parameter(model_name_temp,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout, progress=gr.Progress()):
+                progress(0, desc="Fine-tune started!! please wait ...")
+                # write code to files if code was edited
+                if edit_code and len(code_temp)!=0:
+                    if model_name_temp=="Mistral":
+                        open(r"fine_tune_file/mistral_finetune.py","w").write(code_temp)
+                    elif model_name_temp=="Zephyr":
+                        open(r"fine_tune_file/zepyhr_finetune.py","w").write(code_temp)
+                    elif model_name_temp=="Llama":
+                        open(r"fine_tune_file/llama_finetune.py","w").write(code_temp)
+                    elif model_name_temp=="Phi":
+                        open(r"fine_tune_file/phi_finetune.py","w").write(code_temp)
+                    elif model_name_temp=="Custom model":
+                        open(r"fine_tune_file/finetune_file.py","w").write(code_temp)
+                # importing just before finetuning, to ensure the latest code is used
+                # from fine_tune_file.mistral_finetune import mistral_trainer
+                # from fine_tune_file.zepyhr_finetune import zephyr_trainer
+                # from fine_tune_file.llama_finetune import llama_trainer
+                # from fine_tune_file.phi_finetune import phi_trainer
+                from fine_tune_file.finetune_file import custom_model_trainer
+                # from fine_tune_file.flant5_finetune import flant5_trainer
+                from fine_tune_file.modular_finetune import get_trainer
+                # create instance of the finetuning classes and then call the finetune function
                 if model_name_temp=="Mistral":
-                    open(r"fine_tune_file/mistral_finetune.py","w").write(code_temp)
+                    gr.Info("Fine-tune started!!!")
+                    trainer=get_trainer("mistral")
+                    # trainer = mistral_trainer()
+                    trainer.mistral_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                    gr.Info("Fine-tune Ended!!!")
                 elif model_name_temp=="Zephyr":
-                    open(r"fine_tune_file/zepyhr_finetune.py","w").write(code_temp)
+                    gr.Info("Fine-tune started!!!")
+                    trainer=get_trainer("zephyr")
+                    # trainer = zephyr_trainer()
+                    trainer.zepyhr_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                    gr.Info("Fine-tune Ended!!!")
                 elif model_name_temp=="Llama":
-                    open(r"fine_tune_file/llama_finetune.py","w").write(code_temp)
+                    gr.Info("Fine-tune started!!!")
+                    trainer=get_trainer("llama")
+                    # trainer = llama_trainer()
+                    trainer.llama_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                    gr.Info("Fine-tune Ended!!!")
                 elif model_name_temp=="Phi":
-                    open(r"fine_tune_file/phi_finetune.py","w").write(code_temp)
+                    gr.Info("Fine-tune started!!!")
+                    # trainer = phi_trainer()
+                    trainer=get_trainer("phi")
+                    trainer.phi_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                    gr.Info("Fine-tune Ended!!!")
+                elif model_name_temp=="Flant5":
+                    gr.Info("Fine-tune started!!!")
+                    # trainer = flant5_trainer()
+                    trainer=get_trainer("flant5")
+                    trainer.flant5_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                    gr.Info("Fine-tune Ended!!!")
                 elif model_name_temp=="Custom model":
-                    open(r"fine_tune_file/finetune_file.py","w").write(code_temp)
-            # importing just before finetuning, to ensure the latest code is used
-            # from fine_tune_file.mistral_finetune import mistral_trainer
-            # from fine_tune_file.zepyhr_finetune import zephyr_trainer
-            # from fine_tune_file.llama_finetune import llama_trainer
-            # from fine_tune_file.phi_finetune import phi_trainer
-            from fine_tune_file.finetune_file import custom_model_trainer
-            # from fine_tune_file.flant5_finetune import flant5_trainer
-            from fine_tune_file.modular_finetune import get_trainer
-            # create instance of the finetuning classes and then call the finetune function
-            if model_name_temp=="Mistral":
-                gr.Info("Fine-tune started!!!")
-                trainer=get_trainer("mistral")
-                # trainer = mistral_trainer()
-                trainer.mistral_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
-                gr.Info("Fine-tune Ended!!!")
-            elif model_name_temp=="Zephyr":
-                gr.Info("Fine-tune started!!!")
-                trainer=get_trainer("zephyr")
-                # trainer = zephyr_trainer()
-                trainer.zepyhr_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
-                gr.Info("Fine-tune Ended!!!")
-            elif model_name_temp=="Llama":
-                gr.Info("Fine-tune started!!!")
-                trainer=get_trainer("llama")
-                # trainer = llama_trainer()
-                trainer.llama_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
-                gr.Info("Fine-tune Ended!!!")
-            elif model_name_temp=="Phi":
-                gr.Info("Fine-tune started!!!")
-                # trainer = phi_trainer()
-                trainer=get_trainer("phi")
-                trainer.phi_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
-                gr.Info("Fine-tune Ended!!!")
-            elif model_name_temp=="Flant5":
-                gr.Info("Fine-tune started!!!")
-                # trainer = flant5_trainer()
-                trainer=get_trainer("flant5")
-                trainer.flant5_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
-                gr.Info("Fine-tune Ended!!!")
-            elif model_name_temp=="Custom model":
-                gr.Info("Fine-tune started!!!")
-                trainer=custom_model_trainer()
-                trainer.custom_model_finetune()
-                gr.Info("Fine-tune Ended!!!")
-        
-        def code_show(model_name):
-            if model_name=="Mistral":
-                f=open(r"fine_tune_file/mistral_finetune.py").read()
-                return gr.Code(visible=True,value=f,interactive=True,language="python")
-            elif model_name=="Zephyr":
-                f=open(r"fine_tune_file/zepyhr_finetune.py").read()
-                return gr.Code(visible=True,value=f,interactive=True,language="python")
-            elif model_name=="Llama":
-                f=open(r"fine_tune_file/llama_finetune.py").read()
-                return gr.Code(visible=True,value=f,interactive=True,language="python")
-            elif model_name=="Phi":
-                f=open(r"fine_tune_file/phi_finetune.py").read()
-                return gr.Code(visible=True,value=f,interactive=True,language="python")
-            elif model_name=="Flant5":
-                f=open(r"fine_tune_file/flant5_finetune.py").read()
-                return gr.Code(visible=True,value=f,interactive=True,language="python")
+                    gr.Info("Fine-tune started!!!")
+                    trainer=custom_model_trainer()
+                    trainer.custom_model_finetune()
+                    gr.Info("Fine-tune Ended!!!")
+            
+            def code_show(model_name):
+                if model_name=="Mistral":
+                    f=open(r"fine_tune_file/mistral_finetune.py").read()
+                    return gr.Code(visible=True,value=f,interactive=True,language="python")
+                elif model_name=="Zephyr":
+                    f=open(r"fine_tune_file/zepyhr_finetune.py").read()
+                    return gr.Code(visible=True,value=f,interactive=True,language="python")
+                elif model_name=="Llama":
+                    f=open(r"fine_tune_file/llama_finetune.py").read()
+                    return gr.Code(visible=True,value=f,interactive=True,language="python")
+                elif model_name=="Phi":
+                    f=open(r"fine_tune_file/phi_finetune.py").read()
+                    return gr.Code(visible=True,value=f,interactive=True,language="python")
+                elif model_name=="Flant5":
+                    f=open(r"fine_tune_file/flant5_finetune.py").read()
+                    return gr.Code(visible=True,value=f,interactive=True,language="python")
 
-        def custom_model(model_name): # It shows custom model code in the UI.
-            if model_name=="Custom model":
-                f=open(r"fine_tune_file/finetune_file.py").read()
-                return [gr.Code(visible=True,value=f,interactive=True,language="python"),gr.Button(visible=False)]
-            else:
-                return [gr.Code(visible=False),gr.Button("Advance Code Editing",visible=True)]
-        def change_code_fun(code_,model_name):
-            if model_name=="Mistral":
-                open(r"fine_tune_file/mistral_finetune.py","w").write(code_)
-                gr.Info("Successfully saved code!!!")
-            elif model_name=="Zephyr":
-                open(r"fine_tune_file/zepyhr_finetune.py","w").write(code_)
-                gr.Info("Successfully saved code!!!")
-            elif model_name=="Llama":
-                open(r"fine_tune_file/llama_finetune.py","w").write(code_)
-                gr.Info("Successfully saved code!!!")
-            elif model_name=="Phi":
-                open(r"fine_tune_file/phi_finetune.py","w").write(code_)
-                gr.Info("Successfully saved code!!!")
-            elif model_name=="Flant5":
-                open(r"fine_tune_file/flant5_finetune.py","w").write(code_)
-                gr.Info("Successfully saved code!!!")
+            def custom_model(model_name): # It shows custom model code in the UI.
+                if model_name=="Custom model":
+                    f=open(r"fine_tune_file/finetune_file.py").read()
+                    return [gr.Code(visible=True,value=f,interactive=True,language="python"),gr.Button(visible=False)]
+                else:
+                    return [gr.Code(visible=False),gr.Button("Advance Code Editing",visible=True)]
+            def change_code_fun(code_,model_name):
+                if model_name=="Mistral":
+                    open(r"fine_tune_file/mistral_finetune.py","w").write(code_)
+                    gr.Info("Successfully saved code!!!")
+                elif model_name=="Zephyr":
+                    open(r"fine_tune_file/zepyhr_finetune.py","w").write(code_)
+                    gr.Info("Successfully saved code!!!")
+                elif model_name=="Llama":
+                    open(r"fine_tune_file/llama_finetune.py","w").write(code_)
+                    gr.Info("Successfully saved code!!!")
+                elif model_name=="Phi":
+                    open(r"fine_tune_file/phi_finetune.py","w").write(code_)
+                    gr.Info("Successfully saved code!!!")
+                elif model_name=="Flant5":
+                    open(r"fine_tune_file/flant5_finetune.py","w").write(code_)
+                    gr.Info("Successfully saved code!!!")
 
-        def finetune_emb(emb_name):
-            from embedding_finetune import train_model_with_custom_dataset
-            gr.Info("Embedding model fine-tune is started!!!")
-            train_model_with_custom_dataset("emb_data.xlsx",emb_name)
+            def finetune_emb(emb_name):
+                from embedding_finetune import train_model_with_custom_dataset
+                gr.Info("Embedding model fine-tune is started!!!")
+                train_model_with_custom_dataset("emb_data.xlsx",emb_name)
 
-        with gr.Row():
-            code_temp=gr.Code(visible=False)
-        with gr.Row():
-            embedding_model=gr.Dropdown(choices=["BAAI/bge-base-en-v1.5","dunzhang/stella_en_1.5B_v5","dunzhang/stella_en_400M_v5","nvidia/NV-Embed-v2","Alibaba-NLP/gte-Qwen2-1.5B-instruct"],label="Select the embedding model for fine-tuning")        
-            btn_emb=gr.Button("Fine-tune the embedding model")        
-        with gr.Row():
-            model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama","Phi","Flant5","Custom model"],label="Select the LLM for fine-tuning")        
-        with gr.Accordion("Parameter Setup"):
             with gr.Row():
-                lr=gr.Number(label="learning_rate",value=5e-6,interactive=True,info="The step size at which the model parameters are updated during training. It controls the magnitude of the updates to the model's weights.")
-                epoch=gr.Number(label="epochs",value=2,interactive=True,info="One complete pass through the entire training dataset during the training process. It's a measure of how many times the algorithm has seen the entire dataset.")
-                batch_size=gr.Number(label="batch_size",value=4,interactive=True,info="The number of training examples used in one iteration of training. It affects the speed and stability of the training process.")
-                gradient_accumulation = gr.Number(info="Gradient accumulation involves updating model weights after accumulating gradients over multiple batches, instead of after each individual batch.",label="gradient_accumulation",value=4,interactive=True)
+                code_temp=gr.Code(visible=False)    
             with gr.Row():
-                quantization = gr.Dropdown(info="Quantization is a technique used to reduce the precision of numerical values, typically from 32-bit floating-point numbers to lower bit representations.",label="quantization",choices=[4,8],value=8,interactive=True)
-                lora_r = gr.Number(info="LoRA_r is a hyperparameter associated with the rank of the low-rank approximation used in LoRA.",label="lora_r",value=16,interactive=True)
-                lora_alpha = gr.Number(info="LoRA_alpha is a hyperparameter used in LoRA for controlling the strength of the adaptation.",label="lora_alpha",value=32,interactive=True)
-                lora_dropout = gr.Number(info="LoRA_dropout is a hyperparameter used in LoRA to control the dropout rate during fine-tuning.",label="lora_dropout",value=.05,interactive=True)
-        with gr.Row():
-            edit_code=gr.Button("Advance Code Editing")
-        with gr.Row():
-            code_temp=gr.Code(visible=False)
-        with gr.Row():
-            parameter_alter=gr.Button("Fine-tune")
-        with gr.Row():
-            fin_com=gr.Label(visible=False)
-        edit_code.click(code_show,model_name,code_temp)
-        # On click finetune button 
-        parameter_alter.click(edit_model_parameter,[model_name,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout],model_name)
-        model_name.change(custom_model,model_name,[code_temp,edit_code])
+                model_name=gr.Dropdown(choices=["Mistral","Zephyr","Llama","Phi","Flant5","Custom model"],label="Select the LLM for fine-tuning")        
+            with gr.Accordion("Parameter Setup"):
+                with gr.Row():
+                    lr=gr.Number(label="learning_rate",value=5e-6,interactive=True,info="The step size at which the model parameters are updated during training. It controls the magnitude of the updates to the model's weights.")
+                    epoch=gr.Number(label="epochs",value=2,interactive=True,info="One complete pass through the entire training dataset during the training process. It's a measure of how many times the algorithm has seen the entire dataset.")
+                    batch_size=gr.Number(label="batch_size",value=4,interactive=True,info="The number of training examples used in one iteration of training. It affects the speed and stability of the training process.")
+                    gradient_accumulation = gr.Number(info="Gradient accumulation involves updating model weights after accumulating gradients over multiple batches, instead of after each individual batch.",label="gradient_accumulation",value=4,interactive=True)
+                with gr.Row():
+                    quantization = gr.Dropdown(info="Quantization is a technique used to reduce the precision of numerical values, typically from 32-bit floating-point numbers to lower bit representations.",label="quantization",choices=[4,8],value=8,interactive=True)
+                    lora_r = gr.Number(info="LoRA_r is a hyperparameter associated with the rank of the low-rank approximation used in LoRA.",label="lora_r",value=16,interactive=True)
+                    lora_alpha = gr.Number(info="LoRA_alpha is a hyperparameter used in LoRA for controlling the strength of the adaptation.",label="lora_alpha",value=32,interactive=True)
+                    lora_dropout = gr.Number(info="LoRA_dropout is a hyperparameter used in LoRA to control the dropout rate during fine-tuning.",label="lora_dropout",value=.05,interactive=True)
+            with gr.Row():
+                edit_code=gr.Button("Advance Code Editing")
+            with gr.Row():
+                code_temp=gr.Code(visible=False)
+            with gr.Row():
+                parameter_alter=gr.Button("Fine-tune")
+            with gr.Row():
+                fin_com=gr.Label(visible=False)
+            edit_code.click(code_show,model_name,code_temp)
+            # On click finetune button 
+            parameter_alter.click(edit_model_parameter,[model_name,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout],model_name)
+            model_name.change(custom_model,model_name,[code_temp,edit_code])
+        with gr.Tab("Embedding model"):
+            with gr.Row():
+                embedding_model=gr.Dropdown(choices=["BAAI/bge-base-en-v1.5","dunzhang/stella_en_1.5B_v5","dunzhang/stella_en_400M_v5","nvidia/NV-Embed-v2","Alibaba-NLP/gte-Qwen2-1.5B-instruct"],label="Select the embedding model for fine-tuning")        
+                btn_emb=gr.Button("Fine-tune the embedding model")    
+            
         btn_emb.click(finetune_emb,[embedding_model], None)
 #***************************************************
     with gr.Tab("Testing Data Generation and RAG Customization"):
