@@ -383,10 +383,18 @@ with gr.Blocks() as demo:
                     open(r"fine_tune_file/flant5_finetune.py","w").write(code_)
                     gr.Info("Successfully saved code!!!")
 
-            def finetune_emb(emb_name):
-                from embedding_finetune import train_model_with_custom_dataset
+            def finetune_emb(model_name, loss_name, epochs = 1, batch_size = 8):
                 gr.Info("Embedding model fine-tune is started!!!")
-                train_model_with_custom_dataset("emb_data.xlsx",emb_name)
+                from embedding_tuner import EmbeddingFinetuner
+                finetuner = EmbeddingFinetuner(
+                    model_name=model_name,
+                    loss_function=loss_name,  
+                    epochs=epochs,
+                    batch_size=batch_size,
+                )
+                success = finetuner.train()
+                if success:
+                    gr.Info("Embedding model fine-tune finished!!!")
 
             with gr.Row():
                 code_temp=gr.Code(visible=False)    
@@ -417,10 +425,70 @@ with gr.Blocks() as demo:
             model_name.change(custom_model,model_name,[code_temp,edit_code])
         with gr.Tab("Embedding model"):
             with gr.Row():
-                embedding_model=gr.Dropdown(choices=["BAAI/bge-base-en-v1.5","dunzhang/stella_en_1.5B_v5","dunzhang/stella_en_400M_v5","nvidia/NV-Embed-v2","Alibaba-NLP/gte-Qwen2-1.5B-instruct"],label="Select the embedding model for fine-tuning")        
-                btn_emb=gr.Button("Fine-tune the embedding model")    
+                embedding_model = gr.Dropdown(
+                    choices=[
+                        "BAAI/bge-base-en-v1.5",
+                        "dunzhang/stella_en_1.5B_v5",
+                        "dunzhang/stella_en_400M_v5",
+                        "nvidia/NV-Embed-v2",
+                        "Alibaba-NLP/gte-Qwen2-1.5B-instruct",
+                    ],
+                    label="Select the embedding model for fine-tuning",
+                )
+                loss_function = gr.Dropdown(
+                    choices=[
+                        "MultipleNegativesRankingLoss",
+                        "OnlineContrastiveLoss",
+                        "CoSENTLoss",
+                        "GISTEmbedLoss",
+                        "TripletLoss",
+                    ],
+                    label="Select the loss function",
+                )
+                btn_emb = gr.Button("Fine-tune the embedding model")
+            with gr.Row():
+                epoch=gr.Number(label="epochs",value=1,interactive=True,info="One complete pass through the entire training dataset during the training process.")
+                batch_size=gr.Number(label="batch_size",value=8,interactive=True,info="The number of training examples used in one iteration of training.")
+
+            with gr.Row():
+                with gr.Accordion():
+                    loss_info = gr.Markdown(
+                        """
+                        # Expected data format according to loss function:
+                        ### Format data/emb_data.xlsx accordingly.
+                        
+                        **MultipleNegativesRankingLoss:**
+                        Expects data with columns: `anchor`, `positive`, `negative`.
+                        - `anchor`: The sentence to be embedded.
+                        - `positive`: A sentence semantically similar to the anchor.
+                        - `negative`: A sentence semantically dissimilar to the anchor.
+
+                        **OnlineContrastiveLoss:**
+                        Expects data with columns: `sentence1`, `sentence2`, `label`.
+                        - `sentence1`, `sentence2`: Pairs of sentences.
+                        - `label`: 1 if the sentences are similar, 0 if dissimilar.
+
+                        **CoSENTLoss:**
+                        Expects data with columns: `sentence1`, `sentence2`, `score`.
+                        - `sentence1`, `sentence2`: Pairs of sentences.
+                        - `score`: A float value (e.g., 0-1) representing their similarity.
+
+                        **GISTEmbedLoss:**
+                        Expects data with either:
+                        - Columns: `anchor`, `positive`, `negative` (like TripletLoss).
+                        - Columns: `anchor`, `positive` (for pairs of similar sentences).
+
+                        **TripletLoss:**
+                        Expects data with columns: `anchor`, `positive`, `negative`.
+                        - `anchor`: The sentence to be embedded.
+                        - `positive`: A sentence semantically similar to the anchor.
+                        - `negative`: A sentence semantically dissimilar to the anchor.
+                        """
+                    )
+                    
+                    
             
-        btn_emb.click(finetune_emb,[embedding_model], None)
+        btn_emb.click(finetune_emb,[embedding_model, loss_function, epoch, batch_size], None)
 #***************************************************
     with gr.Tab("Testing Data Generation and RAG Customization"):
         from utils import save_params_to_file

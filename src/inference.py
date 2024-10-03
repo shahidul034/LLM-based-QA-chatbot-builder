@@ -8,7 +8,8 @@ from langchain import hub
 from model_ret import zephyr_model,llama_model,mistral_model,phi_model,flant5_model
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
-from create_retriever import ensemble_retriever
+# from create_retriever import ensemble_retriever
+from create_retriever import retriever_chroma
 # HuggingFace model mapping
 hf_model_map = {
     "Zephyr": "HuggingFaceH4/zephyr-7b-beta",
@@ -54,12 +55,13 @@ class model_chain:
             self.tokenizer, self.model, self.llm = flant5_model(model_name_temp, use_online=use_online)
 
         # Creating the retriever
-        self.retriever = ensemble_retriever(embedding_name,
-                                            splitter_type=splitter_type_dropdown,
-                                            chunk_size=chunk_size_slider,
-                                            chunk_overlap=chunk_overlap_slider,
-                                            separator=separator_textbox,
-                                            max_tokens=max_tokens_slider)
+        # self.retriever = ensemble_retriever(embedding_name,
+        #                                     splitter_type=splitter_type_dropdown,
+        #                                     chunk_size=chunk_size_slider,
+        #                                     chunk_overlap=chunk_overlap_slider,
+        #                                     separator=separator_textbox,
+        #                                     max_tokens=max_tokens_slider)
+        self.retreiver = retriever_chroma(False, embedding_name, splitter_type_dropdown,  chunk_size_slider, chunk_size_slider,  separator_textbox, max_tokens_slider)
 
         # Defining the RAG chain
         prompt = hub.pull("rlm/rag-prompt")

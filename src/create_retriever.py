@@ -5,7 +5,7 @@ from langchain.text_splitter import CharacterTextSplitter, RecursiveCharacterTex
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.retrievers import EnsembleRetriever
-from ragatouille import RAGPretrainedModel
+# from ragatouille import RAGPretrainedModel
 
 # Function to load and process documents
 def docs_return(flag):
@@ -87,24 +87,24 @@ def retriever_chroma(flag, model_name="BAAI/bge-large-en-v1.5", splitter_type='c
         return chroma_retriever
 
 # ColBERT retriever
-def colbert_retriever():
-    docs = docs_return(1)
-    RAG = RAGPretrainedModel.from_pretrained("colbert-ir/colbertv2.0")
-    RAG.index(
-        collection=[docs],
-        index_name="ensemble_colbert",
-        max_document_length=256,
-        split_documents=True,
-    )
-    retriever = RAG.as_langchain_retriever(k=3)
-    return retriever
+# def colbert_retriever():
+#     docs = docs_return(1)
+#     RAG = RAGPretrainedModel.from_pretrained("colbert-ir/colbertv2.0")
+#     RAG.index(
+#         collection=[docs],
+#         index_name="ensemble_colbert",
+#         max_document_length=256,
+#         split_documents=True,
+#     )
+#     retriever = RAG.as_langchain_retriever(k=3)
+#     return retriever
 
 # Ensemble retriever
-def ensemble_retriever(model_name="BAAI/bge-large-en-v1.5", splitter_type='character', chunk_size=500, chunk_overlap=30, separator="\n", max_tokens=1000):
-    retriever1 = colbert_retriever()
-    retriever2 = retriever_chroma(False, model_name=model_name, splitter_type=splitter_type, chunk_size=chunk_size, chunk_overlap=chunk_overlap, separator=separator, max_tokens=max_tokens)
-    retriever = EnsembleRetriever(retrievers=[retriever1, retriever2], weights=[0.50, 0.50])
-    return retriever
+# def ensemble_retriever(model_name="BAAI/bge-large-en-v1.5", splitter_type='character', chunk_size=500, chunk_overlap=30, separator="\n", max_tokens=1000):
+#     retriever1 = colbert_retriever()
+#     retriever2 = retriever_chroma(False, model_name=model_name, splitter_type=splitter_type, chunk_size=chunk_size, chunk_overlap=chunk_overlap, separator=separator, max_tokens=max_tokens)
+#     retriever = EnsembleRetriever(retrievers=[retriever1, retriever2], weights=[0.50, 0.50])
+#     return retriever
 
 # Example usage:
 # dat = ensemble_retriever(model_name="sentence-transformers/all-mpnet-base-v2", splitter_type='token', chunk_size=500)
