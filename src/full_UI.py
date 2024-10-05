@@ -569,7 +569,7 @@ with gr.Blocks(title="LLM QA Chatbot Builder") as demo:
                 parameter_alter=gr.Button("Fine-tune")
             with gr.Row():
                 fin_com=gr.Label(visible=False)
-            edit_code.click(code_show,model_name,code_temp)
+            edit_code.click(code_show,model_name,code_temp)    
             # On click finetune button 
             parameter_alter.click(edit_model_parameter,[model_name,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout],model_name)
             model_name.change(custom_model,model_name,[code_temp,edit_code])
