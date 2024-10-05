@@ -181,7 +181,7 @@ def next_ques(ques,ans):
     return gr.Label(value=ques_temp)
 ######
 #***************************************************
-with gr.Blocks() as demo:
+with gr.Blocks(title="LLM QA Builder") as demo:
     gr.Markdown("""
         # QA chatbot builder
             """)
@@ -191,29 +191,29 @@ with gr.Blocks() as demo:
                     parse_data(link_temp,progress)
                     gr.Info("Finished parsing!! Save as a docx file.")
             gr.Markdown(""" # Instructions: 
-            In this page you can prepare data for finetuning and testing your model. The data can be provided through Excel file or directly via web interface. Additionally, data can be parsed from the target website(Data parsing for RAG) to further enhance the model performance.  
+            In this page you can prepare data for LLM finetuning, testing and embedding model finetuning your model. The data can be provided through Excel file or CSV file or directly via web interface. Additionally, data can be parsed from the target website (Data parsing for RAG) to further enhance the model performance.  
                         
             ## 1. If you want to provide data in Excel file or CSV file for model finetuning and testing.
-            1) Create an Excel or CSV file in the data folder and name it "finetune_data.xlsx" or "finetune_data.csv" for finetuning the model.
-            2) Create an Excel or CSV file in the data folder and name it "testing_data.xlsx" or "testing_data.csv" for generating answers using the fine-tuned model.
-            3) "finetune_data.xlsx" has two columns: question and answer. "testing_data.xlsx" has three columns: question, contexts, ground_truths. 
+            1) Create an Excel or CSV file in the data folder and name it `finetune_data.xlsx` or `finetune_data.csv` for finetuning the model.
+            2) Create an Excel or CSV file in the data folder and name it `testing_data.xlsx` or `testing_data.csv` for generating answers using the fine-tuned model.
+            3) "finetune_data.xlsx" or `finetune_data.csv` has two columns: `question` and `answer`. `testing_data.xlsx` or `testing_data.csv` has three columns: `question`, `contexts`, `ground_truths`. 
         """)
             gr.Markdown("""
-                    ## finetune_data.xlsx
+                    ## finetune_data.xlsx or finetune_data.csv
                  """)
-            gr.HTML(value=display_table(), label="finetune_data.xlsx")
+            gr.HTML(value=display_table(), label="finetune_data.xlsx or finetune_data.csv")
             gr.Markdown("""
-                    ## testing_data.xlsx
+                    ## testing_data.xlsx or testing_data.csv
                  """)
-            gr.HTML(value=display_table(r"data//demo_test_data.xlsx"), label="testing_data.xlsx")
+            gr.HTML(value=display_table(r"data//demo_test_data.xlsx"), label="testing_data.xlsx or testing_data.csv")
             gr.Markdown("""
                     ## 2. You can use the below interface to create the dataset for training and testing models.
                  """)
             with gr.Tab("Training Data Generation"):
                 with gr.Tab("Existing Questions"):
                     gr.Markdown("""
-                        Existing questions are provided by the administrator and placed in the data folder named "existing_dataset.xlsx". This file has only one column: "question".
-                        After clicking the "Save the Answer" button. Those questions and answers are saved in the "data" folder as a finetune_data.xlsx file.
+                        Existing questions are provided by the administrator and placed in the data folder named `existing_dataset.xlsx`. This file has only one column: `question`.
+                        After clicking the `Save the Answer` button. Those questions and answers are saved in the `data` folder as a `finetune_data.xlsx` file.
                     """)
                     ques_temp,ans_temp=random_ques_ans2()
                     with gr.Row():
@@ -230,7 +230,7 @@ with gr.Blocks() as demo:
                     
                 with gr.Tab("Custom Questions"):
                     gr.Markdown("""
-                        After clicking the "save the answer" button. Those questions and answers are saved in the "data" folder as a finetune_data.xlsx file.
+                        After clicking the `save the answer` button. Those questions and answers are saved in the `data` folder as a `finetune_data.xlsx` file.
                     """)
                     with gr.Row():
                         ques=gr.Textbox(label="Question")
@@ -244,7 +244,7 @@ with gr.Blocks() as demo:
             with gr.Tab("Testing Data Generation"):
                 gr.Markdown("""
                     You can create test data for generating answers using the fine-tune model, which will be used for testing the model's performance. 
-                    After clicking the "Save the Answer" button. Those questions and answers are saved in the "data" folder as a testing_data.xlsx file. You can ignore the "Ground Truth" textbox. If you do not want to give the answer.
+                    After clicking the `Save the Answer` button. Those questions and answers are saved in the `data` folder as a `testing_data.xlsx` file.
                             """)
                 with gr.Row():
                     ques=gr.Textbox(label="Question")
@@ -393,7 +393,7 @@ with gr.Blocks() as demo:
                         label="Select the loss function",
                     )
                 with gr.Row():
-                    gr.Markdown("""Format data/emb_data.xlsx to the expected data format, according to the selected loss function.
+                    gr.Markdown("""Format `data/emb_data.xlsx` or `data/emb_data.csv` to the expected data format, according to the selected loss function.
                 If the file exists and has matching columns, new data will be appended. 
                 Otherwise, the file will be overwritten.""")
                 with gr.Row():
@@ -605,7 +605,7 @@ with gr.Blocks() as demo:
                     loss_info = gr.Markdown(
                         """
                         # Expected data format according to loss function:
-                        ### Format data/emb_data.xlsx accordingly.
+                        ### Format `data/emb_data.xlsx` or `data/emb_data.xlsx` accordingly.
                         
                         **MultipleNegativesRankingLoss:**
                         Expects data with columns: `anchor`, `positive`, `negative`.
@@ -695,7 +695,7 @@ with gr.Blocks() as demo:
         gr.Info("Generating answer from model is finished!!! Now, it is ready for human evaluation. Model answer is saved in \"model_ans\" folder. ")
                
         gr.Markdown(""" # Instructions:\n
-                    In this page you can generate answer from fine-tuned models for human evaluation. The questions must be created using 'Testing data generation' section of 'Data collection' tab.     
+                    In this page you can generate answer from fine-tuned models for human evaluation. The questions must be created using `Testing data generation` section of `Data collection` tab.     
                     """)
         with gr.Row():
             embedding_name=gr.Dropdown(choices=["BAAI/bge-base-en-v1.5","dunzhang/stella_en_1.5B_v5","dunzhang/stella_en_400M_v5",
@@ -878,8 +878,8 @@ with gr.Blocks() as demo:
                            title="Chatbot")
     #----------------------------------------------
     with gr.Tab("Deployment"):
-        gr.Markdown("""\"deploy\" folder has all the code for the deployment of the model.
-                    For installing dependencies use the following command: "pip install -r requirements.txt".
+        gr.Markdown("""`deploy` folder has all the code for the deployment of the model.
+                    For installing dependencies use the following command: `pip install -r requirements.txt`.
                     """)
         def deploy_func(model_name):
             import shutil
