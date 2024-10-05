@@ -257,6 +257,156 @@ with gr.Blocks() as demo:
                 with gr.Row():
                     lab=gr.Label(visible=False,value="You answer is submitted!!! Thank you for your contribution.",label="Submitted")
                 save_test.click(save_the_ques_test,[ques,ans],None)
+            ## Embedding data generation
+            def save_emb_data(loss_function,first_input,second_input,third_input):
+                if loss_function=="MultipleNegativesRankingLoss":
+                    data=pd.DataFrame({
+                        "anchor":[first_input],
+                        "positive":[second_input],
+                        "negative":[third_input]
+                    })
+                elif loss_function=="OnlineContrastiveLoss":
+                    data=pd.DataFrame({
+                        "sentence1":[first_input],
+                        "sentence2":[second_input],
+                        "label":[third_input]
+                    })
+                elif loss_function=="CoSENTLoss":
+                    data=pd.DataFrame({
+                        "sentence1":[first_input],
+                        "sentence2":[second_input],
+                        "score":[third_input]
+                    })
+                elif loss_function=="GISTEmbedLoss":
+                    data=pd.DataFrame({
+                        "anchor":[first_input],
+                        "positive":[second_input],
+                        "negative":[third_input]
+                    })
+                elif loss_function=="TripletLoss":
+                    data=pd.DataFrame({
+                        "anchor":[first_input],
+                        "positive":[second_input],
+                        "negative":[third_input]
+                    })
+                try:
+                    existing_data = pd.read_excel("data/emb_data.xlsx")
+                    if list(data.columns) == list(existing_data.columns):
+                        # Append if columns match
+                        combined_data = pd.concat([existing_data, data], ignore_index=True)
+                        with pd.ExcelWriter("data/emb_data.xlsx", mode='w') as writer:
+                            combined_data.to_excel(writer, index=False)
+                        gr.Info("Data appended to existing file!")
+                    else:
+                        # Overwrite if columns don't match
+                        with pd.ExcelWriter("data/emb_data.xlsx", mode='w') as writer:
+                            data.to_excel(writer, index=False)
+                        gr.Info("Data saved to a new file (overwritten)!") 
+                except FileNotFoundError:
+                    # Create a new file if it doesn't exist
+                    with pd.ExcelWriter("data/emb_data.xlsx", mode='w') as writer:
+                        data.to_excel(writer, index=False)
+                    gr.Info("Data saved to a new file!")
+                
+            def update_fields(loss_function):
+                if loss_function == "MultipleNegativesRankingLoss":
+                    first_input = gr.Textbox(label="Anchor", visible=True, placeholder="The sentence to be embedded.")
+                    second_input = gr.Textbox(label="Positive", visible=True, placeholder="A sentence semantically similar to the anchor.")
+                    third_input = gr.Textbox(label="Negative", visible=True, placeholder="A sentence semantically dissimilar to the anchor.")
+                    markdown = gr.Markdown(
+                    """
+                    **MultipleNegativesRankingLoss:**
+                    Expects data with columns: `anchor`, `positive`, `negative`.
+                    - `anchor`: The sentence to be embedded.
+                    - `positive`: A sentence semantically similar to the anchor.
+                    - `negative`: A sentence semantically dissimilar to the anchor.""",
+                    visible=True
+                )
+                elif loss_function == "OnlineContrastiveLoss":
+                    first_input = gr.Textbox(label="Sentence 1", visible=True, placeholder="The first sentence.")
+                    second_input = gr.Textbox(label="Sentence 2", visible=True, placeholder="The second sentence.")
+                    third_input = gr.Textbox(label="Label", visible=True, placeholder="1 if the sentences are similar, 0 if dissimilar.")
+                    markdown = gr.Markdown(
+                    """
+                    **OnlineContrastiveLoss:**
+                    Expects data with columns: `sentence1`, `sentence2`, `label`.
+                    - `sentence1`, `sentence2`: Pairs of sentences.
+                    - `label`: 1 if the sentences are similar, 0 if dissimilar.""",
+                    visible=True
+                )
+                elif loss_function == "CoSENTLoss":
+                    first_input = gr.Textbox(label="Sentence 1", visible=True, placeholder="The first sentence.")
+                    second_input = gr.Textbox(label="Sentence 2", visible=True, placeholder="The second sentence.")
+                    third_input = gr.Textbox(label="Score", visible=True, placeholder="A float value (e.g., 0-1) representing their similarity.")
+                    markdown = gr.Markdown(
+                    """
+                    **CoSENTLoss:**
+                    Expects data with columns: `sentence1`, `sentence2`, `score`.
+                    - `sentence1`, `sentence2`: Pairs of sentences.
+                    - `score`: A float value (e.g., 0-1) representing their similarity.""",
+                    visible=True
+                )
+                elif loss_function == "GISTEmbedLoss":
+                    first_input = gr.Textbox(label="Anchor", visible=True, placeholder="The sentence to be embedded.")
+                    second_input = gr.Textbox(label="Positive", visible=True, placeholder="A sentence semantically similar to the anchor.")
+                    third_input = gr.Textbox(label="Negative", visible=True, placeholder="A sentence semantically dissimilar to the anchor. Can be empty.")
+                    markdown = gr.Markdown(
+                    """
+                    **GISTEmbedLoss:**
+                    Expects data with either:
+                    - Columns: `anchor`, `positive`, `negative` (like TripletLoss).
+                    - Columns: `anchor`, `positive` (for pairs of similar sentences).""",
+                    visible=True
+                )
+                elif loss_function == "TripletLoss":
+                    first_input = gr.Textbox(label="Anchor", visible=True, placeholder="The sentence to be embedded.")
+                    second_input = gr.Textbox(label="Positive", visible=True, placeholder="A sentence semantically similar to the anchor.")
+                    third_input = gr.Textbox(label="Negative", visible=True, placeholder="A sentence semantically dissimilar to the anchor.")
+                    markdown = gr.Markdown(
+                    """
+                    **TripletLoss:**
+                    Expects data with columns: `anchor`, `positive`, `negative`.
+                    - `anchor`: The sentence to be embedded.
+                    - `positive`: A sentence semantically similar to the anchor.
+                    - `negative`: A sentence semantically dissimilar to the anchor.""",
+                    visible=True
+                )
+                else:
+                    first_input = gr.Textbox(visible=False)
+                    second_input = gr.Textbox(visible=False)
+                    third_input = gr.Textbox(visible=False)
+                    markdown = gr.Markdown(visible=False)
+
+                return first_input, second_input, third_input, markdown
+                
+            with gr.Tab("Embedding Data Generation"):
+                gr.Markdown("**Choose a loss function to format your embedding data.**")
+                with gr.Row():
+                    loss_function = gr.Dropdown(
+                        choices=[
+                            "MultipleNegativesRankingLoss",
+                            "OnlineContrastiveLoss",
+                            "CoSENTLoss",
+                            "GISTEmbedLoss",
+                            "TripletLoss",
+                        ],
+                        label="Select the loss function",
+                    )
+                with gr.Row():
+                    gr.Markdown("""Format data/emb_data.xlsx to the expected data format, according to the selected loss function.
+                If the file exists and has matching columns, new data will be appended. 
+                Otherwise, the file will be overwritten.""")
+                with gr.Row():
+                    loss_info_markdown = gr.Markdown(visible=False)
+                with gr.Row():
+                    first_input = gr.Textbox(label="Anchor", value="",visible=False) 
+                    second_input = gr.Textbox(label="Positive", value="",visible=False) 
+                    third_input = gr.Textbox(label="Negative", value="",visible=False)
+                loss_function.change(update_fields, loss_function, [first_input, second_input, third_input,loss_info_markdown])
+                with gr.Row():
+                    save_emb=gr.Button("Save the Answer")
+                save_emb.click(save_emb_data,[loss_function,first_input,second_input,third_input])
+
             with gr.Row():
                 gr.Markdown("""
                         ## 3. Data parsing for RAG
