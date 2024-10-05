@@ -181,9 +181,9 @@ def next_ques(ques,ans):
     return gr.Label(value=ques_temp)
 ######
 #***************************************************
-with gr.Blocks(title="LLM QA Builder") as demo:
+with gr.Blocks(title="LLM QA Chatbot Builder") as demo:
     gr.Markdown("""
-        # QA chatbot builder
+        # LLM QA Chatbot Builder
             """)
     with gr.Tab("Data Collection"):
             def parse_data_func(link_temp,progress=gr.Progress()):
@@ -191,19 +191,19 @@ with gr.Blocks(title="LLM QA Builder") as demo:
                     parse_data(link_temp,progress)
                     gr.Info("Finished parsing!! Save as a docx file.")
             gr.Markdown(""" # Instructions: 
-            In this page you can prepare data for LLM finetuning, testing and embedding model finetuning your model. The data can be provided through Excel file or CSV file or directly via web interface. Additionally, data can be parsed from the target website (Data parsing for RAG) to further enhance the model performance.  
+            In this page you can prepare data for LLM fine-tuning, testing and embedding model finetuning your model. The data can be provided through Excel file or CSV file or directly via web interface. Additionally, data can be parsed from the target website (Data parsing for RAG) to further enhance the model performance.  
                         
-            ## 1. If you want to provide data in Excel file or CSV file for model finetuning and testing.
-            1) Create an Excel or CSV file in the data folder and name it `finetune_data.xlsx` or `finetune_data.csv` for finetuning the model.
-            2) Create an Excel or CSV file in the data folder and name it `testing_data.xlsx` or `testing_data.csv` for generating answers using the fine-tuned model.
-            3) "finetune_data.xlsx" or `finetune_data.csv` has two columns: `question` and `answer`. `testing_data.xlsx` or `testing_data.csv` has three columns: `question`, `contexts`, `ground_truths`. 
+            ## 1. If you want to provide data in Excel file or CSV file for model fine-tuning and testing.
+            - Create an Excel or CSV file in the data folder and name it `finetune_data.xlsx` or `finetune_data.csv` for finetuning the model.
+            - Create an Excel or CSV file in the data folder and name it `testing_data.xlsx` or `testing_data.csv` for generating answers using the fine-tuned model.
+            - `finetune_data.xlsx` or `finetune_data.csv` has two columns: `question` and `answer`. `testing_data.xlsx` or `testing_data.csv` has three columns: `question`, `contexts`, `ground_truths`. 
         """)
             gr.Markdown("""
-                    ## finetune_data.xlsx or finetune_data.csv
+                    ## `finetune_data.xlsx`  |  `finetune_data.csv`
                  """)
             gr.HTML(value=display_table(), label="finetune_data.xlsx or finetune_data.csv")
             gr.Markdown("""
-                    ## testing_data.xlsx or testing_data.csv
+                    ## `testing_data.xlsx`  |  `testing_data.csv`
                  """)
             gr.HTML(value=display_table(r"data//demo_test_data.xlsx"), label="testing_data.xlsx or testing_data.csv")
             gr.Markdown("""
@@ -428,10 +428,10 @@ with gr.Blocks(title="LLM QA Builder") as demo:
                 token_tb.change(login_hug,token_tb,None)
             gr.Markdown("""
                 # Instructions:
-                1) Required VRAM for training: 24GB, for inference: 16GB.(Mistral, Zepyhr and Lllama)\n
-                2) Required VRAM for training: 5GB, for inference: 4GB.(Phi,Flan-T5)
-                3) For fine-tuning a custom model select 'custom model' option in 'Select the model for fine-tuning' dropdown section. The custom model can be configured by editing the code section.\n
-                4) After fine-tuning the model, it will be saved in the "models" folder.
+                - Required VRAM for training: 24GB, for inference: 16GB.(Mistral, Zepyhr and Lllama)\n
+                - Required VRAM for training: 5GB, for inference: 4GB.(Phi,Flan-T5)
+                - For fine-tuning a custom model select `custom model` option in `Select the model for fine-tuning` dropdown section. The custom model can be configured by editing the code section.\n
+                - After fine-tuning the model, it will be saved in the `models` folder.
             """)
                 
             def edit_model_parameter(model_name_temp,edit_code,code_temp,lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout, progress=gr.Progress()):
@@ -595,46 +595,48 @@ with gr.Blocks(title="LLM QA Builder") as demo:
                     ],
                     label="Select the loss function",
                 )
-                btn_emb = gr.Button("Fine-tune the embedding model")
-            with gr.Row():
+                
                 epoch=gr.Number(label="epochs",value=1,interactive=True,info="One complete pass through the entire training dataset during the training process.")
                 batch_size=gr.Number(label="batch_size",value=8,interactive=True,info="The number of training examples used in one iteration of training.")
-
             with gr.Row():
-                with gr.Accordion():
-                    loss_info = gr.Markdown(
-                        """
-                        # Expected data format according to loss function:
-                        ### Format `data/emb_data.xlsx` or `data/emb_data.xlsx` accordingly.
+                btn_emb = gr.Button("Fine-tune the embedding model")
+            
+
+            # with gr.Row():
+            #     with gr.Accordion(label="Expected data format according to loss function"):
+            #         loss_info = gr.Markdown(
+            #             """
+            #             # Expected data format according to loss function:
+            #             ### Format `data/emb_data.xlsx` | `data/emb_data.xlsx` accordingly.
                         
-                        **MultipleNegativesRankingLoss:**
-                        Expects data with columns: `anchor`, `positive`, `negative`.
-                        - `anchor`: The sentence to be embedded.
-                        - `positive`: A sentence semantically similar to the anchor.
-                        - `negative`: A sentence semantically dissimilar to the anchor.
+            #             **MultipleNegativesRankingLoss:**
+            #             Expects data with columns: `anchor`, `positive`, `negative`.
+            #             - `anchor`: The sentence to be embedded.
+            #             - `positive`: A sentence semantically similar to the anchor.
+            #             - `negative`: A sentence semantically dissimilar to the anchor.
 
-                        **OnlineContrastiveLoss:**
-                        Expects data with columns: `sentence1`, `sentence2`, `label`.
-                        - `sentence1`, `sentence2`: Pairs of sentences.
-                        - `label`: 1 if the sentences are similar, 0 if dissimilar.
+            #             **OnlineContrastiveLoss:**
+            #             Expects data with columns: `sentence1`, `sentence2`, `label`.
+            #             - `sentence1`, `sentence2`: Pairs of sentences.
+            #             - `label`: 1 if the sentences are similar, 0 if dissimilar.
 
-                        **CoSENTLoss:**
-                        Expects data with columns: `sentence1`, `sentence2`, `score`.
-                        - `sentence1`, `sentence2`: Pairs of sentences.
-                        - `score`: A float value (e.g., 0-1) representing their similarity.
+            #             **CoSENTLoss:**
+            #             Expects data with columns: `sentence1`, `sentence2`, `score`.
+            #             - `sentence1`, `sentence2`: Pairs of sentences.
+            #             - `score`: A float value (e.g., 0-1) representing their similarity.
 
-                        **GISTEmbedLoss:**
-                        Expects data with either:
-                        - Columns: `anchor`, `positive`, `negative` (like TripletLoss).
-                        - Columns: `anchor`, `positive` (for pairs of similar sentences).
+            #             **GISTEmbedLoss:**
+            #             Expects data with either:
+            #             - Columns: `anchor`, `positive`, `negative` (like TripletLoss).
+            #             - Columns: `anchor`, `positive` (for pairs of similar sentences).
 
-                        **TripletLoss:**
-                        Expects data with columns: `anchor`, `positive`, `negative`.
-                        - `anchor`: The sentence to be embedded.
-                        - `positive`: A sentence semantically similar to the anchor.
-                        - `negative`: A sentence semantically dissimilar to the anchor.
-                        """
-                    )
+            #             **TripletLoss:**
+            #             Expects data with columns: `anchor`, `positive`, `negative`.
+            #             - `anchor`: The sentence to be embedded.
+            #             - `positive`: A sentence semantically similar to the anchor.
+            #             - `negative`: A sentence semantically dissimilar to the anchor.
+            #             """
+            #         )
                     
                     
             
@@ -774,7 +776,7 @@ with gr.Blocks(title="LLM QA Builder") as demo:
         btn_1=gr.Button("Submit")
         gr.Markdown(""" # Instructions: 
             In this section, humans evaluate the answers of the model given specific questions. Each answer is rated between 1 and 5 by anonymous students.
-            Those values are saved in the "scrore_report" folder. 
+            Those values are saved in the `scrore_report` folder. 
                     """)
         lab_temp=gr.Markdown(visible=False)
 
