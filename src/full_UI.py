@@ -900,4 +900,4 @@ with gr.Blocks() as demo:
         btn_model=gr.Button("Deploy")
         btn_model.click(deploy_func,model_name)
 
-demo.launch(share=False)
+demo.launch(share=True)
