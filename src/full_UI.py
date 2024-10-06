@@ -219,7 +219,7 @@ with gr.Blocks(title="LLM QA Chatbot Builder") as demo:
             ## 1. If you want to provide data in Excel file or CSV file for model fine-tuning and testing.
             - Create an Excel or CSV file in the data folder and name it `finetune_data.xlsx` or `finetune_data.csv` for finetuning the model.
             - Create an Excel or CSV file in the data folder and name it `testing_data.xlsx` or `testing_data.csv` for generating answers using the fine-tuned model.
-            - `finetune_data.xlsx` or `finetune_data.csv` has two columns: `question` and `answer`. `testing_data.xlsx` or `testing_data.csv` has three columns: `question`, `contexts`, `ground_truths`. 
+            - `finetune_data.xlsx` or `finetune_data.csv` has two columns: `question` and `answer`. `testing_data.xlsx` or `testing_data.csv` has three columns: `question`, `ground_truths` ,`Contexts`. 
         """)
             gr.Markdown("""
                     ## `finetune_data.xlsx`  |  `finetune_data.csv`
