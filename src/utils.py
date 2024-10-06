@@ -116,7 +116,7 @@ def parse_data(link,progress):
     all_data2=re.sub(u'[^\u0020-\uD7FF\u0009\u000A\u000D\uE000-\uFFFD\U00010000-\U0010FFFF]+', '', all_data2)
     document = Document()
     document.add_paragraph(all_data2)
-    document.save(r'rag_data\rag_data.docx')
+    document.save(f'rag_data/{link}.docx')
     print("Finished!!")
     return
 def all_contri_ans(id, ques):

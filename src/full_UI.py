@@ -1,8 +1,3 @@
-#&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-# rag_chain_ret,ans_ret, finetune#######
-# search for on/off finetune,inference##
-#&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
 import gradio as gr
 import pandas as pd
 import os
@@ -11,10 +6,8 @@ import random
 from utils import display_table,current_time,random_ques_ans2,move_to,score_report_bar,all_contri_ans
 from inference import model_chain
 import warnings
+
 warnings.filterwarnings('ignore')
-#$$$$$$$$$$$$$$$$$
-# from inference import rag_chain_ret
-###### Testing code
 os.environ["WANDB_DISABLED"] = "true"
 global cnt
 cnt=1
@@ -22,6 +15,7 @@ data=[]
 save_ques_ans=[]
 save_ques_ans_test=[]
 cur_time=current_time()
+
 def random_ques_ans(model_ans):
     df_temp=pd.read_excel(os.path.join("model_ans",str(model_ans)))
     global cnt
@@ -37,6 +31,7 @@ def save_all(model_ans):
     temp=pd.DataFrame(data)
     temp.to_excel(f"score_report\\{model_ans+cur_time}.xlsx",index=False)
     gr.Info("Sucessfully save all the answer!!!")
+    
 def score_save(ques,ans,score,model_ans,token_key):
     data.append({
         "question":ques,
@@ -50,6 +45,7 @@ def score_save(ques,ans,score,model_ans,token_key):
     ques_temp,ans_temp,id,flag=random_ques_ans(model_ans)
     gr.Info("Your opinion is submitted successfully!!!")
     return gr.Label(value=id,label="ID"),gr.Label(value=ques_temp, label="Question"), gr.Label(value=ans_temp, label="Answer")
+
 def new_ques(model_ans):
     ques_temp,ans_temp,id2,flag=random_ques_ans(model_ans)
     return {
@@ -57,139 +53,166 @@ def new_ques(model_ans):
         ques:gr.Label(value=ques_temp,label="Question"),
         ans:gr.Label(value=ans_temp,label="Answer")
     }
-# def move_to(move,model_ans):
-#     df_temp=pd.read_excel(os.path.join("model_ans",str(model_ans)))
-#     id_temp=int((df_temp.loc[move])['id'])
-#     ques_temp=(df_temp.loc[move])['question']
-#     ans_temp=(df_temp.loc[move])['answer']
-#     if int(move)>=len(df_temp)+1:
-#         gr.Info(f"Number of questions: {len(df_temp)}")
-#         move=0
-#     return [
-#         gr.Label(value=str(id_temp),label="ID"),
-#         gr.Label(value=ques_temp,label="Question"),
-#         gr.Label(value=ans_temp,label="Answer")
-#     ]
+    
+def save_the_ques(ques,ans,file_type = 'xlsx'):
+    """
+    Saves a question and answer pair to a specified file (xlsx or csv).
 
-#######
+    Args:
+        ques (str): The question.
+        ans (str): The answer.
+        file_type (str, optional): The file type to save to ("xlsx" or "csv"). 
+                                    Defaults to "xlsx".
 
-######Data collection
-# Training question and answer saved
-# def save_the_ques(ques,ans):
-#     print("testing")
-#     save_ques_ans.append({
-#         'question':ques,
-#         'ans':ans
-#     })
-#     if len(save_ques_ans)%3==0:
-#         temp=pd.DataFrame(save_ques_ans)
-#         temp.to_excel(f"save_ques_ans\\{cur_time}_trainData.xlsx",index=False)
-#         gr.Info("Sucessfully saved in local folder!!!")
-#     if len(os.listdir("save_ques_ans"))>=2:
-#         df_all=[]
-#         for x in os.listdir("save_ques_ans"):
-#             path=os.path.join("save_ques_ans",x)
-#             df_all.append(pd.read_excel(path))
-#         if Path("data//finetune_data.xlsx").is_file():
-#             df_all.append(pd.read_excel("data//finetune_data.xlsx"))
-#         df_temp=pd.concat(df_all,axis=0)
-#         df_temp.to_excel("data//finetune_data.xlsx",index=False)
-#     return gr.Label(value="Submitted!! Generate new question",visible=True)
+    Returns:
+        str: A success label.
+    """
+
+    new_data = {"question": [ques], "answer": [ans]}
+    df_new = pd.DataFrame(new_data)
+
+    filepath = f"data/finetune_data.{file_type}"
+
+    if Path(filepath).is_file():
+        df_existing = pd.read_excel(filepath) if file_type == "xlsx" else pd.read_csv(filepath)
+        df_combined = pd.concat([df_existing, df_new], ignore_index=True)
+    else:
+        df_combined = df_new
+
+    if file_type == "xlsx":
+        df_combined.to_excel(filepath, index=False)
+    elif file_type == "csv":
+        df_combined.to_csv(filepath, index=False)
+
+    return gr.Label(value="Successfully saved in local folder.", visible=True) 
+
+def save_the_ques_test(ques, ans, file_type = 'xlsx'):
+    """
+    Saves a question and answer pair to a specified file (xlsx or csv).
+
+    Args:
+        ques (str): The question.
+        ans (str): The answer.
+        file_type (str, optional): The file type to save to ("xlsx" or "csv"). 
+                                    Defaults to "xlsx".
+
+    Returns:
+        str: A success label.
+    """
+
+    new_data = {"question": [ques], "answer": [ans]}
+    df_new = pd.DataFrame(new_data)
+
+    filepath = f"data/testing_data.{file_type}"
+
+    if Path(filepath).is_file():
+        df_existing = pd.read_excel(filepath) if file_type == "xlsx" else pd.read_csv(filepath)
+        df_combined = pd.concat([df_existing, df_new], ignore_index=True)
+    else:
+        df_combined = df_new
+
+    if file_type == "xlsx":
+        df_combined.to_excel(filepath, index=False)
+    elif file_type == "csv":
+        df_combined.to_csv(filepath, index=False)
+
+    return gr.Label(value="Successfully saved in local folder.", visible=True) 
 
 import pandas as pd
 from pathlib import Path
-import gradio as gr
-import os
 
-def save_the_ques(ques, ans):
+def save_emb_data(loss_function, first_input, second_input, third_input, file_type="xlsx"):
     """
-    Saves a question-answer pair to the finetune_data.xlsx file.
+    Saves embedding data based on the specified loss function to either an Excel 
+    file (xlsx) or a CSV file (csv).
 
     Args:
-        ques: The question string.
-        ans: The answer string.
+        loss_function (str): The name of the loss function.
+        first_input: The first input data.
+        second_input: The second input data.
+        third_input: The third input data.
+        file_type (str, optional): The file type to save to ("xlsx" or "csv"). 
+                                    Defaults to "xlsx".
 
     Returns:
-        gradio.Info: Success message if saved successfully.
+        str: A success message indicating whether data was appended or a new file 
+             was created.
     """
-    save_ques_ans = []
-    save_ques_ans.append({
-        'question': ques,
-        'answer': ans
-    })
-    df_new = pd.DataFrame(save_ques_ans)
-    if Path("data//finetune_data.xlsx").is_file():
-        df_existing = pd.read_excel("data//finetune_data.xlsx")
-    else:
-        df_existing = pd.DataFrame()
-    df_combined = pd.concat([df_existing, df_new], ignore_index=True)
-    df_combined.to_excel("data//finetune_data.xlsx", index=False)
-    return gr.Info("Sucessfully saved in local folder!!!")
 
-# Testing question and answer saved
-# def save_the_ques_test(ques,ans):
-#     print(ans)
-#     save_ques_ans_test.append({
-#         'question':ques,
-#         'ans':ans
-#     })
-#     # if len(save_ques_ans)%3==0:
-#     temp=pd.DataFrame(save_ques_ans_test)
-#     temp.to_excel(f"save_ques_ans_test\\{cur_time}_testData.xlsx",index=False)
-#     gr.Info("Sucessfully saved in local folder!!!")
-#     if len(os.listdir("save_ques_ans_test"))>=2:
-#         df_all=[]
-#         for x in os.listdir("save_ques_ans_test"):
-#             path=os.path.join("save_ques_ans_test",x)
-#             df_all.append(pd.read_excel(path))
-#         df_temp=pd.concat(df_all,axis=0)
-#         df_temp.to_excel("data//testing_dataset.xlsx",index=False)
+    if loss_function == "MultipleNegativesRankingLoss":
+        data = pd.DataFrame({
+            "anchor": [first_input],
+            "positive": [second_input],
+            "negative": [third_input]
+        })
+    elif loss_function == "OnlineContrastiveLoss":
+        data = pd.DataFrame({
+            "sentence1": [first_input],
+            "sentence2": [second_input],
+            "label": [third_input]
+        })
+    elif loss_function == "CoSENTLoss":
+        data = pd.DataFrame({
+            "sentence1": [first_input],
+            "sentence2": [second_input],
+            "score": [third_input]
+        })
+    elif loss_function == "GISTEmbedLoss":
+        data = pd.DataFrame({
+            "anchor": [first_input],
+            "positive": [second_input],
+            "negative": [third_input]
+        })
+    elif loss_function == "TripletLoss":
+        data = pd.DataFrame({
+            "anchor": [first_input],
+            "positive": [second_input],
+            "negative": [third_input]
+        })
 
-import pandas as pd
-from pathlib import Path
-import gradio as gr
-import os
+    filepath = f"data/emb_data.{file_type}"
 
-def save_the_ques_test(ques, ans):
-    """
-    Saves a question-answer pair to the testing_dataset.xlsx file.
+    try:
+        if file_type == "xlsx":
+            existing_data = pd.read_excel(filepath)
+        elif file_type == "csv":
+            existing_data = pd.read_csv(filepath)
 
-    Args:
-        ques: The question string.
-        ans: The answer string.
+        if list(data.columns) == list(existing_data.columns):
+            combined_data = pd.concat([existing_data, data], ignore_index=True)
+            if file_type == "xlsx":
+                combined_data.to_excel(filepath, index=False)
+            elif file_type == "csv":
+                combined_data.to_csv(filepath, index=False)
+            return "Data appended to existing file!"
+        else:
+            if file_type == "xlsx":
+                data.to_excel(filepath, index=False)
+            elif file_type == "csv":
+                data.to_csv(filepath, index=False)
+            return "Data saved to a new file (overwritten)!"
 
-    Returns:
-        gradio.Info: Success message if saved successfully.
-    """
-    save_ques_ans_test = []
-    save_ques_ans_test.append({
-        'question': ques,
-        'answer': ans
-    })
-    df_new = pd.DataFrame(save_ques_ans_test)
-    if Path("data//testing_dataset.xlsx").is_file():
-        df_existing = pd.read_excel("data//testing_dataset.xlsx")
-    else:
-        df_existing = pd.DataFrame()
-    df_combined = pd.concat([df_existing, df_new], ignore_index=True)
-    df_combined.to_excel("data//testing_dataset.xlsx", index=False)
-    return gr.Info("Sucessfully saved in local folder!!!")
-
+    except FileNotFoundError:
+        if file_type == "xlsx":
+            data.to_excel(filepath, index=False)
+        elif file_type == "csv":
+            data.to_csv(filepath, index=False)
+        return "Data saved to a new file!"
+    
+def parse_data_func(link_temp,progress=gr.Progress()):
+    progress(0, desc="Starting...")
+    parse_data(link_temp,progress)
+    gr.Info("Finished parsing!! Save as a docx file.")
 
 def next_ques(ques,ans):
     ques_temp,ans_temp=random_ques_ans2()
     return gr.Label(value=ques_temp)
-######
-#***************************************************
+
 with gr.Blocks(title="LLM QA Chatbot Builder") as demo:
     gr.Markdown("""
         # LLM QA Chatbot Builder
             """)
     with gr.Tab("Data Collection"):
-            def parse_data_func(link_temp,progress=gr.Progress()):
-                    progress(0, desc="Starting...")
-                    parse_data(link_temp,progress)
-                    gr.Info("Finished parsing!! Save as a docx file.")
             gr.Markdown(""" # Instructions: 
             In this page you can prepare data for LLM fine-tuning, testing and embedding model finetuning your model. The data can be provided through Excel file or CSV file or directly via web interface. Additionally, data can be parsed from the target website (Data parsing for RAG) to further enhance the model performance.  
                         
@@ -205,10 +228,12 @@ with gr.Blocks(title="LLM QA Chatbot Builder") as demo:
             gr.Markdown("""
                     ## `testing_data.xlsx`  |  `testing_data.csv`
                  """)
-            gr.HTML(value=display_table(r"data//demo_test_data.xlsx"), label="testing_data.xlsx or testing_data.csv")
+            gr.HTML(value=display_table("data/demo_test_data.xlsx"), label="testing_data.xlsx or testing_data.csv")
             gr.Markdown("""
                     ## 2. You can use the below interface to create the dataset for training and testing models.
                  """)
+            
+            #Training data generation
             with gr.Tab("Training Data Generation"):
                 with gr.Tab("Existing Questions"):
                     gr.Markdown("""
@@ -221,12 +246,14 @@ with gr.Blocks(title="LLM QA Chatbot Builder") as demo:
                     with gr.Row():
                         ans=gr.TextArea(label="Answer")
                     with gr.Row():
-                        save=gr.Button("Save the Answer")
+                        with gr.Row():
+                            type_options = gr.Dropdown(choices=["Save xlsx", "Save csv"], value="Save xlsx", label="Preferred file type")
+                            save_training = gr.Button(value="Save")
                         question = gr.Button("Generate New Question")
                     with gr.Row():
-                        lab=gr.Label(visible=False,value="You ans is submitted!!! Thank you for your contribution.",label="Submitted")
-                    question.click(next_ques,None,ques)
-                    save.click(save_the_ques,[ques,ans],lab)
+                        lab=gr.Label(visible=False)
+                question.click(next_ques,None,ques)
+                save_training.click(save_the_ques,[ques,ans,type_options],lab)
                     
                 with gr.Tab("Custom Questions"):
                     gr.Markdown("""
@@ -237,10 +264,14 @@ with gr.Blocks(title="LLM QA Chatbot Builder") as demo:
                     with gr.Row():
                         ans=gr.TextArea(label="Answer")
                     with gr.Row():
-                        save=gr.Button("Save the Answer")
+                        with gr.Row():
+                            type_options = gr.Dropdown(choices=["Save xlsx", "Save csv"], value="Save xlsx", label="Preferred file type")
+                            save_training = gr.Button(value="Save") 
                     with gr.Row():
                         lab=gr.Label(visible=False,value="You answer is submitted!!! Thank you for your contribution.",label="Submitted")
-                    save.click(save_the_ques,[ques,ans],lab)
+                    save_training.click(save_the_ques,[ques,ans,type_options],lab)
+            
+            ### Testing data generation
             with gr.Tab("Testing Data Generation"):
                 gr.Markdown("""
                     You can create test data for generating answers using the fine-tune model, which will be used for testing the model's performance. 
@@ -253,61 +284,14 @@ with gr.Blocks(title="LLM QA Chatbot Builder") as demo:
                 with gr.Row():
                     ans=gr.TextArea(label="Contexts")
                 with gr.Row():
-                    save_test=gr.Button("Save the Answer")
+                    with gr.Row():
+                        type_options = gr.Dropdown(choices=["Save xlsx", "Save csv"], value="Save xlsx", label="Preferred file type")
+                        save_test = gr.Button(value="Save")
                 with gr.Row():
                     lab=gr.Label(visible=False,value="You answer is submitted!!! Thank you for your contribution.",label="Submitted")
-                save_test.click(save_the_ques_test,[ques,ans],None)
-            ## Embedding data generation
-            def save_emb_data(loss_function,first_input,second_input,third_input):
-                if loss_function=="MultipleNegativesRankingLoss":
-                    data=pd.DataFrame({
-                        "anchor":[first_input],
-                        "positive":[second_input],
-                        "negative":[third_input]
-                    })
-                elif loss_function=="OnlineContrastiveLoss":
-                    data=pd.DataFrame({
-                        "sentence1":[first_input],
-                        "sentence2":[second_input],
-                        "label":[third_input]
-                    })
-                elif loss_function=="CoSENTLoss":
-                    data=pd.DataFrame({
-                        "sentence1":[first_input],
-                        "sentence2":[second_input],
-                        "score":[third_input]
-                    })
-                elif loss_function=="GISTEmbedLoss":
-                    data=pd.DataFrame({
-                        "anchor":[first_input],
-                        "positive":[second_input],
-                        "negative":[third_input]
-                    })
-                elif loss_function=="TripletLoss":
-                    data=pd.DataFrame({
-                        "anchor":[first_input],
-                        "positive":[second_input],
-                        "negative":[third_input]
-                    })
-                try:
-                    existing_data = pd.read_excel("data/emb_data.xlsx")
-                    if list(data.columns) == list(existing_data.columns):
-                        # Append if columns match
-                        combined_data = pd.concat([existing_data, data], ignore_index=True)
-                        with pd.ExcelWriter("data/emb_data.xlsx", mode='w') as writer:
-                            combined_data.to_excel(writer, index=False)
-                        gr.Info("Data appended to existing file!")
-                    else:
-                        # Overwrite if columns don't match
-                        with pd.ExcelWriter("data/emb_data.xlsx", mode='w') as writer:
-                            data.to_excel(writer, index=False)
-                        gr.Info("Data saved to a new file (overwritten)!") 
-                except FileNotFoundError:
-                    # Create a new file if it doesn't exist
-                    with pd.ExcelWriter("data/emb_data.xlsx", mode='w') as writer:
-                        data.to_excel(writer, index=False)
-                    gr.Info("Data saved to a new file!")
+                save_test.click(save_the_ques_test,[ques,ans,type_options],None)
                 
+            ## Embedding data generation
             def update_fields(loss_function):
                 if loss_function == "MultipleNegativesRankingLoss":
                     first_input = gr.Textbox(label="Anchor", visible=True, placeholder="The sentence to be embedded.")
@@ -404,8 +388,10 @@ with gr.Blocks(title="LLM QA Chatbot Builder") as demo:
                     third_input = gr.Textbox(label="Negative", value="",visible=False)
                 loss_function.change(update_fields, loss_function, [first_input, second_input, third_input,loss_info_markdown])
                 with gr.Row():
-                    save_emb=gr.Button("Save the Answer")
-                save_emb.click(save_emb_data,[loss_function,first_input,second_input,third_input])
+                    with gr.Row():
+                        type_options = gr.Dropdown(choices=["Save xlsx", "Save csv"], value="Save xlsx", label="Preferred file type")
+                        save_emb = gr.Button(value="Save")
+                save_emb.click(save_emb_data,[loss_function,first_input,second_input,third_input,type_options])
 
             with gr.Row():
                 gr.Markdown("""
@@ -902,4 +888,4 @@ with gr.Blocks(title="LLM QA Chatbot Builder") as demo:
         btn_model=gr.Button("Deploy")
         btn_model.click(deploy_func,model_name)
 
-demo.launch(share=True)
+demo.launch(share=False)
