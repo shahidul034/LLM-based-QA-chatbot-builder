@@ -170,17 +170,8 @@ def get_trainer(model_name):
         "Flant5": ("google/flan-t5-base", FlanT5Trainer),
     }
     
-    base_model, trainer_class = model_map.get(model_name.lower(), (None, None))
+    base_model, trainer_class = model_map[model_name]
     if not base_model or not trainer_class:
         raise ValueError(f"Unsupported model: {model_name}")
     
     return trainer_class(model_name, base_model)
-
-def main():
-    # Example usage
-    model_name = "Llama"  # or "mistral", "phi", "zephyr", "flan-t5"
-    trainer = get_trainer(model_name)
-    trainer.train(lr=5e-6, epoch=2, batch_size=4, gradient_accumulation=4, quantization=8, lora_r=16, lora_alpha=32, lora_dropout=0.05)
-
-if __name__ == "__main__":
-    main()
