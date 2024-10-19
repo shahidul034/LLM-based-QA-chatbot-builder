@@ -443,40 +443,25 @@ with gr.Blocks(title="LLM QA Chatbot Builder") as demo:
                 # from fine_tune_file.flant5_finetune import flant5_trainer
                 from fine_tune_file.modular_finetune import get_trainer
                 # create instance of the finetuning classes and then call the finetune function
-                if model_name_temp=="Mistral":
-                    gr.Info("Fine-tune started!!!")
-                    trainer=get_trainer("mistral")
-                    # trainer = mistral_trainer()
-                    trainer.mistral_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
-                    gr.Info("Fine-tune Ended!!!")
-                elif model_name_temp=="Zephyr":
-                    gr.Info("Fine-tune started!!!")
-                    trainer=get_trainer("zephyr")
-                    # trainer = zephyr_trainer()
-                    trainer.zepyhr_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
-                    gr.Info("Fine-tune Ended!!!")
-                elif model_name_temp=="Llama":
-                    gr.Info("Fine-tune started!!!")
-                    trainer=get_trainer("llama")
-                    # trainer = llama_trainer()
-                    trainer.llama_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
-                    gr.Info("Fine-tune Ended!!!")
-                elif model_name_temp=="Phi":
-                    gr.Info("Fine-tune started!!!")
-                    # trainer = phi_trainer()
-                    trainer=get_trainer("phi")
-                    trainer.phi_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
-                    gr.Info("Fine-tune Ended!!!")
-                elif model_name_temp=="Flant5":
-                    gr.Info("Fine-tune started!!!")
-                    # trainer = flant5_trainer()
-                    trainer=get_trainer("flant5")
-                    trainer.flant5_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
-                    gr.Info("Fine-tune Ended!!!")
-                elif model_name_temp=="Custom model":
+                
+                if model_name_temp=="Custom model":
                     gr.Info("Fine-tune started!!!")
                     trainer=custom_model_trainer()
                     trainer.custom_model_finetune()
+                    gr.Info("Fine-tune Ended!!!")
+                else:
+                    trainer=get_trainer(model_name_temp)
+                    gr.Info("Fine-tune started!!!")
+                    if model_name_temp=="Mistral":
+                        trainer.mistral_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                    elif model_name_temp=="Zephyr":
+                        trainer.zepyhr_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                    elif model_name_temp=="Llama":
+                        trainer.llama_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                    elif model_name_temp=="Phi":
+                        trainer.phi_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
+                    elif model_name_temp=="Flant5":
+                        trainer.flant5_finetune(lr,epoch,batch_size,gradient_accumulation,quantization,lora_r,lora_alpha,lora_dropout)
                     gr.Info("Fine-tune Ended!!!")
             
             def code_show(model_name):
