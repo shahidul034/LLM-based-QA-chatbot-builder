@@ -208,7 +208,7 @@ def next_ques(ques,ans):
     ques_temp,ans_temp=random_ques_ans2()
     return gr.Label(value=ques_temp)
 
-with gr.Blocks(title="LLM QA Chatbot Builder") as demo:
+with gr.Blocks(title="LLM QA Chatbot Builder",theme=gr.themes.Soft()) as demo:
     gr.Markdown("""
         # LLM QA Chatbot Builder
             """)
