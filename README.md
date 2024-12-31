@@ -1,5 +1,8 @@
 
 # ✨ LLM based QA chatbot builder
+## Paper Link
+https://www.sciencedirect.com/science/article/pii/S235271102400400X
+
 ## 🏁 An end-to-end solution to develop a fully open-source application based on open-source models and libraries.
 
 ### 🎯 What Is LLM based QA chatbot builder?
